@@ -52,7 +52,6 @@ app.use(
     xXssProtection: '0',
     // contentSecurityPolicy: "default-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
     xContentTypeOptions: 'nosniff',
-    // permissionPolicy: 'camera=(), microphone=(), geolocation=()',
   })
 )
 

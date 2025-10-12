@@ -18,3 +18,5 @@ root.cookie.pkfile
 ca.pem
 
 wrangler.toml
+
+pingfile
