@@ -15,6 +15,9 @@ localhost-cert.pem
 localhost-key.pem
 root.cookie.pkfile
 
+localhost.crt
+localhost.key
+
 ca.pem
 
 wrangler.toml
