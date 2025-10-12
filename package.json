@@ -1,0 +1,14 @@
+{
+  "name": "openfile",
+  "license": "AGPL-3.0",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --filter=backend dev & bun run --filter=frontend dev",
+    "start": "bun run --filter=backend start & bun run --filter=frontend start",
+    "build": "bun run --filter=frontend build"
+  },
+  "workspaces": [
+    "apps/*"
+  ]
+}

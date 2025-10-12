@@ -1,0 +1,37 @@
+{
+ "request": {
+  "Body": {
+   "email": "kumarpradeepbgs@gmail.com",
+   "password": "@exvillager"
+  },
+  "Headers": {
+   "Method": "POST"
+  },
+  "URL": "http://localhost:8000/api/v1/auth/login"
+ },
+ "response": {
+  "Body": "eyJtZXNzYWdlIjoiVXNlciBsb2dnZWQgaW4gc3VjY2Vzc2Z1bGx5IiwidXNlciI6eyJpZCI6MSwiZW1haWwiOiJrdW1hcnByYWRlZXBiZ3NAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkOHdjYm1jc2JNTERXSThQTHVNd1l4ZWhvbEU1LlRwU2pYMVpnUDVnYzdhWUJFTHBaY1VKTy4iLCJjcmVhdGVkQXQiOiIyMDI1LTA1LTIxVDA5OjI1OjQzLjkyMVoiLCJ1cGRhdGVkQXQiOiIyMDI1LTA1LTIxVDA5OjI1OjQzLjkyMVoifSwiYWNjZXNzVG9rZW4iOiJleUpoYkdjaU9pSklVekkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKcFpDSTZNU3dpWlcxaGFXd2lPaUpyZFcxaGNuQnlZV1JsWlhCaVozTkFaMjFoYVd3dVkyOXRJaXdpYVdGMElqb3hOelV3TlRnNE1EY3dMQ0psZUhBaU9qRTNOVEV3TWpBd056QjkuZ3oxMGpBRTRCUWRjeEp6NUs0TlBNN0ltcWJTSHRmNUJGa1RJMG5kVlZ4ayIsInJlZnJlc2hUb2tlbiI6ImV5SmhiR2NpT2lKSVV6STFOaUlzSW5SNWNDSTZJa3BYVkNKOS5leUpwWkNJNk1Td2laVzFoYVd3aU9pSnJkVzFoY25CeVlXUmxaWEJpWjNOQVoyMWhhV3d1WTI5dElpd2lhV0YwSWpveE56VXdOVGc0TURjd0xDSmxlSEFpT2pFM05URTRPRFF3TnpCOS52c1E2ZXM2ZHZCUGJ1Q1NGckJ4SGg1MzRRaVNTY3lmRElBa1VnZXExS3pJIn0=",
+  "Headers": {
+   "Access-Control-Allow-Credentials": [
+    "true"
+   ],
+   "Content-Length": [
+    "650"
+   ],
+   "Content-Type": [
+    "application/json"
+   ],
+   "Date": [
+    "Sun, 22 Jun 2025 10:27:50 GMT"
+   ],
+   "Set-Cookie": [
+    "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJrdW1hcnByYWRlZXBiZ3NAZ21haWwuY29tIiwiaWF0IjoxNzUwNTg4MDcwLCJleHAiOjE3NTEwMjAwNzB9.gz10jAE4BQdcxJz5K4NPM7ImqbSHtf5BFkTI0ndVVxk; Max-Age=432000; Path=/; HttpOnly; SameSite=Lax",
+    "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJrdW1hcnByYWRlZXBiZ3NAZ21haWwuY29tIiwiaWF0IjoxNzUwNTg4MDcwLCJleHAiOjE3NTE4ODQwNzB9.vsQ6es6dvBPbuCSFrBxHh534QiSScyfDIAkUgeq1KzI; Max-Age=1296000; Path=/; HttpOnly; SameSite=Lax"
+   ],
+   "Vary": [
+    "Origin"
+   ]
+  },
+  "Status": "200 OK"
+ }
+}

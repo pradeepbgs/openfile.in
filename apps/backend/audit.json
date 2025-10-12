@@ -1,0 +1,16 @@
+{
+    "keepSettings": {
+        "type": 2,
+        "amount": 10
+    },
+    "auditFilename": "/home/pradeep/Desktop/openfile.in/apps/backend/audit.json",
+    "hashType": "md5",
+    "extension": ".log",
+    "files": [
+        {
+            "date": 1757586953654,
+            "name": "/home/pradeep/Desktop/openfile.in/apps/backend/File-2025-09-11.0.log",
+            "hash": "d6bd0f715ac16ea5a594e76d9b77136d"
+        }
+    ]
+}

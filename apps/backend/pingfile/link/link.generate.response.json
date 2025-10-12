@@ -1,0 +1,39 @@
+{
+ "request": {
+  "Body": {
+   "allowedFileType": [
+    "video/mp4",
+    "image/png"
+   ],
+   "expiresAt": "2025-08-02T10:00:00.000Z",
+   "maxUploads": 1,
+   "secretKey": "mySuperSecretKey123"
+  },
+  "Headers": {
+   "Content-Type": "application/json",
+   "Method": "POST"
+  },
+  "URL": "http://localhost:8000/api/v1/link"
+ },
+ "response": {
+  "Body": "eyJtZXNzYWdlIjoiU2VjdXJlIHVwbG9hZCBsaW5rIGdlbmVyYXRlZCBzdWNjZXNzZnVsbHkiLCJ1cGxvYWRVcmwiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL3YxL2ZpbGU/dG9rZW49QVplWExsRDJjQUNkMU5GdjJSVHNsZyJ9",
+  "Headers": {
+   "Access-Control-Allow-Credentials": [
+    "true"
+   ],
+   "Content-Length": [
+    "132"
+   ],
+   "Content-Type": [
+    "application/json"
+   ],
+   "Date": [
+    "Sun, 22 Jun 2025 10:28:04 GMT"
+   ],
+   "Vary": [
+    "Origin"
+   ]
+  },
+  "Status": "200 OK"
+ }
+}

@@ -1,0 +1,158 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id     Int    @id @default(autoincrement())
+  email  String @unique
+  name   String
+  avatar String
+  links  Link[] // One-to-many relation with Link
+  files  File[] @relation("UserFiles")
+
+  subscription Subscription?
+
+  linkCount         Int       @default(0)
+  linkCountExpireAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
+
+model Link {
+  id          Int      @id @default(autoincrement())
+  token       String   @unique
+  name        String   @default("")
+  maxUploads  Int
+  uploadCount Int
+  expiresAt   DateTime
+
+  expireAfterFirstUpload Boolean @default(false)
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  files File[]
+
+  ipLogs IpLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([token])
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model File {
+  id      Int     @id @default(autoincrement())
+  url     String
+  name    String
+  size    BigInt
+  keyUsed Boolean @default(false)
+
+  uploadLink   Link @relation(fields: [uploadLinkId], references: [id], onDelete: Cascade)
+  uploadLinkId Int
+
+  user   User @relation("UserFiles", fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+
+  ipLogs IpLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([uploadLinkId])
+  @@index([userId])
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  CANCELLED
+}
+
+model Subscription {
+  id        Int                @id @default(autoincrement())
+  userId    Int                @unique
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planName  String             @default("free")
+  price     Float              @default(0.0)
+  status    SubscriptionStatus @default(ACTIVE)
+  startDate DateTime           @default(now())
+  endDate   DateTime?
+  cancelAt  DateTime?
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  @@index([userId])
+  @@index([planName])
+}
+
+model IpLog {
+  id Int    @id @default(autoincrement())
+  ip String
+
+  purpose String @default("upload")
+
+  fileId Int
+  file   File @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  linkId Int
+  link   Link @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([fileId])
+  @@index([linkId])
+  @@index([purpose])
+  @@index([ip])
+}
+
+enum DeletedStatus {
+  PENDING
+  DELETED
+  FAILED
+}
+
+model DeletedFile {
+  id        Int           @id @default(autoincrement())
+  fileId    Int
+  linkId    Int
+  fileUrl   String
+  status    DeletedStatus @default(PENDING)
+  deletedAt DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status])
+  @@index([linkId])
+  @@index([fileId])
+}
+
+model SubscriptionLog {
+  id             String  @id @default(cuid())
+  eventType      String
+  status         String
+  userEmail      String
+  userId         Int?
+  paymentId      String  @unique
+  subscriptionId String?
+  amount         Int
+  currency       String
+  rawPayload     Json
+  message        String
+  error          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

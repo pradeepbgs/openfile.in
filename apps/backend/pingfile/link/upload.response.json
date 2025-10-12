@@ -1,0 +1,40 @@
+{
+ "request": {
+  "Body": null,
+  "Headers": {
+   "Content-Type": "application/json",
+   "Method": "POST"
+  },
+  "URL": "http://localhost:8000/api/v1/file?token=AZeXLlD2cACd1NFv2RTslg"
+ },
+ "response": {
+  "Body": "eyJlcnJvciI6IkludGVybmFsIFNlcnZlciBFcnJvciBpbiB2YWxpZGF0ZUxpbmtBY2Nlc3MifQ==",
+  "Headers": {
+   "Access-Control-Allow-Credentials": [
+    "true"
+   ],
+   "Content-Length": [
+    "55"
+   ],
+   "Content-Type": [
+    "application/json"
+   ],
+   "Date": [
+    "Sun, 22 Jun 2025 10:28:36 GMT"
+   ],
+   "Vary": [
+    "Origin"
+   ],
+   "X-Ratelimit-Limit": [
+    "NaN"
+   ],
+   "X-Ratelimit-Remaining": [
+    "NaN"
+   ],
+   "X-Ratelimit-Reset": [
+    "NaN"
+   ]
+  },
+  "Status": "500 Internal Server Error"
+ }
+}

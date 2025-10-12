@@ -1,0 +1,1 @@
+this is just for  writing raw sql queries used in this project.

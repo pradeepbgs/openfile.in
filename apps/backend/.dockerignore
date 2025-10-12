@@ -1,0 +1,5 @@
+.env
+.gitignore
+node_modules
+root.cookie.pkfile
+pingfile
