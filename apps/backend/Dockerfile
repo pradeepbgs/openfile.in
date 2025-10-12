@@ -8,6 +8,7 @@ WORKDIR /app
 COPY package.json tsconfig.json ./
 
 RUN apt-get update -y && apt-get install -y openssl
+# RUN apt-get update -y 
 
 COPY . .
 
