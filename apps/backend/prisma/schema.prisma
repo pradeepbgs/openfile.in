@@ -43,8 +43,6 @@ model Link {
  
   files                File[]
  
-  ipLogs IpLog[]
-
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
@@ -64,10 +62,7 @@ model File {
   uploadLinkId Int
   
   user       User     @relation("UserFiles", fields: [userId], references: [id],onDelete: Cascade)
-  userId     Int
-  
-  ipLogs     IpLog[]
-  
+  userId     Int  
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -99,26 +94,6 @@ model Subscription {
     @@index([planName])
 }
 
-
-model IpLog {
-  id      Int     @id @default(autoincrement())
-  ip      String
-  
-  purpose String @default("upload")
-  
-  fileId  Int
-  file    File   @relation(fields: [fileId], references: [id],onDelete: Cascade)
-  
-  linkId Int
-  link   Link   @relation(fields: [linkId], references: [id], onDelete: Cascade)
-  
-  createdAt DateTime @default(now())
-  
-  @@index([fileId])
-  @@index([linkId])
-  @@index([purpose])
-  @@index([ip])
-}
 
 enum DeletedStatus {
   PENDING

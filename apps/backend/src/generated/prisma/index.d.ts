@@ -34,11 +34,6 @@ export type File = $Result.DefaultSelection<Prisma.$FilePayload>
  */
 export type Subscription = $Result.DefaultSelection<Prisma.$SubscriptionPayload>
 /**
- * Model IpLog
- * 
- */
-export type IpLog = $Result.DefaultSelection<Prisma.$IpLogPayload>
-/**
  * Model DeletedFile
  * 
  */
@@ -96,7 +91,7 @@ export const DeletedStatus: typeof $Enums.DeletedStatus
  */
 export class PrismaClient<
   ClientOptions extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
-  U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
+  const U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
   ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
@@ -128,13 +123,6 @@ export class PrismaClient<
    * Disconnect from the database
    */
   $disconnect(): $Utils.JsPromise<void>;
-
-  /**
-   * Add a middleware
-   * @deprecated since 4.16.0. For new code, prefer client extensions instead.
-   * @see https://pris.ly/d/extensions
-   */
-  $use(cb: Prisma.Middleware): void
 
 /**
    * Executes a prepared raw query and returns the number of affected rows.
@@ -246,16 +234,6 @@ export class PrismaClient<
   get subscription(): Prisma.SubscriptionDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.ipLog`: Exposes CRUD operations for the **IpLog** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more IpLogs
-    * const ipLogs = await prisma.ipLog.findMany()
-    * ```
-    */
-  get ipLog(): Prisma.IpLogDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.deletedFile`: Exposes CRUD operations for the **DeletedFile** model.
     * Example usage:
     * ```ts
@@ -332,8 +310,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.8.2
-   * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
+   * Prisma Client JS version: 6.17.0
+   * Query Engine version: c0aafc03b8ef6cdced8654b9a817999e02457d6a
    */
   export type PrismaVersion = {
     client: string
@@ -718,7 +696,6 @@ export namespace Prisma {
     Link: 'Link',
     File: 'File',
     Subscription: 'Subscription',
-    IpLog: 'IpLog',
     DeletedFile: 'DeletedFile',
     SubscriptionLog: 'SubscriptionLog'
   };
@@ -739,7 +716,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "link" | "file" | "subscription" | "ipLog" | "deletedFile" | "subscriptionLog"
+      modelProps: "user" | "link" | "file" | "subscription" | "deletedFile" | "subscriptionLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1039,80 +1016,6 @@ export namespace Prisma {
           }
         }
       }
-      IpLog: {
-        payload: Prisma.$IpLogPayload<ExtArgs>
-        fields: Prisma.IpLogFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.IpLogFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IpLogPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.IpLogFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IpLogPayload>
-          }
-          findFirst: {
-            args: Prisma.IpLogFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IpLogPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.IpLogFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IpLogPayload>
-          }
-          findMany: {
-            args: Prisma.IpLogFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IpLogPayload>[]
-          }
-          create: {
-            args: Prisma.IpLogCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IpLogPayload>
-          }
-          createMany: {
-            args: Prisma.IpLogCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.IpLogCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IpLogPayload>[]
-          }
-          delete: {
-            args: Prisma.IpLogDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IpLogPayload>
-          }
-          update: {
-            args: Prisma.IpLogUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IpLogPayload>
-          }
-          deleteMany: {
-            args: Prisma.IpLogDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.IpLogUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.IpLogUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IpLogPayload>[]
-          }
-          upsert: {
-            args: Prisma.IpLogUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$IpLogPayload>
-          }
-          aggregate: {
-            args: Prisma.IpLogAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateIpLog>
-          }
-          groupBy: {
-            args: Prisma.IpLogGroupByArgs<ExtArgs>
-            result: $Utils.Optional<IpLogGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.IpLogCountArgs<ExtArgs>
-            result: $Utils.Optional<IpLogCountAggregateOutputType> | number
-          }
-        }
-      }
       DeletedFile: {
         payload: Prisma.$DeletedFilePayload<ExtArgs>
         fields: Prisma.DeletedFileFieldRefs
@@ -1304,16 +1207,24 @@ export namespace Prisma {
     /**
      * @example
      * ```
-     * // Defaults to stdout
+     * // Shorthand for `emit: 'stdout'`
      * log: ['query', 'info', 'warn', 'error']
      * 
-     * // Emit as events
+     * // Emit as events only
      * log: [
-     *   { emit: 'stdout', level: 'query' },
-     *   { emit: 'stdout', level: 'info' },
-     *   { emit: 'stdout', level: 'warn' }
-     *   { emit: 'stdout', level: 'error' }
+     *   { emit: 'event', level: 'query' },
+     *   { emit: 'event', level: 'info' },
+     *   { emit: 'event', level: 'warn' }
+     *   { emit: 'event', level: 'error' }
      * ]
+     * 
+     * / Emit as events and log to stdout
+     * og: [
+     *  { emit: 'stdout', level: 'query' },
+     *  { emit: 'stdout', level: 'info' },
+     *  { emit: 'stdout', level: 'warn' }
+     *  { emit: 'stdout', level: 'error' }
+     * 
      * ```
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
@@ -1328,6 +1239,10 @@ export namespace Prisma {
       timeout?: number
       isolationLevel?: Prisma.TransactionIsolationLevel
     }
+    /**
+     * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-planetscale`
+     */
+    adapter?: runtime.SqlDriverAdapterFactory | null
     /**
      * Global configuration for omitting model fields by default.
      * 
@@ -1349,7 +1264,6 @@ export namespace Prisma {
     link?: LinkOmit
     file?: FileOmit
     subscription?: SubscriptionOmit
-    ipLog?: IpLogOmit
     deletedFile?: DeletedFileOmit
     subscriptionLog?: SubscriptionLogOmit
   }
@@ -1361,10 +1275,15 @@ export namespace Prisma {
     emit: 'stdout' | 'event'
   }
 
-  export type GetLogType<T extends LogLevel | LogDefinition> = T extends LogDefinition ? T['emit'] extends 'event' ? T['level'] : never : never
-  export type GetEvents<T extends any> = T extends Array<LogLevel | LogDefinition> ?
-    GetLogType<T[0]> | GetLogType<T[1]> | GetLogType<T[2]> | GetLogType<T[3]>
-    : never
+  export type CheckIsLogLevel<T> = T extends LogLevel ? T : never;
+
+  export type GetLogType<T> = CheckIsLogLevel<
+    T extends LogDefinition ? T['level'] : T
+  >;
+
+  export type GetEvents<T extends any[]> = T extends Array<LogLevel | LogDefinition>
+    ? GetLogType<T[number]>
+    : never;
 
   export type QueryEvent = {
     timestamp: Date
@@ -1404,25 +1323,6 @@ export namespace Prisma {
     | 'runCommandRaw'
     | 'findRaw'
     | 'groupBy'
-
-  /**
-   * These options are being passed into the middleware as "params"
-   */
-  export type MiddlewareParams = {
-    model?: ModelName
-    action: PrismaAction
-    args: any
-    dataPath: string[]
-    runInTransaction: boolean
-  }
-
-  /**
-   * The `T` type makes sure, that the `return proceed` is not forgotten in the middleware implementation
-   */
-  export type Middleware<T = any> = (
-    params: MiddlewareParams,
-    next: (params: MiddlewareParams) => $Utils.JsPromise<T>,
-  ) => $Utils.JsPromise<T>
 
   // tested in getLogLevel.test.ts
   export function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined;
@@ -1487,12 +1387,10 @@ export namespace Prisma {
 
   export type LinkCountOutputType = {
     files: number
-    ipLogs: number
   }
 
   export type LinkCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     files?: boolean | LinkCountOutputTypeCountFilesArgs
-    ipLogs?: boolean | LinkCountOutputTypeCountIpLogsArgs
   }
 
   // Custom InputTypes
@@ -1511,44 +1409,6 @@ export namespace Prisma {
    */
   export type LinkCountOutputTypeCountFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FileWhereInput
-  }
-
-  /**
-   * LinkCountOutputType without action
-   */
-  export type LinkCountOutputTypeCountIpLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: IpLogWhereInput
-  }
-
-
-  /**
-   * Count Type FileCountOutputType
-   */
-
-  export type FileCountOutputType = {
-    ipLogs: number
-  }
-
-  export type FileCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    ipLogs?: boolean | FileCountOutputTypeCountIpLogsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * FileCountOutputType without action
-   */
-  export type FileCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FileCountOutputType
-     */
-    select?: FileCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * FileCountOutputType without action
-   */
-  export type FileCountOutputTypeCountIpLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: IpLogWhereInput
   }
 
 
@@ -3006,7 +2866,6 @@ export namespace Prisma {
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     files?: boolean | Link$filesArgs<ExtArgs>
-    ipLogs?: boolean | Link$ipLogsArgs<ExtArgs>
     _count?: boolean | LinkCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["link"]>
 
@@ -3055,7 +2914,6 @@ export namespace Prisma {
   export type LinkInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     files?: boolean | Link$filesArgs<ExtArgs>
-    ipLogs?: boolean | Link$ipLogsArgs<ExtArgs>
     _count?: boolean | LinkCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LinkIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3070,7 +2928,6 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       files: Prisma.$FilePayload<ExtArgs>[]
-      ipLogs: Prisma.$IpLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3479,7 +3336,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     files<T extends Link$filesArgs<ExtArgs> = {}>(args?: Subset<T, Link$filesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    ipLogs<T extends Link$ipLogsArgs<ExtArgs> = {}>(args?: Subset<T, Link$ipLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IpLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3939,30 +3795,6 @@ export namespace Prisma {
   }
 
   /**
-   * Link.ipLogs
-   */
-  export type Link$ipLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpLog
-     */
-    select?: IpLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the IpLog
-     */
-    omit?: IpLogOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpLogInclude<ExtArgs> | null
-    where?: IpLogWhereInput
-    orderBy?: IpLogOrderByWithRelationInput | IpLogOrderByWithRelationInput[]
-    cursor?: IpLogWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: IpLogScalarFieldEnum | IpLogScalarFieldEnum[]
-  }
-
-  /**
    * Link without action
    */
   export type LinkDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4225,8 +4057,6 @@ export namespace Prisma {
     updatedAt?: boolean
     uploadLink?: boolean | LinkDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-    ipLogs?: boolean | File$ipLogsArgs<ExtArgs>
-    _count?: boolean | FileCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["file"]>
 
   export type FileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -4273,8 +4103,6 @@ export namespace Prisma {
   export type FileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     uploadLink?: boolean | LinkDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-    ipLogs?: boolean | File$ipLogsArgs<ExtArgs>
-    _count?: boolean | FileCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type FileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     uploadLink?: boolean | LinkDefaultArgs<ExtArgs>
@@ -4290,7 +4118,6 @@ export namespace Prisma {
     objects: {
       uploadLink: Prisma.$LinkPayload<ExtArgs>
       user: Prisma.$UserPayload<ExtArgs>
-      ipLogs: Prisma.$IpLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -4698,7 +4525,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     uploadLink<T extends LinkDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LinkDefaultArgs<ExtArgs>>): Prisma__LinkClient<$Result.GetResult<Prisma.$LinkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    ipLogs<T extends File$ipLogsArgs<ExtArgs> = {}>(args?: Subset<T, File$ipLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IpLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5130,30 +4956,6 @@ export namespace Prisma {
      * Limit how many Files to delete.
      */
     limit?: number
-  }
-
-  /**
-   * File.ipLogs
-   */
-  export type File$ipLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpLog
-     */
-    select?: IpLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the IpLog
-     */
-    omit?: IpLogOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpLogInclude<ExtArgs> | null
-    where?: IpLogWhereInput
-    orderBy?: IpLogOrderByWithRelationInput | IpLogOrderByWithRelationInput[]
-    cursor?: IpLogWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: IpLogScalarFieldEnum | IpLogScalarFieldEnum[]
   }
 
   /**
@@ -6337,1127 +6139,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: SubscriptionInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model IpLog
-   */
-
-  export type AggregateIpLog = {
-    _count: IpLogCountAggregateOutputType | null
-    _avg: IpLogAvgAggregateOutputType | null
-    _sum: IpLogSumAggregateOutputType | null
-    _min: IpLogMinAggregateOutputType | null
-    _max: IpLogMaxAggregateOutputType | null
-  }
-
-  export type IpLogAvgAggregateOutputType = {
-    id: number | null
-    fileId: number | null
-    linkId: number | null
-  }
-
-  export type IpLogSumAggregateOutputType = {
-    id: number | null
-    fileId: number | null
-    linkId: number | null
-  }
-
-  export type IpLogMinAggregateOutputType = {
-    id: number | null
-    ip: string | null
-    purpose: string | null
-    fileId: number | null
-    linkId: number | null
-    createdAt: Date | null
-  }
-
-  export type IpLogMaxAggregateOutputType = {
-    id: number | null
-    ip: string | null
-    purpose: string | null
-    fileId: number | null
-    linkId: number | null
-    createdAt: Date | null
-  }
-
-  export type IpLogCountAggregateOutputType = {
-    id: number
-    ip: number
-    purpose: number
-    fileId: number
-    linkId: number
-    createdAt: number
-    _all: number
-  }
-
-
-  export type IpLogAvgAggregateInputType = {
-    id?: true
-    fileId?: true
-    linkId?: true
-  }
-
-  export type IpLogSumAggregateInputType = {
-    id?: true
-    fileId?: true
-    linkId?: true
-  }
-
-  export type IpLogMinAggregateInputType = {
-    id?: true
-    ip?: true
-    purpose?: true
-    fileId?: true
-    linkId?: true
-    createdAt?: true
-  }
-
-  export type IpLogMaxAggregateInputType = {
-    id?: true
-    ip?: true
-    purpose?: true
-    fileId?: true
-    linkId?: true
-    createdAt?: true
-  }
-
-  export type IpLogCountAggregateInputType = {
-    id?: true
-    ip?: true
-    purpose?: true
-    fileId?: true
-    linkId?: true
-    createdAt?: true
-    _all?: true
-  }
-
-  export type IpLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which IpLog to aggregate.
-     */
-    where?: IpLogWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of IpLogs to fetch.
-     */
-    orderBy?: IpLogOrderByWithRelationInput | IpLogOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: IpLogWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` IpLogs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` IpLogs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned IpLogs
-    **/
-    _count?: true | IpLogCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: IpLogAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: IpLogSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: IpLogMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: IpLogMaxAggregateInputType
-  }
-
-  export type GetIpLogAggregateType<T extends IpLogAggregateArgs> = {
-        [P in keyof T & keyof AggregateIpLog]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateIpLog[P]>
-      : GetScalarType<T[P], AggregateIpLog[P]>
-  }
-
-
-
-
-  export type IpLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: IpLogWhereInput
-    orderBy?: IpLogOrderByWithAggregationInput | IpLogOrderByWithAggregationInput[]
-    by: IpLogScalarFieldEnum[] | IpLogScalarFieldEnum
-    having?: IpLogScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: IpLogCountAggregateInputType | true
-    _avg?: IpLogAvgAggregateInputType
-    _sum?: IpLogSumAggregateInputType
-    _min?: IpLogMinAggregateInputType
-    _max?: IpLogMaxAggregateInputType
-  }
-
-  export type IpLogGroupByOutputType = {
-    id: number
-    ip: string
-    purpose: string
-    fileId: number
-    linkId: number
-    createdAt: Date
-    _count: IpLogCountAggregateOutputType | null
-    _avg: IpLogAvgAggregateOutputType | null
-    _sum: IpLogSumAggregateOutputType | null
-    _min: IpLogMinAggregateOutputType | null
-    _max: IpLogMaxAggregateOutputType | null
-  }
-
-  type GetIpLogGroupByPayload<T extends IpLogGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<IpLogGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof IpLogGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], IpLogGroupByOutputType[P]>
-            : GetScalarType<T[P], IpLogGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type IpLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    ip?: boolean
-    purpose?: boolean
-    fileId?: boolean
-    linkId?: boolean
-    createdAt?: boolean
-    file?: boolean | FileDefaultArgs<ExtArgs>
-    link?: boolean | LinkDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["ipLog"]>
-
-  export type IpLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    ip?: boolean
-    purpose?: boolean
-    fileId?: boolean
-    linkId?: boolean
-    createdAt?: boolean
-    file?: boolean | FileDefaultArgs<ExtArgs>
-    link?: boolean | LinkDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["ipLog"]>
-
-  export type IpLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    ip?: boolean
-    purpose?: boolean
-    fileId?: boolean
-    linkId?: boolean
-    createdAt?: boolean
-    file?: boolean | FileDefaultArgs<ExtArgs>
-    link?: boolean | LinkDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["ipLog"]>
-
-  export type IpLogSelectScalar = {
-    id?: boolean
-    ip?: boolean
-    purpose?: boolean
-    fileId?: boolean
-    linkId?: boolean
-    createdAt?: boolean
-  }
-
-  export type IpLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ip" | "purpose" | "fileId" | "linkId" | "createdAt", ExtArgs["result"]["ipLog"]>
-  export type IpLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    file?: boolean | FileDefaultArgs<ExtArgs>
-    link?: boolean | LinkDefaultArgs<ExtArgs>
-  }
-  export type IpLogIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    file?: boolean | FileDefaultArgs<ExtArgs>
-    link?: boolean | LinkDefaultArgs<ExtArgs>
-  }
-  export type IpLogIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    file?: boolean | FileDefaultArgs<ExtArgs>
-    link?: boolean | LinkDefaultArgs<ExtArgs>
-  }
-
-  export type $IpLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "IpLog"
-    objects: {
-      file: Prisma.$FilePayload<ExtArgs>
-      link: Prisma.$LinkPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      ip: string
-      purpose: string
-      fileId: number
-      linkId: number
-      createdAt: Date
-    }, ExtArgs["result"]["ipLog"]>
-    composites: {}
-  }
-
-  type IpLogGetPayload<S extends boolean | null | undefined | IpLogDefaultArgs> = $Result.GetResult<Prisma.$IpLogPayload, S>
-
-  type IpLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<IpLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: IpLogCountAggregateInputType | true
-    }
-
-  export interface IpLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IpLog'], meta: { name: 'IpLog' } }
-    /**
-     * Find zero or one IpLog that matches the filter.
-     * @param {IpLogFindUniqueArgs} args - Arguments to find a IpLog
-     * @example
-     * // Get one IpLog
-     * const ipLog = await prisma.ipLog.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends IpLogFindUniqueArgs>(args: SelectSubset<T, IpLogFindUniqueArgs<ExtArgs>>): Prisma__IpLogClient<$Result.GetResult<Prisma.$IpLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one IpLog that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {IpLogFindUniqueOrThrowArgs} args - Arguments to find a IpLog
-     * @example
-     * // Get one IpLog
-     * const ipLog = await prisma.ipLog.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends IpLogFindUniqueOrThrowArgs>(args: SelectSubset<T, IpLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IpLogClient<$Result.GetResult<Prisma.$IpLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first IpLog that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IpLogFindFirstArgs} args - Arguments to find a IpLog
-     * @example
-     * // Get one IpLog
-     * const ipLog = await prisma.ipLog.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends IpLogFindFirstArgs>(args?: SelectSubset<T, IpLogFindFirstArgs<ExtArgs>>): Prisma__IpLogClient<$Result.GetResult<Prisma.$IpLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first IpLog that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IpLogFindFirstOrThrowArgs} args - Arguments to find a IpLog
-     * @example
-     * // Get one IpLog
-     * const ipLog = await prisma.ipLog.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends IpLogFindFirstOrThrowArgs>(args?: SelectSubset<T, IpLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__IpLogClient<$Result.GetResult<Prisma.$IpLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more IpLogs that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IpLogFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all IpLogs
-     * const ipLogs = await prisma.ipLog.findMany()
-     * 
-     * // Get first 10 IpLogs
-     * const ipLogs = await prisma.ipLog.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const ipLogWithIdOnly = await prisma.ipLog.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends IpLogFindManyArgs>(args?: SelectSubset<T, IpLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IpLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a IpLog.
-     * @param {IpLogCreateArgs} args - Arguments to create a IpLog.
-     * @example
-     * // Create one IpLog
-     * const IpLog = await prisma.ipLog.create({
-     *   data: {
-     *     // ... data to create a IpLog
-     *   }
-     * })
-     * 
-     */
-    create<T extends IpLogCreateArgs>(args: SelectSubset<T, IpLogCreateArgs<ExtArgs>>): Prisma__IpLogClient<$Result.GetResult<Prisma.$IpLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many IpLogs.
-     * @param {IpLogCreateManyArgs} args - Arguments to create many IpLogs.
-     * @example
-     * // Create many IpLogs
-     * const ipLog = await prisma.ipLog.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends IpLogCreateManyArgs>(args?: SelectSubset<T, IpLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many IpLogs and returns the data saved in the database.
-     * @param {IpLogCreateManyAndReturnArgs} args - Arguments to create many IpLogs.
-     * @example
-     * // Create many IpLogs
-     * const ipLog = await prisma.ipLog.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many IpLogs and only return the `id`
-     * const ipLogWithIdOnly = await prisma.ipLog.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends IpLogCreateManyAndReturnArgs>(args?: SelectSubset<T, IpLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IpLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a IpLog.
-     * @param {IpLogDeleteArgs} args - Arguments to delete one IpLog.
-     * @example
-     * // Delete one IpLog
-     * const IpLog = await prisma.ipLog.delete({
-     *   where: {
-     *     // ... filter to delete one IpLog
-     *   }
-     * })
-     * 
-     */
-    delete<T extends IpLogDeleteArgs>(args: SelectSubset<T, IpLogDeleteArgs<ExtArgs>>): Prisma__IpLogClient<$Result.GetResult<Prisma.$IpLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one IpLog.
-     * @param {IpLogUpdateArgs} args - Arguments to update one IpLog.
-     * @example
-     * // Update one IpLog
-     * const ipLog = await prisma.ipLog.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends IpLogUpdateArgs>(args: SelectSubset<T, IpLogUpdateArgs<ExtArgs>>): Prisma__IpLogClient<$Result.GetResult<Prisma.$IpLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more IpLogs.
-     * @param {IpLogDeleteManyArgs} args - Arguments to filter IpLogs to delete.
-     * @example
-     * // Delete a few IpLogs
-     * const { count } = await prisma.ipLog.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends IpLogDeleteManyArgs>(args?: SelectSubset<T, IpLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more IpLogs.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IpLogUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many IpLogs
-     * const ipLog = await prisma.ipLog.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends IpLogUpdateManyArgs>(args: SelectSubset<T, IpLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more IpLogs and returns the data updated in the database.
-     * @param {IpLogUpdateManyAndReturnArgs} args - Arguments to update many IpLogs.
-     * @example
-     * // Update many IpLogs
-     * const ipLog = await prisma.ipLog.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more IpLogs and only return the `id`
-     * const ipLogWithIdOnly = await prisma.ipLog.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends IpLogUpdateManyAndReturnArgs>(args: SelectSubset<T, IpLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IpLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one IpLog.
-     * @param {IpLogUpsertArgs} args - Arguments to update or create a IpLog.
-     * @example
-     * // Update or create a IpLog
-     * const ipLog = await prisma.ipLog.upsert({
-     *   create: {
-     *     // ... data to create a IpLog
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the IpLog we want to update
-     *   }
-     * })
-     */
-    upsert<T extends IpLogUpsertArgs>(args: SelectSubset<T, IpLogUpsertArgs<ExtArgs>>): Prisma__IpLogClient<$Result.GetResult<Prisma.$IpLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of IpLogs.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IpLogCountArgs} args - Arguments to filter IpLogs to count.
-     * @example
-     * // Count the number of IpLogs
-     * const count = await prisma.ipLog.count({
-     *   where: {
-     *     // ... the filter for the IpLogs we want to count
-     *   }
-     * })
-    **/
-    count<T extends IpLogCountArgs>(
-      args?: Subset<T, IpLogCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], IpLogCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a IpLog.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IpLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends IpLogAggregateArgs>(args: Subset<T, IpLogAggregateArgs>): Prisma.PrismaPromise<GetIpLogAggregateType<T>>
-
-    /**
-     * Group by IpLog.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IpLogGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends IpLogGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: IpLogGroupByArgs['orderBy'] }
-        : { orderBy?: IpLogGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, IpLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIpLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the IpLog model
-   */
-  readonly fields: IpLogFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for IpLog.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__IpLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    file<T extends FileDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FileDefaultArgs<ExtArgs>>): Prisma__FileClient<$Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    link<T extends LinkDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LinkDefaultArgs<ExtArgs>>): Prisma__LinkClient<$Result.GetResult<Prisma.$LinkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the IpLog model
-   */
-  interface IpLogFieldRefs {
-    readonly id: FieldRef<"IpLog", 'Int'>
-    readonly ip: FieldRef<"IpLog", 'String'>
-    readonly purpose: FieldRef<"IpLog", 'String'>
-    readonly fileId: FieldRef<"IpLog", 'Int'>
-    readonly linkId: FieldRef<"IpLog", 'Int'>
-    readonly createdAt: FieldRef<"IpLog", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * IpLog findUnique
-   */
-  export type IpLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpLog
-     */
-    select?: IpLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the IpLog
-     */
-    omit?: IpLogOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpLogInclude<ExtArgs> | null
-    /**
-     * Filter, which IpLog to fetch.
-     */
-    where: IpLogWhereUniqueInput
-  }
-
-  /**
-   * IpLog findUniqueOrThrow
-   */
-  export type IpLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpLog
-     */
-    select?: IpLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the IpLog
-     */
-    omit?: IpLogOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpLogInclude<ExtArgs> | null
-    /**
-     * Filter, which IpLog to fetch.
-     */
-    where: IpLogWhereUniqueInput
-  }
-
-  /**
-   * IpLog findFirst
-   */
-  export type IpLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpLog
-     */
-    select?: IpLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the IpLog
-     */
-    omit?: IpLogOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpLogInclude<ExtArgs> | null
-    /**
-     * Filter, which IpLog to fetch.
-     */
-    where?: IpLogWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of IpLogs to fetch.
-     */
-    orderBy?: IpLogOrderByWithRelationInput | IpLogOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for IpLogs.
-     */
-    cursor?: IpLogWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` IpLogs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` IpLogs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of IpLogs.
-     */
-    distinct?: IpLogScalarFieldEnum | IpLogScalarFieldEnum[]
-  }
-
-  /**
-   * IpLog findFirstOrThrow
-   */
-  export type IpLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpLog
-     */
-    select?: IpLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the IpLog
-     */
-    omit?: IpLogOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpLogInclude<ExtArgs> | null
-    /**
-     * Filter, which IpLog to fetch.
-     */
-    where?: IpLogWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of IpLogs to fetch.
-     */
-    orderBy?: IpLogOrderByWithRelationInput | IpLogOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for IpLogs.
-     */
-    cursor?: IpLogWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` IpLogs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` IpLogs.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of IpLogs.
-     */
-    distinct?: IpLogScalarFieldEnum | IpLogScalarFieldEnum[]
-  }
-
-  /**
-   * IpLog findMany
-   */
-  export type IpLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpLog
-     */
-    select?: IpLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the IpLog
-     */
-    omit?: IpLogOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpLogInclude<ExtArgs> | null
-    /**
-     * Filter, which IpLogs to fetch.
-     */
-    where?: IpLogWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of IpLogs to fetch.
-     */
-    orderBy?: IpLogOrderByWithRelationInput | IpLogOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing IpLogs.
-     */
-    cursor?: IpLogWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` IpLogs from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` IpLogs.
-     */
-    skip?: number
-    distinct?: IpLogScalarFieldEnum | IpLogScalarFieldEnum[]
-  }
-
-  /**
-   * IpLog create
-   */
-  export type IpLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpLog
-     */
-    select?: IpLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the IpLog
-     */
-    omit?: IpLogOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpLogInclude<ExtArgs> | null
-    /**
-     * The data needed to create a IpLog.
-     */
-    data: XOR<IpLogCreateInput, IpLogUncheckedCreateInput>
-  }
-
-  /**
-   * IpLog createMany
-   */
-  export type IpLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many IpLogs.
-     */
-    data: IpLogCreateManyInput | IpLogCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * IpLog createManyAndReturn
-   */
-  export type IpLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpLog
-     */
-    select?: IpLogSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the IpLog
-     */
-    omit?: IpLogOmit<ExtArgs> | null
-    /**
-     * The data used to create many IpLogs.
-     */
-    data: IpLogCreateManyInput | IpLogCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpLogIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * IpLog update
-   */
-  export type IpLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpLog
-     */
-    select?: IpLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the IpLog
-     */
-    omit?: IpLogOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpLogInclude<ExtArgs> | null
-    /**
-     * The data needed to update a IpLog.
-     */
-    data: XOR<IpLogUpdateInput, IpLogUncheckedUpdateInput>
-    /**
-     * Choose, which IpLog to update.
-     */
-    where: IpLogWhereUniqueInput
-  }
-
-  /**
-   * IpLog updateMany
-   */
-  export type IpLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update IpLogs.
-     */
-    data: XOR<IpLogUpdateManyMutationInput, IpLogUncheckedUpdateManyInput>
-    /**
-     * Filter which IpLogs to update
-     */
-    where?: IpLogWhereInput
-    /**
-     * Limit how many IpLogs to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * IpLog updateManyAndReturn
-   */
-  export type IpLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpLog
-     */
-    select?: IpLogSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the IpLog
-     */
-    omit?: IpLogOmit<ExtArgs> | null
-    /**
-     * The data used to update IpLogs.
-     */
-    data: XOR<IpLogUpdateManyMutationInput, IpLogUncheckedUpdateManyInput>
-    /**
-     * Filter which IpLogs to update
-     */
-    where?: IpLogWhereInput
-    /**
-     * Limit how many IpLogs to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpLogIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * IpLog upsert
-   */
-  export type IpLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpLog
-     */
-    select?: IpLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the IpLog
-     */
-    omit?: IpLogOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpLogInclude<ExtArgs> | null
-    /**
-     * The filter to search for the IpLog to update in case it exists.
-     */
-    where: IpLogWhereUniqueInput
-    /**
-     * In case the IpLog found by the `where` argument doesn't exist, create a new IpLog with this data.
-     */
-    create: XOR<IpLogCreateInput, IpLogUncheckedCreateInput>
-    /**
-     * In case the IpLog was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<IpLogUpdateInput, IpLogUncheckedUpdateInput>
-  }
-
-  /**
-   * IpLog delete
-   */
-  export type IpLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpLog
-     */
-    select?: IpLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the IpLog
-     */
-    omit?: IpLogOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpLogInclude<ExtArgs> | null
-    /**
-     * Filter which IpLog to delete.
-     */
-    where: IpLogWhereUniqueInput
-  }
-
-  /**
-   * IpLog deleteMany
-   */
-  export type IpLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which IpLogs to delete
-     */
-    where?: IpLogWhereInput
-    /**
-     * Limit how many IpLogs to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * IpLog without action
-   */
-  export type IpLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpLog
-     */
-    select?: IpLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the IpLog
-     */
-    omit?: IpLogOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpLogInclude<ExtArgs> | null
   }
 
 
@@ -9758,18 +8439,6 @@ export namespace Prisma {
   export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
 
 
-  export const IpLogScalarFieldEnum: {
-    id: 'id',
-    ip: 'ip',
-    purpose: 'purpose',
-    fileId: 'fileId',
-    linkId: 'linkId',
-    createdAt: 'createdAt'
-  };
-
-  export type IpLogScalarFieldEnum = (typeof IpLogScalarFieldEnum)[keyof typeof IpLogScalarFieldEnum]
-
-
   export const DeletedFileScalarFieldEnum: {
     id: 'id',
     fileId: 'fileId',
@@ -10065,7 +8734,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Link"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     files?: FileListRelationFilter
-    ipLogs?: IpLogListRelationFilter
   }
 
   export type LinkOrderByWithRelationInput = {
@@ -10081,7 +8749,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
     files?: FileOrderByRelationAggregateInput
-    ipLogs?: IpLogOrderByRelationAggregateInput
   }
 
   export type LinkWhereUniqueInput = Prisma.AtLeast<{
@@ -10100,7 +8767,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Link"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     files?: FileListRelationFilter
-    ipLogs?: IpLogListRelationFilter
   }, "id" | "token">
 
   export type LinkOrderByWithAggregationInput = {
@@ -10152,7 +8818,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"File"> | Date | string
     uploadLink?: XOR<LinkScalarRelationFilter, LinkWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    ipLogs?: IpLogListRelationFilter
   }
 
   export type FileOrderByWithRelationInput = {
@@ -10167,7 +8832,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
     uploadLink?: LinkOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
-    ipLogs?: IpLogOrderByRelationAggregateInput
   }
 
   export type FileWhereUniqueInput = Prisma.AtLeast<{
@@ -10185,7 +8849,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"File"> | Date | string
     uploadLink?: XOR<LinkScalarRelationFilter, LinkWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    ipLogs?: IpLogListRelationFilter
   }, "id">
 
   export type FileOrderByWithAggregationInput = {
@@ -10300,71 +8963,6 @@ export namespace Prisma {
     cancelAt?: DateTimeNullableWithAggregatesFilter<"Subscription"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Subscription"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Subscription"> | Date | string
-  }
-
-  export type IpLogWhereInput = {
-    AND?: IpLogWhereInput | IpLogWhereInput[]
-    OR?: IpLogWhereInput[]
-    NOT?: IpLogWhereInput | IpLogWhereInput[]
-    id?: IntFilter<"IpLog"> | number
-    ip?: StringFilter<"IpLog"> | string
-    purpose?: StringFilter<"IpLog"> | string
-    fileId?: IntFilter<"IpLog"> | number
-    linkId?: IntFilter<"IpLog"> | number
-    createdAt?: DateTimeFilter<"IpLog"> | Date | string
-    file?: XOR<FileScalarRelationFilter, FileWhereInput>
-    link?: XOR<LinkScalarRelationFilter, LinkWhereInput>
-  }
-
-  export type IpLogOrderByWithRelationInput = {
-    id?: SortOrder
-    ip?: SortOrder
-    purpose?: SortOrder
-    fileId?: SortOrder
-    linkId?: SortOrder
-    createdAt?: SortOrder
-    file?: FileOrderByWithRelationInput
-    link?: LinkOrderByWithRelationInput
-  }
-
-  export type IpLogWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: IpLogWhereInput | IpLogWhereInput[]
-    OR?: IpLogWhereInput[]
-    NOT?: IpLogWhereInput | IpLogWhereInput[]
-    ip?: StringFilter<"IpLog"> | string
-    purpose?: StringFilter<"IpLog"> | string
-    fileId?: IntFilter<"IpLog"> | number
-    linkId?: IntFilter<"IpLog"> | number
-    createdAt?: DateTimeFilter<"IpLog"> | Date | string
-    file?: XOR<FileScalarRelationFilter, FileWhereInput>
-    link?: XOR<LinkScalarRelationFilter, LinkWhereInput>
-  }, "id">
-
-  export type IpLogOrderByWithAggregationInput = {
-    id?: SortOrder
-    ip?: SortOrder
-    purpose?: SortOrder
-    fileId?: SortOrder
-    linkId?: SortOrder
-    createdAt?: SortOrder
-    _count?: IpLogCountOrderByAggregateInput
-    _avg?: IpLogAvgOrderByAggregateInput
-    _max?: IpLogMaxOrderByAggregateInput
-    _min?: IpLogMinOrderByAggregateInput
-    _sum?: IpLogSumOrderByAggregateInput
-  }
-
-  export type IpLogScalarWhereWithAggregatesInput = {
-    AND?: IpLogScalarWhereWithAggregatesInput | IpLogScalarWhereWithAggregatesInput[]
-    OR?: IpLogScalarWhereWithAggregatesInput[]
-    NOT?: IpLogScalarWhereWithAggregatesInput | IpLogScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"IpLog"> | number
-    ip?: StringWithAggregatesFilter<"IpLog"> | string
-    purpose?: StringWithAggregatesFilter<"IpLog"> | string
-    fileId?: IntWithAggregatesFilter<"IpLog"> | number
-    linkId?: IntWithAggregatesFilter<"IpLog"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"IpLog"> | Date | string
   }
 
   export type DeletedFileWhereInput = {
@@ -10632,7 +9230,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutLinksInput
     files?: FileCreateNestedManyWithoutUploadLinkInput
-    ipLogs?: IpLogCreateNestedManyWithoutLinkInput
   }
 
   export type LinkUncheckedCreateInput = {
@@ -10647,7 +9244,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     files?: FileUncheckedCreateNestedManyWithoutUploadLinkInput
-    ipLogs?: IpLogUncheckedCreateNestedManyWithoutLinkInput
   }
 
   export type LinkUpdateInput = {
@@ -10661,7 +9257,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutLinksNestedInput
     files?: FileUpdateManyWithoutUploadLinkNestedInput
-    ipLogs?: IpLogUpdateManyWithoutLinkNestedInput
   }
 
   export type LinkUncheckedUpdateInput = {
@@ -10676,7 +9271,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     files?: FileUncheckedUpdateManyWithoutUploadLinkNestedInput
-    ipLogs?: IpLogUncheckedUpdateManyWithoutLinkNestedInput
   }
 
   export type LinkCreateManyInput = {
@@ -10725,7 +9319,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     uploadLink: LinkCreateNestedOneWithoutFilesInput
     user: UserCreateNestedOneWithoutFilesInput
-    ipLogs?: IpLogCreateNestedManyWithoutFileInput
   }
 
   export type FileUncheckedCreateInput = {
@@ -10738,7 +9331,6 @@ export namespace Prisma {
     userId: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    ipLogs?: IpLogUncheckedCreateNestedManyWithoutFileInput
   }
 
   export type FileUpdateInput = {
@@ -10750,7 +9342,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     uploadLink?: LinkUpdateOneRequiredWithoutFilesNestedInput
     user?: UserUpdateOneRequiredWithoutFilesNestedInput
-    ipLogs?: IpLogUpdateManyWithoutFileNestedInput
   }
 
   export type FileUncheckedUpdateInput = {
@@ -10763,7 +9354,6 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ipLogs?: IpLogUncheckedUpdateManyWithoutFileNestedInput
   }
 
   export type FileCreateManyInput = {
@@ -10884,64 +9474,6 @@ export namespace Prisma {
     cancelAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IpLogCreateInput = {
-    ip: string
-    purpose?: string
-    createdAt?: Date | string
-    file: FileCreateNestedOneWithoutIpLogsInput
-    link: LinkCreateNestedOneWithoutIpLogsInput
-  }
-
-  export type IpLogUncheckedCreateInput = {
-    id?: number
-    ip: string
-    purpose?: string
-    fileId: number
-    linkId: number
-    createdAt?: Date | string
-  }
-
-  export type IpLogUpdateInput = {
-    ip?: StringFieldUpdateOperationsInput | string
-    purpose?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    file?: FileUpdateOneRequiredWithoutIpLogsNestedInput
-    link?: LinkUpdateOneRequiredWithoutIpLogsNestedInput
-  }
-
-  export type IpLogUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    ip?: StringFieldUpdateOperationsInput | string
-    purpose?: StringFieldUpdateOperationsInput | string
-    fileId?: IntFieldUpdateOperationsInput | number
-    linkId?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IpLogCreateManyInput = {
-    id?: number
-    ip: string
-    purpose?: string
-    fileId: number
-    linkId: number
-    createdAt?: Date | string
-  }
-
-  export type IpLogUpdateManyMutationInput = {
-    ip?: StringFieldUpdateOperationsInput | string
-    purpose?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IpLogUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    ip?: StringFieldUpdateOperationsInput | string
-    purpose?: StringFieldUpdateOperationsInput | string
-    fileId?: IntFieldUpdateOperationsInput | number
-    linkId?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DeletedFileCreateInput = {
@@ -11330,16 +9862,6 @@ export namespace Prisma {
     isNot?: UserWhereInput
   }
 
-  export type IpLogListRelationFilter = {
-    every?: IpLogWhereInput
-    some?: IpLogWhereInput
-    none?: IpLogWhereInput
-  }
-
-  export type IpLogOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type LinkCountOrderByAggregateInput = {
     id?: SortOrder
     token?: SortOrder
@@ -11576,50 +10098,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumSubscriptionStatusFilter<$PrismaModel>
     _max?: NestedEnumSubscriptionStatusFilter<$PrismaModel>
-  }
-
-  export type FileScalarRelationFilter = {
-    is?: FileWhereInput
-    isNot?: FileWhereInput
-  }
-
-  export type IpLogCountOrderByAggregateInput = {
-    id?: SortOrder
-    ip?: SortOrder
-    purpose?: SortOrder
-    fileId?: SortOrder
-    linkId?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type IpLogAvgOrderByAggregateInput = {
-    id?: SortOrder
-    fileId?: SortOrder
-    linkId?: SortOrder
-  }
-
-  export type IpLogMaxOrderByAggregateInput = {
-    id?: SortOrder
-    ip?: SortOrder
-    purpose?: SortOrder
-    fileId?: SortOrder
-    linkId?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type IpLogMinOrderByAggregateInput = {
-    id?: SortOrder
-    ip?: SortOrder
-    purpose?: SortOrder
-    fileId?: SortOrder
-    linkId?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type IpLogSumOrderByAggregateInput = {
-    id?: SortOrder
-    fileId?: SortOrder
-    linkId?: SortOrder
   }
 
   export type EnumDeletedStatusFilter<$PrismaModel = never> = {
@@ -12001,25 +10479,11 @@ export namespace Prisma {
     connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
   }
 
-  export type IpLogCreateNestedManyWithoutLinkInput = {
-    create?: XOR<IpLogCreateWithoutLinkInput, IpLogUncheckedCreateWithoutLinkInput> | IpLogCreateWithoutLinkInput[] | IpLogUncheckedCreateWithoutLinkInput[]
-    connectOrCreate?: IpLogCreateOrConnectWithoutLinkInput | IpLogCreateOrConnectWithoutLinkInput[]
-    createMany?: IpLogCreateManyLinkInputEnvelope
-    connect?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-  }
-
   export type FileUncheckedCreateNestedManyWithoutUploadLinkInput = {
     create?: XOR<FileCreateWithoutUploadLinkInput, FileUncheckedCreateWithoutUploadLinkInput> | FileCreateWithoutUploadLinkInput[] | FileUncheckedCreateWithoutUploadLinkInput[]
     connectOrCreate?: FileCreateOrConnectWithoutUploadLinkInput | FileCreateOrConnectWithoutUploadLinkInput[]
     createMany?: FileCreateManyUploadLinkInputEnvelope
     connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
-  }
-
-  export type IpLogUncheckedCreateNestedManyWithoutLinkInput = {
-    create?: XOR<IpLogCreateWithoutLinkInput, IpLogUncheckedCreateWithoutLinkInput> | IpLogCreateWithoutLinkInput[] | IpLogUncheckedCreateWithoutLinkInput[]
-    connectOrCreate?: IpLogCreateOrConnectWithoutLinkInput | IpLogCreateOrConnectWithoutLinkInput[]
-    createMany?: IpLogCreateManyLinkInputEnvelope
-    connect?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -12048,20 +10512,6 @@ export namespace Prisma {
     deleteMany?: FileScalarWhereInput | FileScalarWhereInput[]
   }
 
-  export type IpLogUpdateManyWithoutLinkNestedInput = {
-    create?: XOR<IpLogCreateWithoutLinkInput, IpLogUncheckedCreateWithoutLinkInput> | IpLogCreateWithoutLinkInput[] | IpLogUncheckedCreateWithoutLinkInput[]
-    connectOrCreate?: IpLogCreateOrConnectWithoutLinkInput | IpLogCreateOrConnectWithoutLinkInput[]
-    upsert?: IpLogUpsertWithWhereUniqueWithoutLinkInput | IpLogUpsertWithWhereUniqueWithoutLinkInput[]
-    createMany?: IpLogCreateManyLinkInputEnvelope
-    set?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    disconnect?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    delete?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    connect?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    update?: IpLogUpdateWithWhereUniqueWithoutLinkInput | IpLogUpdateWithWhereUniqueWithoutLinkInput[]
-    updateMany?: IpLogUpdateManyWithWhereWithoutLinkInput | IpLogUpdateManyWithWhereWithoutLinkInput[]
-    deleteMany?: IpLogScalarWhereInput | IpLogScalarWhereInput[]
-  }
-
   export type FileUncheckedUpdateManyWithoutUploadLinkNestedInput = {
     create?: XOR<FileCreateWithoutUploadLinkInput, FileUncheckedCreateWithoutUploadLinkInput> | FileCreateWithoutUploadLinkInput[] | FileUncheckedCreateWithoutUploadLinkInput[]
     connectOrCreate?: FileCreateOrConnectWithoutUploadLinkInput | FileCreateOrConnectWithoutUploadLinkInput[]
@@ -12076,20 +10526,6 @@ export namespace Prisma {
     deleteMany?: FileScalarWhereInput | FileScalarWhereInput[]
   }
 
-  export type IpLogUncheckedUpdateManyWithoutLinkNestedInput = {
-    create?: XOR<IpLogCreateWithoutLinkInput, IpLogUncheckedCreateWithoutLinkInput> | IpLogCreateWithoutLinkInput[] | IpLogUncheckedCreateWithoutLinkInput[]
-    connectOrCreate?: IpLogCreateOrConnectWithoutLinkInput | IpLogCreateOrConnectWithoutLinkInput[]
-    upsert?: IpLogUpsertWithWhereUniqueWithoutLinkInput | IpLogUpsertWithWhereUniqueWithoutLinkInput[]
-    createMany?: IpLogCreateManyLinkInputEnvelope
-    set?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    disconnect?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    delete?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    connect?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    update?: IpLogUpdateWithWhereUniqueWithoutLinkInput | IpLogUpdateWithWhereUniqueWithoutLinkInput[]
-    updateMany?: IpLogUpdateManyWithWhereWithoutLinkInput | IpLogUpdateManyWithWhereWithoutLinkInput[]
-    deleteMany?: IpLogScalarWhereInput | IpLogScalarWhereInput[]
-  }
-
   export type LinkCreateNestedOneWithoutFilesInput = {
     create?: XOR<LinkCreateWithoutFilesInput, LinkUncheckedCreateWithoutFilesInput>
     connectOrCreate?: LinkCreateOrConnectWithoutFilesInput
@@ -12100,20 +10536,6 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutFilesInput, UserUncheckedCreateWithoutFilesInput>
     connectOrCreate?: UserCreateOrConnectWithoutFilesInput
     connect?: UserWhereUniqueInput
-  }
-
-  export type IpLogCreateNestedManyWithoutFileInput = {
-    create?: XOR<IpLogCreateWithoutFileInput, IpLogUncheckedCreateWithoutFileInput> | IpLogCreateWithoutFileInput[] | IpLogUncheckedCreateWithoutFileInput[]
-    connectOrCreate?: IpLogCreateOrConnectWithoutFileInput | IpLogCreateOrConnectWithoutFileInput[]
-    createMany?: IpLogCreateManyFileInputEnvelope
-    connect?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-  }
-
-  export type IpLogUncheckedCreateNestedManyWithoutFileInput = {
-    create?: XOR<IpLogCreateWithoutFileInput, IpLogUncheckedCreateWithoutFileInput> | IpLogCreateWithoutFileInput[] | IpLogUncheckedCreateWithoutFileInput[]
-    connectOrCreate?: IpLogCreateOrConnectWithoutFileInput | IpLogCreateOrConnectWithoutFileInput[]
-    createMany?: IpLogCreateManyFileInputEnvelope
-    connect?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
   }
 
   export type BigIntFieldUpdateOperationsInput = {
@@ -12140,34 +10562,6 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFilesInput, UserUpdateWithoutFilesInput>, UserUncheckedUpdateWithoutFilesInput>
   }
 
-  export type IpLogUpdateManyWithoutFileNestedInput = {
-    create?: XOR<IpLogCreateWithoutFileInput, IpLogUncheckedCreateWithoutFileInput> | IpLogCreateWithoutFileInput[] | IpLogUncheckedCreateWithoutFileInput[]
-    connectOrCreate?: IpLogCreateOrConnectWithoutFileInput | IpLogCreateOrConnectWithoutFileInput[]
-    upsert?: IpLogUpsertWithWhereUniqueWithoutFileInput | IpLogUpsertWithWhereUniqueWithoutFileInput[]
-    createMany?: IpLogCreateManyFileInputEnvelope
-    set?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    disconnect?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    delete?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    connect?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    update?: IpLogUpdateWithWhereUniqueWithoutFileInput | IpLogUpdateWithWhereUniqueWithoutFileInput[]
-    updateMany?: IpLogUpdateManyWithWhereWithoutFileInput | IpLogUpdateManyWithWhereWithoutFileInput[]
-    deleteMany?: IpLogScalarWhereInput | IpLogScalarWhereInput[]
-  }
-
-  export type IpLogUncheckedUpdateManyWithoutFileNestedInput = {
-    create?: XOR<IpLogCreateWithoutFileInput, IpLogUncheckedCreateWithoutFileInput> | IpLogCreateWithoutFileInput[] | IpLogUncheckedCreateWithoutFileInput[]
-    connectOrCreate?: IpLogCreateOrConnectWithoutFileInput | IpLogCreateOrConnectWithoutFileInput[]
-    upsert?: IpLogUpsertWithWhereUniqueWithoutFileInput | IpLogUpsertWithWhereUniqueWithoutFileInput[]
-    createMany?: IpLogCreateManyFileInputEnvelope
-    set?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    disconnect?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    delete?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    connect?: IpLogWhereUniqueInput | IpLogWhereUniqueInput[]
-    update?: IpLogUpdateWithWhereUniqueWithoutFileInput | IpLogUpdateWithWhereUniqueWithoutFileInput[]
-    updateMany?: IpLogUpdateManyWithWhereWithoutFileInput | IpLogUpdateManyWithWhereWithoutFileInput[]
-    deleteMany?: IpLogScalarWhereInput | IpLogScalarWhereInput[]
-  }
-
   export type UserCreateNestedOneWithoutSubscriptionInput = {
     create?: XOR<UserCreateWithoutSubscriptionInput, UserUncheckedCreateWithoutSubscriptionInput>
     connectOrCreate?: UserCreateOrConnectWithoutSubscriptionInput
@@ -12192,34 +10586,6 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutSubscriptionInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSubscriptionInput, UserUpdateWithoutSubscriptionInput>, UserUncheckedUpdateWithoutSubscriptionInput>
-  }
-
-  export type FileCreateNestedOneWithoutIpLogsInput = {
-    create?: XOR<FileCreateWithoutIpLogsInput, FileUncheckedCreateWithoutIpLogsInput>
-    connectOrCreate?: FileCreateOrConnectWithoutIpLogsInput
-    connect?: FileWhereUniqueInput
-  }
-
-  export type LinkCreateNestedOneWithoutIpLogsInput = {
-    create?: XOR<LinkCreateWithoutIpLogsInput, LinkUncheckedCreateWithoutIpLogsInput>
-    connectOrCreate?: LinkCreateOrConnectWithoutIpLogsInput
-    connect?: LinkWhereUniqueInput
-  }
-
-  export type FileUpdateOneRequiredWithoutIpLogsNestedInput = {
-    create?: XOR<FileCreateWithoutIpLogsInput, FileUncheckedCreateWithoutIpLogsInput>
-    connectOrCreate?: FileCreateOrConnectWithoutIpLogsInput
-    upsert?: FileUpsertWithoutIpLogsInput
-    connect?: FileWhereUniqueInput
-    update?: XOR<XOR<FileUpdateToOneWithWhereWithoutIpLogsInput, FileUpdateWithoutIpLogsInput>, FileUncheckedUpdateWithoutIpLogsInput>
-  }
-
-  export type LinkUpdateOneRequiredWithoutIpLogsNestedInput = {
-    create?: XOR<LinkCreateWithoutIpLogsInput, LinkUncheckedCreateWithoutIpLogsInput>
-    connectOrCreate?: LinkCreateOrConnectWithoutIpLogsInput
-    upsert?: LinkUpsertWithoutIpLogsInput
-    connect?: LinkWhereUniqueInput
-    update?: XOR<XOR<LinkUpdateToOneWithWhereWithoutIpLogsInput, LinkUpdateWithoutIpLogsInput>, LinkUncheckedUpdateWithoutIpLogsInput>
   }
 
   export type EnumDeletedStatusFieldUpdateOperationsInput = {
@@ -12549,7 +10915,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     files?: FileCreateNestedManyWithoutUploadLinkInput
-    ipLogs?: IpLogCreateNestedManyWithoutLinkInput
   }
 
   export type LinkUncheckedCreateWithoutUserInput = {
@@ -12563,7 +10928,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     files?: FileUncheckedCreateNestedManyWithoutUploadLinkInput
-    ipLogs?: IpLogUncheckedCreateNestedManyWithoutLinkInput
   }
 
   export type LinkCreateOrConnectWithoutUserInput = {
@@ -12584,7 +10948,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     uploadLink: LinkCreateNestedOneWithoutFilesInput
-    ipLogs?: IpLogCreateNestedManyWithoutFileInput
   }
 
   export type FileUncheckedCreateWithoutUserInput = {
@@ -12596,7 +10959,6 @@ export namespace Prisma {
     uploadLinkId: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    ipLogs?: IpLogUncheckedCreateNestedManyWithoutFileInput
   }
 
   export type FileCreateOrConnectWithoutUserInput = {
@@ -12772,7 +11134,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutFilesInput
-    ipLogs?: IpLogCreateNestedManyWithoutFileInput
   }
 
   export type FileUncheckedCreateWithoutUploadLinkInput = {
@@ -12784,7 +11145,6 @@ export namespace Prisma {
     userId: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    ipLogs?: IpLogUncheckedCreateNestedManyWithoutFileInput
   }
 
   export type FileCreateOrConnectWithoutUploadLinkInput = {
@@ -12794,31 +11154,6 @@ export namespace Prisma {
 
   export type FileCreateManyUploadLinkInputEnvelope = {
     data: FileCreateManyUploadLinkInput | FileCreateManyUploadLinkInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type IpLogCreateWithoutLinkInput = {
-    ip: string
-    purpose?: string
-    createdAt?: Date | string
-    file: FileCreateNestedOneWithoutIpLogsInput
-  }
-
-  export type IpLogUncheckedCreateWithoutLinkInput = {
-    id?: number
-    ip: string
-    purpose?: string
-    fileId: number
-    createdAt?: Date | string
-  }
-
-  export type IpLogCreateOrConnectWithoutLinkInput = {
-    where: IpLogWhereUniqueInput
-    create: XOR<IpLogCreateWithoutLinkInput, IpLogUncheckedCreateWithoutLinkInput>
-  }
-
-  export type IpLogCreateManyLinkInputEnvelope = {
-    data: IpLogCreateManyLinkInput | IpLogCreateManyLinkInput[]
     skipDuplicates?: boolean
   }
 
@@ -12874,34 +11209,6 @@ export namespace Prisma {
     data: XOR<FileUpdateManyMutationInput, FileUncheckedUpdateManyWithoutUploadLinkInput>
   }
 
-  export type IpLogUpsertWithWhereUniqueWithoutLinkInput = {
-    where: IpLogWhereUniqueInput
-    update: XOR<IpLogUpdateWithoutLinkInput, IpLogUncheckedUpdateWithoutLinkInput>
-    create: XOR<IpLogCreateWithoutLinkInput, IpLogUncheckedCreateWithoutLinkInput>
-  }
-
-  export type IpLogUpdateWithWhereUniqueWithoutLinkInput = {
-    where: IpLogWhereUniqueInput
-    data: XOR<IpLogUpdateWithoutLinkInput, IpLogUncheckedUpdateWithoutLinkInput>
-  }
-
-  export type IpLogUpdateManyWithWhereWithoutLinkInput = {
-    where: IpLogScalarWhereInput
-    data: XOR<IpLogUpdateManyMutationInput, IpLogUncheckedUpdateManyWithoutLinkInput>
-  }
-
-  export type IpLogScalarWhereInput = {
-    AND?: IpLogScalarWhereInput | IpLogScalarWhereInput[]
-    OR?: IpLogScalarWhereInput[]
-    NOT?: IpLogScalarWhereInput | IpLogScalarWhereInput[]
-    id?: IntFilter<"IpLog"> | number
-    ip?: StringFilter<"IpLog"> | string
-    purpose?: StringFilter<"IpLog"> | string
-    fileId?: IntFilter<"IpLog"> | number
-    linkId?: IntFilter<"IpLog"> | number
-    createdAt?: DateTimeFilter<"IpLog"> | Date | string
-  }
-
   export type LinkCreateWithoutFilesInput = {
     token: string
     name?: string
@@ -12912,7 +11219,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutLinksInput
-    ipLogs?: IpLogCreateNestedManyWithoutLinkInput
   }
 
   export type LinkUncheckedCreateWithoutFilesInput = {
@@ -12926,7 +11232,6 @@ export namespace Prisma {
     userId: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    ipLogs?: IpLogUncheckedCreateNestedManyWithoutLinkInput
   }
 
   export type LinkCreateOrConnectWithoutFilesInput = {
@@ -12964,31 +11269,6 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutFilesInput, UserUncheckedCreateWithoutFilesInput>
   }
 
-  export type IpLogCreateWithoutFileInput = {
-    ip: string
-    purpose?: string
-    createdAt?: Date | string
-    link: LinkCreateNestedOneWithoutIpLogsInput
-  }
-
-  export type IpLogUncheckedCreateWithoutFileInput = {
-    id?: number
-    ip: string
-    purpose?: string
-    linkId: number
-    createdAt?: Date | string
-  }
-
-  export type IpLogCreateOrConnectWithoutFileInput = {
-    where: IpLogWhereUniqueInput
-    create: XOR<IpLogCreateWithoutFileInput, IpLogUncheckedCreateWithoutFileInput>
-  }
-
-  export type IpLogCreateManyFileInputEnvelope = {
-    data: IpLogCreateManyFileInput | IpLogCreateManyFileInput[]
-    skipDuplicates?: boolean
-  }
-
   export type LinkUpsertWithoutFilesInput = {
     update: XOR<LinkUpdateWithoutFilesInput, LinkUncheckedUpdateWithoutFilesInput>
     create: XOR<LinkCreateWithoutFilesInput, LinkUncheckedCreateWithoutFilesInput>
@@ -13010,7 +11290,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutLinksNestedInput
-    ipLogs?: IpLogUpdateManyWithoutLinkNestedInput
   }
 
   export type LinkUncheckedUpdateWithoutFilesInput = {
@@ -13024,7 +11303,6 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ipLogs?: IpLogUncheckedUpdateManyWithoutLinkNestedInput
   }
 
   export type UserUpsertWithoutFilesInput = {
@@ -13061,22 +11339,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     links?: LinkUncheckedUpdateManyWithoutUserNestedInput
     subscription?: SubscriptionUncheckedUpdateOneWithoutUserNestedInput
-  }
-
-  export type IpLogUpsertWithWhereUniqueWithoutFileInput = {
-    where: IpLogWhereUniqueInput
-    update: XOR<IpLogUpdateWithoutFileInput, IpLogUncheckedUpdateWithoutFileInput>
-    create: XOR<IpLogCreateWithoutFileInput, IpLogUncheckedCreateWithoutFileInput>
-  }
-
-  export type IpLogUpdateWithWhereUniqueWithoutFileInput = {
-    where: IpLogWhereUniqueInput
-    data: XOR<IpLogUpdateWithoutFileInput, IpLogUncheckedUpdateWithoutFileInput>
-  }
-
-  export type IpLogUpdateManyWithWhereWithoutFileInput = {
-    where: IpLogScalarWhereInput
-    data: XOR<IpLogUpdateManyMutationInput, IpLogUncheckedUpdateManyWithoutFileInput>
   }
 
   export type UserCreateWithoutSubscriptionInput = {
@@ -13145,138 +11407,6 @@ export namespace Prisma {
     files?: FileUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type FileCreateWithoutIpLogsInput = {
-    url: string
-    name: string
-    size: bigint | number
-    keyUsed?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    uploadLink: LinkCreateNestedOneWithoutFilesInput
-    user: UserCreateNestedOneWithoutFilesInput
-  }
-
-  export type FileUncheckedCreateWithoutIpLogsInput = {
-    id?: number
-    url: string
-    name: string
-    size: bigint | number
-    keyUsed?: boolean
-    uploadLinkId: number
-    userId: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type FileCreateOrConnectWithoutIpLogsInput = {
-    where: FileWhereUniqueInput
-    create: XOR<FileCreateWithoutIpLogsInput, FileUncheckedCreateWithoutIpLogsInput>
-  }
-
-  export type LinkCreateWithoutIpLogsInput = {
-    token: string
-    name?: string
-    maxUploads: number
-    uploadCount: number
-    expiresAt: Date | string
-    expireAfterFirstUpload?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutLinksInput
-    files?: FileCreateNestedManyWithoutUploadLinkInput
-  }
-
-  export type LinkUncheckedCreateWithoutIpLogsInput = {
-    id?: number
-    token: string
-    name?: string
-    maxUploads: number
-    uploadCount: number
-    expiresAt: Date | string
-    expireAfterFirstUpload?: boolean
-    userId: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    files?: FileUncheckedCreateNestedManyWithoutUploadLinkInput
-  }
-
-  export type LinkCreateOrConnectWithoutIpLogsInput = {
-    where: LinkWhereUniqueInput
-    create: XOR<LinkCreateWithoutIpLogsInput, LinkUncheckedCreateWithoutIpLogsInput>
-  }
-
-  export type FileUpsertWithoutIpLogsInput = {
-    update: XOR<FileUpdateWithoutIpLogsInput, FileUncheckedUpdateWithoutIpLogsInput>
-    create: XOR<FileCreateWithoutIpLogsInput, FileUncheckedCreateWithoutIpLogsInput>
-    where?: FileWhereInput
-  }
-
-  export type FileUpdateToOneWithWhereWithoutIpLogsInput = {
-    where?: FileWhereInput
-    data: XOR<FileUpdateWithoutIpLogsInput, FileUncheckedUpdateWithoutIpLogsInput>
-  }
-
-  export type FileUpdateWithoutIpLogsInput = {
-    url?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    size?: BigIntFieldUpdateOperationsInput | bigint | number
-    keyUsed?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    uploadLink?: LinkUpdateOneRequiredWithoutFilesNestedInput
-    user?: UserUpdateOneRequiredWithoutFilesNestedInput
-  }
-
-  export type FileUncheckedUpdateWithoutIpLogsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    url?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    size?: BigIntFieldUpdateOperationsInput | bigint | number
-    keyUsed?: BoolFieldUpdateOperationsInput | boolean
-    uploadLinkId?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LinkUpsertWithoutIpLogsInput = {
-    update: XOR<LinkUpdateWithoutIpLogsInput, LinkUncheckedUpdateWithoutIpLogsInput>
-    create: XOR<LinkCreateWithoutIpLogsInput, LinkUncheckedCreateWithoutIpLogsInput>
-    where?: LinkWhereInput
-  }
-
-  export type LinkUpdateToOneWithWhereWithoutIpLogsInput = {
-    where?: LinkWhereInput
-    data: XOR<LinkUpdateWithoutIpLogsInput, LinkUncheckedUpdateWithoutIpLogsInput>
-  }
-
-  export type LinkUpdateWithoutIpLogsInput = {
-    token?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    maxUploads?: IntFieldUpdateOperationsInput | number
-    uploadCount?: IntFieldUpdateOperationsInput | number
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expireAfterFirstUpload?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutLinksNestedInput
-    files?: FileUpdateManyWithoutUploadLinkNestedInput
-  }
-
-  export type LinkUncheckedUpdateWithoutIpLogsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    token?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    maxUploads?: IntFieldUpdateOperationsInput | number
-    uploadCount?: IntFieldUpdateOperationsInput | number
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expireAfterFirstUpload?: BoolFieldUpdateOperationsInput | boolean
-    userId?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    files?: FileUncheckedUpdateManyWithoutUploadLinkNestedInput
-  }
-
   export type LinkCreateManyUserInput = {
     id?: number
     token: string
@@ -13310,7 +11440,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     files?: FileUpdateManyWithoutUploadLinkNestedInput
-    ipLogs?: IpLogUpdateManyWithoutLinkNestedInput
   }
 
   export type LinkUncheckedUpdateWithoutUserInput = {
@@ -13324,7 +11453,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     files?: FileUncheckedUpdateManyWithoutUploadLinkNestedInput
-    ipLogs?: IpLogUncheckedUpdateManyWithoutLinkNestedInput
   }
 
   export type LinkUncheckedUpdateManyWithoutUserInput = {
@@ -13347,7 +11475,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     uploadLink?: LinkUpdateOneRequiredWithoutFilesNestedInput
-    ipLogs?: IpLogUpdateManyWithoutFileNestedInput
   }
 
   export type FileUncheckedUpdateWithoutUserInput = {
@@ -13359,7 +11486,6 @@ export namespace Prisma {
     uploadLinkId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ipLogs?: IpLogUncheckedUpdateManyWithoutFileNestedInput
   }
 
   export type FileUncheckedUpdateManyWithoutUserInput = {
@@ -13384,14 +11510,6 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type IpLogCreateManyLinkInput = {
-    id?: number
-    ip: string
-    purpose?: string
-    fileId: number
-    createdAt?: Date | string
-  }
-
   export type FileUpdateWithoutUploadLinkInput = {
     url?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -13400,7 +11518,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFilesNestedInput
-    ipLogs?: IpLogUpdateManyWithoutFileNestedInput
   }
 
   export type FileUncheckedUpdateWithoutUploadLinkInput = {
@@ -13412,7 +11529,6 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ipLogs?: IpLogUncheckedUpdateManyWithoutFileNestedInput
   }
 
   export type FileUncheckedUpdateManyWithoutUploadLinkInput = {
@@ -13424,60 +11540,6 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IpLogUpdateWithoutLinkInput = {
-    ip?: StringFieldUpdateOperationsInput | string
-    purpose?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    file?: FileUpdateOneRequiredWithoutIpLogsNestedInput
-  }
-
-  export type IpLogUncheckedUpdateWithoutLinkInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    ip?: StringFieldUpdateOperationsInput | string
-    purpose?: StringFieldUpdateOperationsInput | string
-    fileId?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IpLogUncheckedUpdateManyWithoutLinkInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    ip?: StringFieldUpdateOperationsInput | string
-    purpose?: StringFieldUpdateOperationsInput | string
-    fileId?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IpLogCreateManyFileInput = {
-    id?: number
-    ip: string
-    purpose?: string
-    linkId: number
-    createdAt?: Date | string
-  }
-
-  export type IpLogUpdateWithoutFileInput = {
-    ip?: StringFieldUpdateOperationsInput | string
-    purpose?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    link?: LinkUpdateOneRequiredWithoutIpLogsNestedInput
-  }
-
-  export type IpLogUncheckedUpdateWithoutFileInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    ip?: StringFieldUpdateOperationsInput | string
-    purpose?: StringFieldUpdateOperationsInput | string
-    linkId?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IpLogUncheckedUpdateManyWithoutFileInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    ip?: StringFieldUpdateOperationsInput | string
-    purpose?: StringFieldUpdateOperationsInput | string
-    linkId?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

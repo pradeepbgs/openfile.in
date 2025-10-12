@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.8.2
- * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
+ * Prisma Client JS version: 6.17.0
+ * Query Engine version: c0aafc03b8ef6cdced8654b9a817999e02457d6a
  */
 Prisma.prismaVersion = {
-  client: "6.8.2",
-  engine: "2060c79ba17c6bb9f5823312b6f6b7f4a845738e"
+  client: "6.17.0",
+  engine: "c0aafc03b8ef6cdced8654b9a817999e02457d6a"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -169,15 +169,6 @@ exports.Prisma.SubscriptionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.IpLogScalarFieldEnum = {
-  id: 'id',
-  ip: 'ip',
-  purpose: 'purpose',
-  fileId: 'fileId',
-  linkId: 'linkId',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.DeletedFileScalarFieldEnum = {
   id: 'id',
   fileId: 'fileId',
@@ -247,7 +238,6 @@ exports.Prisma.ModelName = {
   Link: 'Link',
   File: 'File',
   Subscription: 'Subscription',
-  IpLog: 'IpLog',
   DeletedFile: 'DeletedFile',
   SubscriptionLog: 'SubscriptionLog'
 };
