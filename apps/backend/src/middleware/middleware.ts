@@ -5,9 +5,10 @@ import { jwtToken } from "../../type"
 import * as jwt from 'jsonwebtoken'
 import { getConnInfo } from "hono/bun"
 import { redis } from "../config/redis"
-import { validateLinkAccessM } from "./validateLinkAccess"
 import { ILinkRepo } from "../interface/link.interface"
 import { IUserRepository } from "../interface/user.interface"
+import { calculateTTL, script } from "../utils/helper"
+import { uploadRequestSchema } from "../zod/schema"
 
 export const RATE_LIMIT = parseInt(process.env.UPLOAD_RATE_LIMIT) || 60
 export const WINDOW = parseInt(process.env.UPLOAD_RATE_WINDOW) || 60
@@ -248,7 +249,7 @@ export class Middlewares {
             const links = await this.linkRepository.findUserLinks(decoded.id, query, skip, limit)
 
             if (!links || links.length === 0) {
-                return c.json({ error: "No links found or unauthorized" , data:[]}, 200);
+                return c.json({ error: "No links found or unauthorized", data: [] }, 200);
                 // throw new HTTPException(404, {
                 //     res: c.json({ error: "No links found or unauthorized" }, 404)
                 // });
@@ -304,9 +305,55 @@ export class Middlewares {
     }
 
     //
-    validateLinkAccess = async (c: Context, next: Next) => {
-        await validateLinkAccessM(c, next)
-    }
+    validateLinkAccessM = async (c: Context, next) => {
+        try {
+            const link = c.get("link");
+
+            const body = await c.req.json();
+            const parsed = uploadRequestSchema.safeParse(body);
+            if (!parsed.success) {
+                return c.json({ error: parsed.error.format() }, 400);
+            }
+
+            const { mimeType, fileSize } = parsed.data;
+
+            const redisKey = `upload:count:${link.id}`;
+            const maxUploads = link.maxUploads
+            const ttl = calculateTTL(fileSize);
+            const expireAfterFirst = link.expireAfterFirstUpload ? "1" : "0";
+
+            const result = await redis.eval(
+                script,
+                1,
+                redisKey,
+                maxUploads,
+                ttl,
+                expireAfterFirst
+            );
+
+            if (result === -1) {
+                return c.json({ error: "Upload limit reached for this link." }, 403);
+            }
+
+            if (result === -2) {
+                return c.json({ error: "This link has expired after one upload." }, 403);
+            }
+
+
+            const { uploadCount } = await this.linkRepository.findLinkUploadCount(link.id)
+            if (uploadCount >= maxUploads) {
+                return c.json({ error: "Upload limit reached for this link." }, 403);
+            }
+
+            c.set('mimeType', mimeType)
+
+            return await next();
+        } catch (error) {
+            console.error("Error in validateLinkAccess:", error);
+            return c.json({ error: "Internal Server Error in validateLinkAccess" }, 500);
+        }
+    };
+
 
     validateToken = async (ctx: Context, next: Next) => {
         try {

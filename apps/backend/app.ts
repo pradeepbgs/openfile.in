@@ -1,5 +1,4 @@
 import { Hono } from 'hono'
-import { authRouter } from './src/routes/auth.route'
 import { linkRouter } from './src/routes/link.routes'
 import { cors } from 'hono/cors'
 import { fileRouter } from './src/routes/file.route'

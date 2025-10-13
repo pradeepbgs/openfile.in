@@ -2,7 +2,7 @@ import { uuidv7 } from "uuidv7"
 import { ApiError } from "../utils/apiError";
 import ApiResponse from "../utils/apiRespone";
 import { getFinalLinkExpiration } from "../utils/getLinkExpiration";
-import { deleteQueue } from "../bullmq/queue/delete-files.queue";
+import { deleteQueue } from "../queue/bullmq/queue/delete-files.queue";
 import { ILinkRepo, ILinkService } from "../interface/link.interface";
 import { IDeleteFileRepo } from "../interface/delete-file.interface";
 
