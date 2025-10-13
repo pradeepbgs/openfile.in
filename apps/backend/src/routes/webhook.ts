@@ -1,8 +1,7 @@
 import {  Hono } from 'hono'
 import { Webhooks } from '@dodopayments/hono'
 import { PaymentSucceededData, WebhookEvent } from '../../type';
-import logger from '../utils/logger';
-import { notificationService, subscriptionRepo, userRepository } from '../../server.conf';
+import { notificationService, subscriptionRepository, userRepository } from '../../server.conf';
 
 export const webhookRouter = new Hono()
 
@@ -24,9 +23,8 @@ const subscription_logs = async (
         error?: String
     }
 ) => {
-    const isSuccessFull = await subscriptionRepo.update_subscription_logs(data)
+    const isSuccessFull = await subscriptionRepository.update_subscription_logs(data)
     if (!isSuccessFull) console.warn(`error while saving subscription logs to DB`)
-    logger.info(`[DB LOG] Saved subscription log for PaymentID: ${data.paymentId}`)
     console.log(`[DB LOG] Saved subscription log for PaymentID: ${data.paymentId}`)
 }
 
@@ -62,7 +60,7 @@ const updatePlan = async (email: string, paymentData: PaymentSucceededData, retr
         }
 
         console.log(`found user: ${existingUser.email}, updating plan...`)
-        const updatingPlan = await subscriptionRepo.update_plan(existingUser.id, 'pro')
+        const updatingPlan = await subscriptionRepository.update_plan(existingUser.id, 'pro')
 
         if (!updatingPlan) {
             console.warn(`Subscription record missing for user: ${email}`);

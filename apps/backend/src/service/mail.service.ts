@@ -2,7 +2,6 @@ import { Resend } from "resend";
 import { CONFIG } from "../config";
 import { transporter, hostEmail } from "../config/mail.config";
 import { IMailer, MailPayload } from "../interface/mailer.interface";
-import logger from "../utils/logger";
 
 export class NodemailerService implements IMailer {
     private transporter;
@@ -33,7 +32,6 @@ export class NodemailerService implements IMailer {
             console.log(`Email sent successfully to: ${to}`);
             return true;
         } catch (err) {
-            logger.error(`Couldn't send mail to ${to}: ${err}`);
             return false;
         }
     }

@@ -1,4 +1,4 @@
-import { IpQueue } from "../bullmq/queue/ip-queue";
+import { IpQueue } from "../queue/bullmq/queue/ip-queue";
 import { Ip } from "../../type";
 
 

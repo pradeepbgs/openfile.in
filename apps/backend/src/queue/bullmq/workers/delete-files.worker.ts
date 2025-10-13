@@ -1,7 +1,8 @@
 import { Job, Worker } from "bullmq";
-import { prisma } from "../../config/db";
-import { redis } from "../../config/redis";
-import { storageService } from "../../../server.conf";
+import { redis } from "../../../config/redis";
+import { storageService } from "../../../../server.conf";
+import { createDBClient } from "../../../config/db";
+import { PrismaClient } from "../../../generated/prisma";
 
 interface FileItem {
     id: number;
@@ -28,7 +29,7 @@ interface FileItem {
 // )
 
 export async function deleteFiles(files: FileItem[], linkId: number) {
-
+    const prisma = createDBClient('prisma') as PrismaClient
     const updatePromises = [];
 
     for (const file of files) {

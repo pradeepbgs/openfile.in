@@ -1,22 +1,25 @@
-import { prisma } from "../config/db";
+import { PrismaClient } from "../generated/prisma";
 import { ILinkRepo } from "../interface/link.interface";
 import { ONE_DAY } from "../service/link.service";
 
 
 export class LinkRepository implements ILinkRepo{
     private static instance: LinkRepository
+    private client: PrismaClient;
 
-    constructor() { }
+    constructor(client: PrismaClient) {
+        this.client = client;
+    }
 
-    static getInstance() {
+    static getInstance(client: PrismaClient) {
         if (!LinkRepository.instance) {
-            LinkRepository.instance = new LinkRepository();
+            LinkRepository.instance = new LinkRepository(client);
         }
         return LinkRepository.instance
     }
 
-    async findLinkByIdAndUser(linkId: number, userId: number) {
-        return await prisma.link.findFirst({
+    findLinkByIdAndUser = async (linkId: number, userId: number) => {
+        return await this.client.link.findFirst({
             where: { id: linkId, userId },
             select: {
                 id: true,
@@ -31,52 +34,52 @@ export class LinkRepository implements ILinkRepo{
         });
     }
 
-    async findLinkByTokenAndUserId(token: string, userId: number) {
-        return prisma.link.findFirst({
+    findLinkByTokenAndUserId = async (token: string, userId: number) => {
+        return this.client.link.findFirst({
             where: { token, userId },
         });
     }
 
-    async findLinkByToken(token: string) {
-        return await prisma.link.findFirst({
+    findLinkByToken = async (token: string) => {
+        return await this.client.link.findFirst({
             where: {
                 token
             }
         })
     }
 
-    async FindLinkWithTokenIvAndKey(token: string) {
-        return prisma.link.findFirst({
+    FindLinkWithTokenIvAndKey = async (token: string) => {
+        return this.client.link.findFirst({
             where: {
                 token: token
             }
         })
     }
 
-    async findFilesForLink(linkId: number, userId: number) {
-        return prisma.file.findMany({
+    findFilesForLink = async (linkId: number, userId: number) => {
+        return this.client.file.findMany({
             where: { uploadLinkId: linkId, userId },
         });
     }
 
-    async deleteFilesForLink(linkId: number, userId: number) {
-        return prisma.file.deleteMany({
+    deleteFilesForLink = async (linkId: number, userId: number) => {
+        return this.client.file.deleteMany({
             where: { uploadLinkId: linkId, userId },
         });
     }
 
-    async deleteLink(linkId: number, userId: number) {
-        return prisma.link.delete({
+    deleteLink = async (linkId: number, userId: number) => {
+        return this.client.link.delete({
             where: { id: linkId, userId },
         });
     }
 
-    async delete_link_by_id(id: number){
-        return await prisma.link.delete({ where: { id } })
+    delete_link_by_id = async (id: number) => {
+        return await this.client.link.delete({ where: { id } })
     }
 
-    async findLinkWithFilesByTokenAndUserId(linkId: number, token: string, userId: number, skip: number, limit: number) {
-        return await prisma.link.findFirst({
+    findLinkWithFilesByTokenAndUserId = async (linkId: number, token: string, userId: number, skip: number, limit: number) => {
+        return await this.client.link.findFirst({
             where: {
                 id: linkId,
                 userId,
@@ -100,8 +103,8 @@ export class LinkRepository implements ILinkRepo{
     }
 
 
-    async findUserLinks(userId: number, query: string, skip: number, limit: number) {
-        return await prisma.link.findMany({
+    findUserLinks = async (userId: number, query: string, skip: number, limit: number) => {
+        return await this.client.link.findMany({
             where: {
                 userId,
                 OR: [
@@ -126,18 +129,18 @@ export class LinkRepository implements ILinkRepo{
         });
     }
 
-    async findLinkUploadCount(linkId: number) {
-        return await prisma.link.findUnique({
+    findLinkUploadCount = async (linkId: number) => {
+        return await this.client.link.findUnique({
             where: { id: linkId },
             select: { uploadCount: true },
         });
     }
 
-    async FindUserLinksCount(userId: number) {
-        return await prisma.link.count({ where: { userId } })
+    FindUserLinksCount = async (userId: number) => {
+        return await this.client.link.count({ where: { userId } })
     }
 
-    async createLink(
+    createLink = async (
         {
             finalMaxUploads,
             token,
@@ -160,9 +163,9 @@ export class LinkRepository implements ILinkRepo{
                 now: Date
                 linkCountexpireAt: Date
             }
-    ) {
-        return await prisma.$transaction([
-            prisma.link.create({
+    ) => {
+        return await this.client.$transaction([
+            this.client.link.create({
                 data: {
                     maxUploads: finalMaxUploads,
                     token,
@@ -173,7 +176,7 @@ export class LinkRepository implements ILinkRepo{
                     expireAfterFirstUpload: expireAfterFirstUpload || false
                 }
             }),
-            prisma.user.update({
+            this.client.user.update({
                 where: { id: userId },
                 data: {
                     linkCount: shouldResetLinkCountExpiration ? 1 : { increment: 1 },
@@ -184,16 +187,16 @@ export class LinkRepository implements ILinkRepo{
         ])
     }
 
-    async expired_link_count() {
-        return await prisma.link.count({
+    expired_link_count = async () => {
+        return await this.client.link.count({
             where: {
                 expiresAt: { lt: new Date() },
             },
         })
     }
 
-    async find_expired_links(limit: number, offset: number) {
-        return await prisma.link.findMany({
+    find_expired_links = async (limit: number, offset: number) => {
+        return await this.client.link.findMany({
             where: {
                 expiresAt: { lt: new Date() },
             },
