@@ -1,19 +1,22 @@
-import { prisma } from "../config/db";
+import { PrismaClient } from "../generated/prisma";
 import { ISubscriptionRepo } from "../interface/subsc.interface";
 
 export class SubscriptionRepository implements ISubscriptionRepo {
     private static instance: SubscriptionRepository
+    private client: PrismaClient;
 
-    private constructor() { }
+    private constructor(client: PrismaClient) {
+        this.client = client;
+    }
 
-    static getInstance() {
+    static getInstance(client: PrismaClient) {
         if (!SubscriptionRepository.instance) {
-            SubscriptionRepository.instance = new SubscriptionRepository();
+            SubscriptionRepository.instance = new SubscriptionRepository(client);
         }
         return SubscriptionRepository.instance
     }
 
-    async update_subscription_logs(
+    update_subscription_logs = async (
         data: {
             eventType: string
             status: 'success' | 'failed' | 'processing' | 'user_not_found'
@@ -29,9 +32,9 @@ export class SubscriptionRepository implements ISubscriptionRepo {
             updatedAt: Date
             error?: String
         }
-    ) {
+    ) => {
 
-        return await prisma.subscriptionLog.upsert({
+        return await this.client.subscriptionLog.upsert({
             where: {
                 paymentId: data.paymentId,
             },
@@ -53,8 +56,8 @@ export class SubscriptionRepository implements ISubscriptionRepo {
     }
 
     // Update User Plan
-    async update_plan(userId: number, planName: string = 'pro') {
-        return await prisma.subscription.update({
+    update_plan = async (userId: number, planName: string = 'pro') => {
+        return await this.client.subscription.update({
             where: {
                 userId
             },

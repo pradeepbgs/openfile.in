@@ -1,4 +1,4 @@
-import { deleteQueue } from "../bullmq/queue/delete-files.queue";
+import { deleteQueue } from "../queue/bullmq/queue/delete-files.queue";
 import { prisma } from "../config/db"
 
 

@@ -1,4 +1,5 @@
 import { CONFIG } from "./src/config";
+import { createDBClient } from "./src/config/db";
 import { AuthController } from "./src/controllers/auth.controller";
 import FileController from "./src/controllers/file.controllers";
 import LinkController from "./src/controllers/link.controller";
@@ -6,6 +7,9 @@ import { DieselAuthController } from "./src/diesel/controller/auth.controller";
 import DieselFileController from "./src/diesel/controller/file.controller";
 import { DieselMiddlewares } from "./src/diesel/middleware";
 import { DieselAuthService } from "./src/diesel/service/auth.service";
+import { PrismaClient } from "./src/generated/prisma";
+import { ILinkRepo } from "./src/interface/link.interface";
+import { IUserRepository } from "./src/interface/user.interface";
 import { Middlewares } from "./src/middleware/middleware";
 import { DeletedFileRepository } from "./src/repository/deleted.file.repo";
 import { FileRepository } from "./src/repository/file.repo";
@@ -63,6 +67,35 @@ function createCacheService() {
     }
 }
 
+type RepositoryName = 'link' | 'deleted_file' | 'user' | 'file' | 'subscription'
+
+export function createRepository(repositoryName: RepositoryName)
+    : ILinkRepo | IUserRepository | FileRepository | DeletedFileRepository | SubscriptionRepository {
+    const clientType = CONFIG.DB_CLIENT;
+    const client = createDBClient(clientType as any)
+
+    switch (repositoryName) {
+        case 'link':
+            if (clientType === 'drizzle') return // will create drizzleRepo
+            return LinkRepository.getInstance(client as PrismaClient);
+        case 'deleted_file':
+            if (clientType === 'drizzle') return
+            return DeletedFileRepository.getInstance(client as PrismaClient);
+        case 'user':
+            if (clientType === 'drizzle') return
+            return UserRepository.getInstance(client as PrismaClient);
+        case 'file':
+            if (clientType === 'drizzle') return
+            return FileRepository.getInstance(client as PrismaClient);
+        case 'subscription':
+            if (clientType === 'drizzle') return
+            return SubscriptionRepository.getInstance(client as PrismaClient);
+
+        default:
+            throw new Error(`Repository ${repositoryName} not found`);
+    }
+}
+
 export const cacheService = createCacheService();
 
 export const mailer = createMailer();
@@ -72,29 +105,30 @@ export const notificationService = NotificationService.getInstance(mailer);
 // Instances
 export const storageService = createStorageService();
 
-export const prismaLinkRepository = LinkRepository.getInstance();
-export const prismaDeletedFileRepo = DeletedFileRepository.getInstance();
-export const userRepository = UserRepository.getInstance();
+export const linkRepository = createRepository('link') as ILinkRepo
+export const deletedFileRepository = createRepository('deleted_file') as DeletedFileRepository
+export const userRepository = createRepository('user') as IUserRepository
+export const fileRepository = createRepository('file') as FileRepository
+export const subscriptionRepository = createRepository('subscription') as SubscriptionRepository
+
 
 export const linkService = LinkService.getInstance(
-    prismaLinkRepository,
-    prismaDeletedFileRepo,
+    linkRepository,
+    deletedFileRepository,
 );
 
-export const fileRepository = FileRepository.getInstance();
 export const fileService = FileService.getInstance(fileRepository, storageService);
 
 export const linkController = LinkController.getInstance(linkService);
 export const fileController = FileController.getInstance(fileService);
 
-export const middleware = Middlewares.getInstance(userRepository, prismaLinkRepository);
+export const middleware = Middlewares.getInstance(userRepository, linkRepository);
 
 export const authService = AuthService.getInstance(notificationService, userRepository);
 export const authController = AuthController.getInstance(authService);
-export const subscriptionRepo = SubscriptionRepository.getInstance();
 export const cleanupService = CleanupService.getInstance(
-    prismaLinkRepository,
-    prismaDeletedFileRepo,
+    linkRepository,
+    deletedFileRepository,
     cacheService
 );
 
@@ -102,7 +136,7 @@ export const cleanupService = CleanupService.getInstance(
 
 // Mount diesel to Auth route
 
-export const dieselAuthService = DieselAuthService.getInstance(notificationService,userRepository)
+export const dieselAuthService = DieselAuthService.getInstance(notificationService, userRepository)
 export const dieselAuthController = DieselAuthController.getInstance(dieselAuthService)
-export const dieselMiddleware = DieselMiddlewares.getInstance(userRepository, prismaLinkRepository, cacheService);
-export const diesel_file_controller = DieselFileController.getInstance(fileService)
+export const dieselMiddleware = DieselMiddlewares.getInstance(userRepository, linkRepository, cacheService);
+export const diesel_file_controller = DieselFileController.getInstance(fileService);

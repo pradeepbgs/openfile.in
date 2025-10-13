@@ -19,6 +19,7 @@ export const CONFIG = {
     DB_NAME: process.env.DB_NAME,
     DB_PASS: process.env.DB_PASS,
     DATABASE_URL: process.env.DATABASE_URL,
+    DB_CLIENT:process.env.DB_CLIENT,
 
     // MAIL_ related
     MAIL_SERVICE: process.env.MAIL_SERVICE,

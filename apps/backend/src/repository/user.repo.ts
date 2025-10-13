@@ -1,20 +1,23 @@
-import { prisma } from "../config/db";
+import { PrismaClient } from "../generated/prisma";
 import { IUserRepository } from "../interface/user.interface";
 
 export default class UserRepository implements IUserRepository {
     private static instance: UserRepository
+    private client: PrismaClient
 
-    constructor() { }
+    constructor(client: PrismaClient) {
+        this.client = client
+    }
 
-    static getInstance() {
+    static getInstance(client: PrismaClient) {
         if (!UserRepository.instance) {
-            UserRepository.instance = new UserRepository();
+            UserRepository.instance = new UserRepository(client);
         }
         return UserRepository.instance
     }
 
-    async findUserId(id: number): Promise<{ id: number; } | null> {
-        return await prisma.user.findUnique({
+    findUserId = async (id: number): Promise<{ id: number; } | null> => {
+        return await this.client.user.findUnique({
             where: {
                 id
             },
@@ -24,16 +27,16 @@ export default class UserRepository implements IUserRepository {
         })
     }
 
-    async findUserByEmail(email: string) {
-        return await prisma.user.findUnique({
+    findUserByEmail = async (email: string) => {
+        return await this.client.user.findUnique({
             where: {
                 email
             }
         });
     }
 
-    async createUser(name: string, email: string, avatar: string) {
-        return await prisma.user.create({
+    createUser = async (name: string, email: string, avatar: string) => {
+        return await this.client.user.create({
             data: {
                 name,
                 email,
@@ -45,8 +48,8 @@ export default class UserRepository implements IUserRepository {
         });
     }
 
-    async findUserAndPlanName(userId: number) {
-        return await prisma.user.findUnique({
+    findUserAndPlanName = async (userId: number) => {
+        return await this.client.user.findUnique({
             where: {
                 id: userId
             },

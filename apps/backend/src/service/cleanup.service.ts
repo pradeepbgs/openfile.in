@@ -1,9 +1,9 @@
-import { cleanupQueue } from "../bullmq/queue/cleanup-queue";
-import { deleteQueue } from "../bullmq/queue/delete-files.queue";
+import { cleanupQueue } from "../queue/bullmq/queue/cleanup-queue";
+import { deleteQueue } from "../queue/bullmq/queue/delete-files.queue";
 import { Job, Worker } from "bullmq";
 import { ILinkRepo } from "../interface/link.interface";
 import { IDeleteFileRepo } from "../interface/delete-file.interface";
-import { deleteFiles } from "../bullmq/workers/delete-files.worker";
+import { deleteFiles } from "../queue/bullmq/workers/delete-files.worker";
 import { ICache } from "../interface/cache.interface";
 import { redis } from "../config/redis";
 

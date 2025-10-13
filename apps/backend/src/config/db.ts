@@ -1,25 +1,16 @@
-// import { Pool } from "pg";
+// src/db.ts
 import { PrismaClient } from "../generated/prisma";
+import { drizzle } from "drizzle-orm/neon-http";
 import { CONFIG } from ".";
 
-export const prisma = new PrismaClient();
+export type DBClient = PrismaClient | ReturnType<typeof drizzle>;
 
-(async () => {
-    const user = await prisma.user.findFirst()
-    console.log(user?.name)
-})()
-
-
-// const caCert = fs.readFileSync('ca.pem').toString();
-
-// export const rawSqlPool = new Pool({
-//     host: CONFIG.DB_HOST,
-//     user: CONFIG.DB_USER,
-//     port: Number(CONFIG.DB_PORT),
-//     database: CONFIG.DB_NAME,
-//     password: CONFIG.DB_PASS,
-//     ssl: {
-//         // ca: caCert
-//         rejectUnauthorized: false
-//     },
-// });
+export const createDBClient = (name: "prisma" | "drizzle" = "prisma"): DBClient => {
+  switch (name) {
+    case "prisma":
+      return new PrismaClient();
+    case "drizzle":
+    default:
+      return drizzle(CONFIG.DATABASE_URL);
+  }
+};

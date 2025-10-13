@@ -91,8 +91,8 @@ export class DieselMiddlewares {
             // but what if many users wants to upload at the same link token? it would be bad experience
             // mayb ewe can try ip+token so that each user can only make 5 req/s with his ip with the token
             let ip: string | null = null;
-            const ipInfo: string | object | null = c.ip;
-            if (ipInfo && typeof ipInfo === "object" && "address" in ipInfo) ip = ipInfo.address;
+            const ipInfo: string | object | null = c.ip as any;
+            if (ipInfo && typeof ipInfo === "object" && "address" in ipInfo) ip = ipInfo.address as any;
             else if (typeof ipInfo === "string") ip = ipInfo;
 
             const token = c.query.token

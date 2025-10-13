@@ -1,7 +1,6 @@
 import {  Hono } from 'hono'
 import { Webhooks } from '@dodopayments/hono'
 import { PaymentSucceededData, WebhookEvent } from '../../type';
-import logger from '../utils/logger';
 import { notificationService, subscriptionRepo, userRepository } from '../../server.conf';
 
 export const webhookRouter = new Hono()
@@ -26,7 +25,6 @@ const subscription_logs = async (
 ) => {
     const isSuccessFull = await subscriptionRepo.update_subscription_logs(data)
     if (!isSuccessFull) console.warn(`error while saving subscription logs to DB`)
-    logger.info(`[DB LOG] Saved subscription log for PaymentID: ${data.paymentId}`)
     console.log(`[DB LOG] Saved subscription log for PaymentID: ${data.paymentId}`)
 }
 
