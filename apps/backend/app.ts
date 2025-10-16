@@ -1,14 +1,14 @@
 import { Hono } from 'hono'
-import { linkRouter } from './src/routes/link.routes'
 import { cors } from 'hono/cors'
-import { fileRouter } from './src/routes/file.route'
 import { secureHeaders } from 'hono/secure-headers'
 import { logger } from 'hono/logger'
-import { webhookRouter } from './src/routes/webhook'
-import { paymentsRouter } from './src/routes/payments'
-import { diesel_auth_router } from './src/diesel/routes/auth.routes'
 import { httpRequestsCounter, httpResponseTime, registry } from './metrics'
-import { diesel_file_router } from './src/diesel/routes/file.routes'
+import { diesel_auth_router } from './src/api/diesel/routes/auth.routes'
+import { linkRouter } from './src/api/hono/routes/link.routes'
+import { diesel_file_router } from './src/api/diesel/routes/file.routes'
+import { fileRouter } from './src/api/hono/routes/file.route'
+import { webhookRouter } from './src/api/hono/routes/webhook'
+import { paymentsRouter } from './src/api/hono/routes/payments'
 
 
 

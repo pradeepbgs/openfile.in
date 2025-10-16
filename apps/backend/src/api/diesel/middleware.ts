@@ -1,14 +1,14 @@
 import { ContextType } from "diesel-core"
-import { ICache } from "../interface/cache.interface"
-import { ILinkRepo } from "../interface/link.interface"
-import { IUserRepository } from "../interface/user.interface"
+import { ICache } from "../../interface/cache.interface"
+import { ILinkRepo } from "../../interface/link.interface"
+import { IUserRepository } from "../../interface/user.interface"
 import { HTTPException } from "diesel-core/http-exception"
-import { verifyToken } from "../utils/jwt"
-import { calculateTTL, script } from "../utils/helper"
-import { redis } from "../config/redis"
-import { uploadRequestSchema } from "../zod/schema"
-import { Link } from "../generated/prisma"
-import { RATE_LIMIT, WINDOW } from "../middlewarex/middleware"
+import { verifyToken } from "../../utils/jwt"
+import { calculateTTL, script } from "../../utils/helper"
+import { redis } from "../../config/redis"
+import { uploadRequestSchema } from "../../zod/schema"
+import { Link } from "../../generated/prisma"
+import { RATE_LIMIT, WINDOW } from "../../middlewarex/middleware"
 
 
 export class DieselMiddlewares {
