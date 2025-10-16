@@ -1,2 +1,2 @@
 // constants.ts
-export const GLOBAL_BG = 'bg-gray-950';
+export const GLOBAL_BG = 'bg-black';
