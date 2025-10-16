@@ -6,7 +6,6 @@ import LinkController from "./src/controllers/link.controller";
 import { DieselAuthController } from "./src/diesel/controller/auth.controller";
 import DieselFileController from "./src/diesel/controller/file.controller";
 import { DieselMiddlewares } from "./src/diesel/middleware";
-import { DieselAuthService } from "./src/diesel/service/auth.service";
 import { PrismaClient } from "./src/generated/prisma";
 import { ILinkRepo } from "./src/interface/link.interface";
 import { IUserRepository } from "./src/interface/user.interface";
@@ -15,6 +14,7 @@ import { DeletedFileRepository } from "./src/repository/deleted.file.repo";
 import { FileRepository } from "./src/repository/file.repo";
 import { LinkRepository } from "./src/repository/link.repo";
 import { SubscriptionRepository } from "./src/repository/subscription.repo";
+import UserRepositoryDrizzle, { DrizzleClient } from "./src/repository/user.drizzle";
 import UserRepository from "./src/repository/user.repo";
 import { AuthService } from "./src/service/auth.service";
 import { RedisCache } from "./src/service/cache.service";
@@ -82,7 +82,7 @@ export function createRepository(repositoryName: RepositoryName)
             if (clientType === 'drizzle') return
             return DeletedFileRepository.getInstance(client as PrismaClient);
         case 'user':
-            if (clientType === 'drizzle') return
+            if (clientType === 'drizzle') return UserRepositoryDrizzle.getInstance(client as DrizzleClient)
             return UserRepository.getInstance(client as PrismaClient);
         case 'file':
             if (clientType === 'drizzle') return
@@ -134,9 +134,8 @@ export const cleanupService = CleanupService.getInstance(
 
 
 
-// Mount diesel to Auth route
+// for diesel.js
 
-export const dieselAuthService = DieselAuthService.getInstance(notificationService, userRepository)
-export const dieselAuthController = DieselAuthController.getInstance(dieselAuthService)
+export const dieselAuthController = DieselAuthController.getInstance(authService)
 export const dieselMiddleware = DieselMiddlewares.getInstance(userRepository, linkRepository, cacheService);
 export const diesel_file_controller = DieselFileController.getInstance(fileService);

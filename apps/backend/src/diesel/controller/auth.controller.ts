@@ -22,6 +22,7 @@ export class DieselAuthController {
     }
 
     handleGoogleSignIn = async (c: ContextType) => {
+        console.log('from diesel to..')
         try {
             const body = await c.body
             const result = authSchema.safeParse(body)
