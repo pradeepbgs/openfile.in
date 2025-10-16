@@ -1,4 +1,4 @@
-import { Shield, Lock, Upload, Download, ArrowRight, Zap, Globe } from 'lucide-react';
+import { Shield,  Upload, Download, ArrowRight, Zap, Globe } from 'lucide-react';
 import { Link } from 'react-router';
 import Header from '~/components/header';
 import Footer from '~/components/footer';
@@ -38,7 +38,7 @@ function App() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                 <Link
                   to={'/dashboard'}
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-10 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-purple-500/30">
+                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-5 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-purple-500/30">
                   Get Started for Free
                 </Link>
                 <a href='#how-it-works' className="bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-gray-200 hover:text-white px-10 py-4 rounded-xl font-semibold text-lg transition-all duration-300">
@@ -50,7 +50,7 @@ function App() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="px-6 py-20 bg-gray-950">
+        <section id="features" className="px-6 py-20">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold text-white mb-4">Why Choose OpenFile?</h2>
@@ -97,7 +97,7 @@ function App() {
         </section>
 
         {/* How It Works Section */}
-        <section id="how-it-works" className="px-6 py-20 bg-gradient-to-b from-gray-900 to-gray-950">
+        <section id="how-it-works" className="px-6 py-20">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-20">
               <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">How It Works</h2>
@@ -143,7 +143,7 @@ function App() {
           </div>
         </section>
 
-        <section className="bg-gray-900 py-10">
+        <section className=" py-10">
           <PlansPage />
         </section>
 

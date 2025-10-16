@@ -282,7 +282,7 @@ export const useUpdateS3UploadDB = () => {
 
 
 
-const createLink = async ({ payload, navigate, secretKey, iv }: createLinkArgs) => {
+const createLink = async ({ payload, navigate }: createLinkArgs) => {
     try {
         const res = await fetch(`${backendUrl}/api/v1/link`, {
             method: "POST",
