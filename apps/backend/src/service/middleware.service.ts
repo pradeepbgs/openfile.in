@@ -54,7 +54,7 @@ export class MiddlewareService {
         if (!decoded?.id) throw new ApiError("Invalid token", 401);
 
         const link = await linkRepository.findLinkByIdAndUser(linkId, decoded.id as number);
-        if (!link) throw new ApiError("Link not found or user unauthorized", 404);
+        if (!link) throw new ApiError("Not Found", 404);
 
         return { userId: decoded.id, link };
     }

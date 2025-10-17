@@ -1,14 +1,14 @@
 import { Context, Next } from "hono"
 import { getCookie } from "hono/cookie"
 import { HTTPException } from 'hono/http-exception'
+import { jwtToken } from "../../type"
+import * as jwt from 'jsonwebtoken'
 import { getConnInfo } from "hono/bun"
 import { redis } from "../config/redis"
 import { ILinkRepo } from "../interface/link.interface"
 import { IUserRepository } from "../interface/user.interface"
 import { calculateTTL, script } from "../utils/helper"
 import { uploadRequestSchema } from "../zod/schema"
-import { MiddlewareService } from "../service/middleware.service"
-import { ApiError } from "../utils/apiError"
 
 export const RATE_LIMIT = parseInt(process.env.UPLOAD_RATE_LIMIT) || 60
 export const WINDOW = parseInt(process.env.UPLOAD_RATE_WINDOW) || 60
@@ -26,10 +26,7 @@ export class Middlewares {
             this.linkRepository = linkRepository
     }
 
-    static getInstance(
-        userRepository: IUserRepository,
-        linkRepository: ILinkRepo,
-    ) {
+    static getInstance(userRepository: IUserRepository, linkRepository: ILinkRepo) {
         if (!this.instance) {
             this.instance = new Middlewares(userRepository, linkRepository)
         }
@@ -39,16 +36,48 @@ export class Middlewares {
     authJwt = async (c: Context, next: Next): Promise<void | null | Response> => {
         try {
             let token = c.req?.header("Authorization") ?? getCookie(c, 'accessToken')
-            const user = await MiddlewareService.verifyAuthToken(token);
+
+            if (!token) {
+                throw new HTTPException(401, {
+                    res: c.json({ message: "Unauthorized", error: "No token provided" }, 401)
+                });
+            }
+
+
+            if (token.startsWith("Bearer ")) {
+                token = token.slice(7);
+            }
+
+            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwtToken;
+            if (!decoded || !decoded.id) {
+                throw new HTTPException(401, {
+                    res: c.json({ message: "Unauthorized", error: "Invalid token" }, 401)
+                });
+            }
+
+
+            const user = await this.userRepository.findUserAndPlanName(decoded.id)
+
+            if (!user) {
+                throw new HTTPException(401, {
+                    res: c.json({ message: "Unauthorized: User not found" }, 401)
+                });
+            }
 
             c.set("user", user);
             return await next()
         } catch (error: any) {
-            console.error("Auth middleware error:", error?.message);
-            if (error instanceof ApiError) {
-                throw new HTTPException(error.statusCode, { message: error.message });
+            console.error("JWT verification error:", error?.message);
+            let errMsg = "Invalid token";
+            if (error.name === "TokenExpiredError") {
+                errMsg = "Token expired";
+            } else if (error.name === "JsonWebTokenError") {
+                errMsg = "Malformed or tampered token";
             }
-            throw new HTTPException(401, { message: "Unauthorized" });
+
+            throw new HTTPException(401, {
+                res: c.json({ message: "Unauthorized", error: errMsg }, 401)
+            });
         }
     }
 
@@ -57,19 +86,38 @@ export class Middlewares {
         try {
             let token = c.req.header("Authorization") ?? getCookie(c, "accessToken");
             if (!token) {
-                throw new ApiError("No token provided", 401);
+                throw new HTTPException(401, {
+                    res: c.json({ message: "Unauthorized", error: "No token provided" }, 401)
+                });
+            }
+            if (token.startsWith("Bearer ")) token = token.slice(7);
+
+            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwtToken;
+            if (!decoded || !decoded.id) {
+                throw new HTTPException(401, {
+                    res: c.json({ message: "Unauthorized", error: "Invalid token" }, 401)
+                });
             }
 
             const linkToken = c.req.param("token");
             const linkId = Number(c.req.param('id'))
             if (!linkToken || !linkId) {
-                throw new ApiError("Token param or linkId missing", 400);
+                throw new HTTPException(400, {
+                    res: c.json({ error: "Token param or linkId missing" }, 400)
+                });
             }
 
             const limit = parseInt(c.req.query("limit") || "10");
             const page = parseInt(c.req.query("page") || "1");
+            const skip = (page - 1) * limit
 
-            const link = await MiddlewareService.fetchFilesByToken(token, linkId, linkToken, page, limit);
+            const link = await this.linkRepository.findLinkWithFilesByTokenAndUserId(linkId, linkToken, decoded.id, skip, limit)
+
+            if (!link) {
+                throw new HTTPException(404, {
+                    res: c.json({ message: "No files found or unauthorized access" }, 404)
+                });
+            }
 
             c.set("files", link.files);
             c.set("pagination", { page, limit });
@@ -77,10 +125,10 @@ export class Middlewares {
             return await next();
         } catch (err: any) {
             console.error("Error in fetchFilesByToken middleware:", err.message);
-            if (err instanceof ApiError) {
-                throw new HTTPException(err.statusCode, { message: err.message });
-            }
-            throw new HTTPException(500, { message: "Internal Server Error" });
+            if (err instanceof HTTPException) throw err;
+            throw new HTTPException(500, {
+                res: c.json({ error: "Internal Server Error" }, 500)
+            });
         }
     };
 
@@ -89,40 +137,87 @@ export class Middlewares {
         try {
             let token = c.req?.header("Authorization") ?? getCookie(c, "accessToken");
 
-            if (!token) throw new ApiError("No token provided", 401);
+            if (!token) {
+                throw new HTTPException(401, {
+                    res: c.json({ message: "Unauthorized", error: "No token provided" }, 401)
+                });
+            }
+            if (token.startsWith("Bearer ")) token = token.slice(7);
+
+            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwtToken;
+            if (!decoded || !decoded.id) {
+                throw new HTTPException(401, {
+                    res: c.json({ message: "Unauthorized", error: "Invalid token" }, 401)
+                });
+            }
+
 
             const linkId = parseInt(c.req.param("id"));
             if (!linkId) {
-                throw new ApiError("Invalid link ID", 400);
+                throw new HTTPException(400, {
+                    res: c.json({ error: "Invalid link ID" }, 400)
+                });
             }
 
-            const { userId, link } = await MiddlewareService.fetchLinkWithUser(token, linkId);
+            const link = await this.linkRepository.findLinkByIdAndUser(linkId, decoded.id)
 
-            c.set("userId", userId);
+            if (!link) {
+                throw new HTTPException(404, {
+                    res: c.json({ message: "Not Found" }, 404)
+                });
+            }
+
+            c.set("userId", decoded.id);
             c.set("link", link);
             return await next();
         } catch (err: any) {
             console.error("Error in fetchLinkWithUser middleware:", err.message);
-            if (err instanceof ApiError) {
-                throw new HTTPException(err.statusCode, { message: err.message });
-            }
-            throw new HTTPException(500, { message: "Internal Server Error" });
+            if (err instanceof HTTPException) throw err;
+            throw new HTTPException(500, {
+                res: c.json({ error: "Internal Server Error" }, 500)
+            });
         }
     };
 
     // 
     fetchUser = async (c: Context, next: Next) => {
         try {
-            const token = c.req?.header("Authorization") ?? getCookie(c, 'accessToken')
-            const user = await MiddlewareService.fetchUser(token);
+            let token = c.req?.header("Authorization") ?? getCookie(c, 'accessToken')
+
+            if (!token) {
+                throw new HTTPException(401, {
+                    res: c.json({ message: "Unauthorized", error: "No token provided" }, 401)
+                });
+            }
+
+            if (token.startsWith("Bearer ")) {
+                token = token.slice(7);
+            }
+
+            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwtToken;
+            if (!decoded || !decoded.id) {
+                throw new HTTPException(401, {
+                    res: c.json({ message: "Unauthorized", error: "Invalid token" }, 401)
+                });
+            }
+
+
+            const user = await this.userRepository.findUserId(decoded.id)
+
+            if (!user) {
+                throw new HTTPException(401, {
+                    res: c.json({ message: "Unauthorized: User not found" }, 401)
+                });
+            }
+
             c.set('user', user)
             return await next()
         } catch (error: any) {
             console.log('error in fetch user from link id ', error?.message)
-
-            if ((error).name === 'HTTPException') throw error;
-
-            throw new HTTPException(500, { message: "Internal Server Error in fetchUser" });
+            if (error instanceof HTTPException) throw error;
+            throw new HTTPException(500, {
+                res: c.json({ error: "Internal Server Error in fetchUser" }, 500)
+            });
         }
     }
 
@@ -132,27 +227,44 @@ export class Middlewares {
             let token = c.req?.header("Authorization") ?? getCookie(c, "accessToken");
 
             if (!token) {
-                throw new ApiError("No token provided", 401);
+                throw new HTTPException(401, {
+                    res: c.json({ message: "Unauthorized", error: "No token provided" }, 401)
+                });
+            }
+
+            if (token.startsWith("Bearer ")) token = token.slice(7);
+
+            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwtToken;
+            if (!decoded || !decoded.id) {
+                throw new HTTPException(401, {
+                    res: c.json({ message: "Unauthorized", error: "Invalid token" }, 401)
+                });
             }
 
             const query = c.req.query("query") || ""
             const limit = parseInt(c.req.query("limit") || "10");
             const page = parseInt(c.req.query("page") || "1");
+            const skip = (page - 1) * limit
 
-            const { userId, links } = await MiddlewareService.fetchUserLinks(token, query, page, limit);
+            const links = await this.linkRepository.findUserLinks(decoded.id, query, skip, limit)
 
             if (!links || links.length === 0) {
                 return c.json({ error: "No links found or unauthorized", data: [] }, 200);
+                // throw new HTTPException(404, {
+                //     res: c.json({ error: "No links found or unauthorized" }, 404)
+                // });
             }
 
-            c.set("userId", userId);
+            c.set("userId", decoded.id);
             c.set("userLinks", links);
             c.set("pagination", { limit, page });
             return await next();
-        } catch (error: any) {
-            console.error("Error in fetchLinkWithUser middleware:", error.message);
-            if ((error).name === 'HTTPException') throw error;
-            throw new HTTPException(500, { message: "Internal Server Error" });
+        } catch (err: any) {
+            console.error("Error in fetchLinkWithUser middleware:", err.message);
+            if (err instanceof HTTPException) throw err;
+            throw new HTTPException(500, {
+                res: c.json({ error: "Internal Server Error" }, 500)
+            });
         }
     };
 
@@ -184,7 +296,7 @@ export class Middlewares {
 
         } catch (error: any) {
             console.log(error)
-            if ((error).name === 'HTTPException') throw error;
+            if (error instanceof HTTPException) throw error;
             throw new HTTPException(500, {
                 res: c.json({ error: "Internal Server Error in rate limit upload" }, 500)
             });
@@ -238,8 +350,6 @@ export class Middlewares {
             return await next();
         } catch (error) {
             console.error("Error in validateLinkAccess:", error);
-            if ((error).name === 'HTTPException') throw error;
-
             return c.json({ error: "Internal Server Error in validateLinkAccess" }, 500);
         }
     };
@@ -268,8 +378,7 @@ export class Middlewares {
 
         } catch (error: any) {
             console.log('Internal Server Error in validate token ', error)
-            if ((error).name === 'HTTPException') throw error;
-
+            if (error instanceof HTTPException) throw error;
             throw new HTTPException(500, {
                 res: ctx.json({ error: "Internal Server Error in validate token" }, 500)
             });
