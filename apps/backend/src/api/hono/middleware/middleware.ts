@@ -1,14 +1,14 @@
 import { Context, Next } from "hono"
 import { getCookie } from "hono/cookie"
 import { HTTPException } from 'hono/http-exception'
-import { jwtToken } from "../../type"
+import { jwtToken } from "../../../../type"
 import * as jwt from 'jsonwebtoken'
 import { getConnInfo } from "hono/bun"
-import { redis } from "../config/redis"
-import { ILinkRepo } from "../interface/link.interface"
-import { IUserRepository } from "../interface/user.interface"
-import { calculateTTL, script } from "../utils/helper"
-import { uploadRequestSchema } from "../zod/schema"
+import { redis } from "../../../config/redis"
+import { ILinkRepo } from "../../../interface/link.interface"
+import { IUserRepository } from "../../../interface/user.interface"
+import { calculateTTL, script } from "../../../utils/helper"
+import { uploadRequestSchema } from "../../../zod/schema"
 
 export const RATE_LIMIT = parseInt(process.env.UPLOAD_RATE_LIMIT) || 60
 export const WINDOW = parseInt(process.env.UPLOAD_RATE_WINDOW) || 60

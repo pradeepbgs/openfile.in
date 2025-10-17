@@ -27,6 +27,7 @@ const getAuthHeaders = (token: string) => ({
 })
 
 describe('GET /api/v1/link', () => {
+
     it('should return 401 when no token is provided', async () => {
         const response = await fetch(`${baseUrl}/api/v1/link`)
         const data = await response.json()
@@ -149,7 +150,6 @@ describe('DELETE /api/v1/link/:id', () => {
                 "Authorization": `Bearer ${wrongUserToken}`
             }
         })
-
         const wrongData = await wrongResponse.json()
         expect(wrongResponse.status).toBe(404)
         expect(wrongData).toEqual({ message: "Not Found" })

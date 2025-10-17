@@ -25,6 +25,7 @@ export class AuthService implements IAuthService {
   }
 
   signInWithGoogle = async (token: string): Promise<ApiResponse> => {
+    console.log('default')
     const ticket = await oAuthClient.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
