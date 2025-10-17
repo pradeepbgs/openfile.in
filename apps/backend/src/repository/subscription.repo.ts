@@ -66,4 +66,16 @@ export class SubscriptionRepository implements ISubscriptionRepo {
             }
         })
     }
+
+    // check a user's plan by email
+    check_plan = async (userId: number) => {
+        return await this.client.subscription.findFirst({
+            where: {
+                userId: userId
+            },
+            select: {
+                planName: true
+            }
+        })
+    }
 }
