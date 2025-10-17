@@ -9,9 +9,8 @@ import { ILinkRepo } from "../../../interface/link.interface"
 import { IUserRepository } from "../../../interface/user.interface"
 import { calculateTTL, script } from "../../../utils/helper"
 import { uploadRequestSchema } from "../../../zod/schema"
+import { RATE_LIMIT, WINDOW } from "../../../../constant"
 
-export const RATE_LIMIT = parseInt(process.env.UPLOAD_RATE_LIMIT) || 60
-export const WINDOW = parseInt(process.env.UPLOAD_RATE_WINDOW) || 60
 
 export class Middlewares {
     private static instance: Middlewares

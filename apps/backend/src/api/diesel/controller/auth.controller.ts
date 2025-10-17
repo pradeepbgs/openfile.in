@@ -1,9 +1,9 @@
 import { type ContextType } from 'diesel-core'
-import { IAuthService } from '../../interface/auth.interface';
-import ApiResponse from '../../utils/apiRespone';
-import { accessTokenOptions, refreshTokenOptions } from '../../utils/cookie-options';
-import { handleErrorResponse } from '../../utils/handle-error';
-import { authSchema } from '../../zod/schema';
+import { IAuthService } from '../../../interface/auth.interface';
+import ApiResponse from '../../../utils/apiRespone';
+import { accessTokenOptions, refreshTokenOptions } from '../../../utils/cookie-options';
+import { handleErrorResponse } from '../../../utils/handle-error';
+import { authSchema } from '../../../zod/schema';
 import { HTTPException } from 'diesel-core/http-exception';
 
 export class DieselAuthController {

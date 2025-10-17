@@ -1,9 +1,9 @@
 import { ContextType } from "diesel-core";
-import { IFileService } from "../../interface/file.interface";
-import { handleErrorResponse } from "../../utils/handle-error";
-import ApiResponse from "../../utils/apiRespone";
-import { notifyUploadSchema } from "../../zod/schema";
-import { Link, User } from "../../generated/prisma";
+import { IFileService } from "../../../interface/file.interface";
+import { handleErrorResponse } from "../../../utils/handle-error";
+import ApiResponse from "../../../utils/apiRespone";
+import { notifyUploadSchema } from "../../../zod/schema";
+import { Link, User } from "../../../generated/prisma";
 import { HTTPException } from "diesel-core/http-exception";
 
 
