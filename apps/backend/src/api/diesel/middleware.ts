@@ -8,7 +8,7 @@ import { calculateTTL, script } from "../../utils/helper"
 import { redis } from "../../config/redis"
 import { uploadRequestSchema } from "../../zod/schema"
 import { Link } from "../../generated/prisma"
-import { RATE_LIMIT, WINDOW } from "../../middlewarex/middleware"
+import { RATE_LIMIT, WINDOW } from "../../../constant"
 
 
 export class DieselMiddlewares {
