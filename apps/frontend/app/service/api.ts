@@ -414,7 +414,7 @@ export const checkoutPage = async (payload: any) => {
 export const checkout = async (productId: string) => {
     try {
         const res = await axios.get(
-            `${backendUrl}/api/v1/payments/dodo-checkout?productId=${productId}`
+            `${backendUrl}/api/v1/payments/dodo-checkout?productId=${productId}`, { withCredentials: true }
         );
 
         if (!res.data?.checkout_url) {
