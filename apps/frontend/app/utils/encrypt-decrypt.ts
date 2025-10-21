@@ -99,14 +99,13 @@ export const decryptAndDownloadFileWithCrypto = async (
         const base64IV = base64UrlToBase64(iv);
 
         const decryptedBlob = await decryptFileWithWebCrypto(encryptedBuffer, base64Key, base64IV);
+        return decryptedBlob;
 
         const link = document.createElement("a");
         link.href = URL.createObjectURL(decryptedBlob);
         link.download = fileName;
         link.click();
-    } catch (error) {
-        console.error("Error during decryption/download:", error);
-    } finally {
+    }  finally {
         useFileStatusStore.getState().updateFileStatus("Decrypt & Download file")
     }
 };

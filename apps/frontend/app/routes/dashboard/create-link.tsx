@@ -35,7 +35,7 @@ export default function CreateLinkPage() {
     unit: "hours",
   });
 
-  const [shouldDownloadKey, setShouldDownloadKey] = useState<boolean>(false);
+  const [shouldDownloadKey, setShouldDownloadKey] = useState<boolean>(true);
   const [shouldExpireLinkAfterFirstUpload, setShouldExpireLinkAfterFirstUpload] = useState<boolean>(false)
 
   const navigate = useNavigate();

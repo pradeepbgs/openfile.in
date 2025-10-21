@@ -5,6 +5,11 @@ import { decryptAndDownloadFileWithCrypto } from '~/utils/encrypt-decrypt';
 import type { FileItem } from 'types/types';
 import { FileCard } from '~/components/file-card';
 import Spinner from '~/components/spinner';
+import { toast } from 'sonner';
+
+const hashParams = new URLSearchParams(window.location.hash.slice(1));
+const hashKey = hashParams.get("key") || "";
+const hashIv = hashParams.get("iv") || "";
 
 function LinkPage() {
   const [searchParams] = useSearchParams();
@@ -12,21 +17,12 @@ function LinkPage() {
   const { id } = useParams();
 
   const [page, setPage] = useState<number>(1);
-  const [decryptingFileId, setDecryptingFileId] = useState<number | null>(null);
-  const [key, setKey] = useState("");
-  const [iv, setIv] = useState("");
+  const [key, setKey] = useState(hashKey);
+  const [iv, setIv] = useState(hashIv);
   const [inputValue, setInputValue] = useState("");
+  const [showKeyIvInput, setShowKeyIvInput] = useState(false);
 
   const limit = 10;
-
-  // Try to get key and iv from URL hash
-  useEffect(() => {
-    const hashParams = new URLSearchParams(window.location.hash.slice(1));
-    const hashKey = hashParams.get("key") || "";
-    const hashIv = hashParams.get("iv") || "";
-    setKey(hashKey);
-    setIv(hashIv);
-  }, []);
 
   const { data, isError, error, isLoading, refetch } = useUserFilesQuery(Number(id), token, page, limit);
   const files = data?.data;
@@ -39,15 +35,6 @@ function LinkPage() {
   if (isLoading) return <div className="min-h-screen flex justify-center items-center"><Spinner size={28} /></div>;
   if (isError) return <p className="h-full flex justify-center items-center p-4 text-red-400">{error.message}</p>;
 
-  const handleDecryptDownload = async (file: FileItem) => {
-    setDecryptingFileId(file.id);
-    try {
-      await decryptAndDownloadFileWithCrypto(file, file.name, token, key, iv);
-    } finally {
-      setDecryptingFileId(null);
-    }
-  };
-
   const loadNextPage = () => setPage((prev) => prev + 1);
   const loadPrevPage = () => setPage((prev) => Math.max(1, prev - 1));
 
@@ -57,12 +44,14 @@ function LinkPage() {
       if (parsed.key && parsed.iv) {
         setKey(parsed.key);
         setIv(parsed.iv);
-        alert("Key and IV set successfully!");
+        toast.success("Key and IV set successfully!");
+        setShowKeyIvInput(false); // Hide on success
+        setInputValue(""); // Clear input
       } else {
-        alert("Key or IV missing in input");
+        toast.error("Key or IV missing in input");
       }
     } catch (e) {
-      alert("Invalid JSON format. Please ensure the input is valid.");
+      toast.error("Invalid JSON format. Please ensure the input is valid.");
     }
   };
 
@@ -75,30 +64,48 @@ function LinkPage() {
           Please do not close or refresh the tab while decryption is in progress.
         </h3>
 
-        <div className="mb-6 p-4 border border-yellow-500 rounded ">
-          <p className="text-sm mb-2 text-yellow-300">Paste your backup JSON (with key and iv):</p>
-          <textarea
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            rows={4}
-            className="w-full p-2 rounded"
-            placeholder={`{"key":"...","iv":"..."}`}
-          />
-          <button
-            onClick={handleKeyIvInput}
-            className="mt-2 px-4 py-1 bg-yellow-500 text-black rounded hover:bg-yellow-400"
-          >
-            Add
-          </button>
-        </div>
+        {showKeyIvInput ? (
+          <div className="mb-6 p-4 border border-yellow-500/50 rounded-lg bg-yellow-900/20 backdrop-blur-sm">
+            <p className="text-sm mb-2 text-yellow-300">Paste your backup JSON (with key and iv):</p>
+            <textarea
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              rows={4}
+              className="w-full p-2 rounded bg-gray-800 text-white border border-white/20 focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+              placeholder={`{"key":"...","iv":"..."}`}
+              autoFocus
+            />
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={handleKeyIvInput}
+                className="px-4 py-1 bg-blue-600 text-black rounded hover:bg-blue-400 transition-colors"
+              >
+                Set Key
+              </button>
+              <button
+                onClick={() => setShowKeyIvInput(false)}
+                className="px-4 py-1 bg-gray-600 text-white rounded hover:bg-gray-500 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="mb-6 flex justify-end">
+            <button onClick={() => setShowKeyIvInput(true)} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition text-sm">
+              Add Backup Key/IV
+            </button>
+          </div>
+        )}
 
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {files.map((file: FileItem) => (
             <FileCard
               key={file.id}
               file={file}
-              onDownload={() => handleDecryptDownload(file)}
-              isDecrypting={decryptingFileId === file.id}
+              iv={iv}
+              token={token}
+              ivkey={key}
             />
           ))}
         </div>
