@@ -1,15 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router';
 import { useUserFilesQuery } from '~/service/api';
-import { decryptAndDownloadFileWithCrypto } from '~/utils/encrypt-decrypt';
 import type { FileItem } from 'types/types';
 import { FileCard } from '~/components/file-card';
 import Spinner from '~/components/spinner';
 import { toast } from 'sonner';
-
-const hashParams = new URLSearchParams(window.location.hash.slice(1));
-const hashKey = hashParams.get("key") || "";
-const hashIv = hashParams.get("iv") || "";
 
 function LinkPage() {
   const [searchParams] = useSearchParams();
@@ -17,8 +12,8 @@ function LinkPage() {
   const { id } = useParams();
 
   const [page, setPage] = useState<number>(1);
-  const [key, setKey] = useState(hashKey);
-  const [iv, setIv] = useState(hashIv);
+  const [key, setKey] = useState('');
+  const [iv, setIv] = useState('');
   const [inputValue, setInputValue] = useState("");
   const [showKeyIvInput, setShowKeyIvInput] = useState(false);
 
@@ -27,6 +22,17 @@ function LinkPage() {
   const { data, isError, error, isLoading, refetch } = useUserFilesQuery(Number(id), token, page, limit);
   const files = data?.data;
   const currentPage = data?.page;
+
+  useEffect(() => {
+    const hashParams = new URLSearchParams(window.location.hash.slice(1));
+    const hashKey = hashParams.get("key");
+    const hashIv = hashParams.get("iv");
+
+    if (hashKey && hashIv) {
+      setKey(hashKey);
+      setIv(hashIv);
+    }
+  }, []);
 
   useEffect(() => {
     refetch();
@@ -45,8 +51,8 @@ function LinkPage() {
         setKey(parsed.key);
         setIv(parsed.iv);
         toast.success("Key and IV set successfully!");
-        setShowKeyIvInput(false); // Hide on success
-        setInputValue(""); // Clear input
+        setShowKeyIvInput(false);
+        setInputValue("");
       } else {
         toast.error("Key or IV missing in input");
       }
