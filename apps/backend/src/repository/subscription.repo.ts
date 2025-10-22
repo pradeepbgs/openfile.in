@@ -1,5 +1,5 @@
 import { PrismaClient } from "../generated/prisma";
-import { ISubscriptionRepo } from "../interface/subsc.interface";
+import { ISubscriptionRepo, StatusType } from "../interface/subsc.interface";
 
 export class SubscriptionRepository implements ISubscriptionRepo {
     private static instance: SubscriptionRepository
@@ -19,7 +19,7 @@ export class SubscriptionRepository implements ISubscriptionRepo {
     update_subscription_logs = async (
         data: {
             eventType: string
-            status: 'success' | 'failed' | 'processing' | 'user_not_found'
+            status: StatusType | any
             userEmail: string
             userId?: number | null
             paymentId: string

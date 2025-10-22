@@ -107,7 +107,7 @@ export const deletedFiles = pgTable(
 export const subscriptionLogs = pgTable(
   "SubscriptionLog",
   {
-    id: varchar("id", { length: 255 }).primaryKey(),
+    id: serial('id').primaryKey(),
     eventType: varchar("eventType", { length: 255 }).notNull(),
     status: varchar("status", { length: 255 }).notNull(),
     userEmail: varchar("userEmail", { length: 255 }).notNull(),

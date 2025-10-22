@@ -7231,17 +7231,19 @@ export namespace Prisma {
   }
 
   export type SubscriptionLogAvgAggregateOutputType = {
+    id: number | null
     userId: number | null
     amount: number | null
   }
 
   export type SubscriptionLogSumAggregateOutputType = {
+    id: number | null
     userId: number | null
     amount: number | null
   }
 
   export type SubscriptionLogMinAggregateOutputType = {
-    id: string | null
+    id: number | null
     eventType: string | null
     status: string | null
     userEmail: string | null
@@ -7257,7 +7259,7 @@ export namespace Prisma {
   }
 
   export type SubscriptionLogMaxAggregateOutputType = {
-    id: string | null
+    id: number | null
     eventType: string | null
     status: string | null
     userEmail: string | null
@@ -7292,11 +7294,13 @@ export namespace Prisma {
 
 
   export type SubscriptionLogAvgAggregateInputType = {
+    id?: true
     userId?: true
     amount?: true
   }
 
   export type SubscriptionLogSumAggregateInputType = {
+    id?: true
     userId?: true
     amount?: true
   }
@@ -7438,7 +7442,7 @@ export namespace Prisma {
   }
 
   export type SubscriptionLogGroupByOutputType = {
-    id: string
+    id: number
     eventType: string
     status: string
     userEmail: string
@@ -7547,7 +7551,7 @@ export namespace Prisma {
     name: "SubscriptionLog"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
-      id: string
+      id: number
       eventType: string
       status: string
       userEmail: string
@@ -7984,7 +7988,7 @@ export namespace Prisma {
    * Fields of the SubscriptionLog model
    */
   interface SubscriptionLogFieldRefs {
-    readonly id: FieldRef<"SubscriptionLog", 'String'>
+    readonly id: FieldRef<"SubscriptionLog", 'Int'>
     readonly eventType: FieldRef<"SubscriptionLog", 'String'>
     readonly status: FieldRef<"SubscriptionLog", 'String'>
     readonly userEmail: FieldRef<"SubscriptionLog", 'String'>
@@ -9038,7 +9042,7 @@ export namespace Prisma {
     AND?: SubscriptionLogWhereInput | SubscriptionLogWhereInput[]
     OR?: SubscriptionLogWhereInput[]
     NOT?: SubscriptionLogWhereInput | SubscriptionLogWhereInput[]
-    id?: StringFilter<"SubscriptionLog"> | string
+    id?: IntFilter<"SubscriptionLog"> | number
     eventType?: StringFilter<"SubscriptionLog"> | string
     status?: StringFilter<"SubscriptionLog"> | string
     userEmail?: StringFilter<"SubscriptionLog"> | string
@@ -9072,7 +9076,7 @@ export namespace Prisma {
   }
 
   export type SubscriptionLogWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
+    id?: number
     paymentId?: string
     AND?: SubscriptionLogWhereInput | SubscriptionLogWhereInput[]
     OR?: SubscriptionLogWhereInput[]
@@ -9117,7 +9121,7 @@ export namespace Prisma {
     AND?: SubscriptionLogScalarWhereWithAggregatesInput | SubscriptionLogScalarWhereWithAggregatesInput[]
     OR?: SubscriptionLogScalarWhereWithAggregatesInput[]
     NOT?: SubscriptionLogScalarWhereWithAggregatesInput | SubscriptionLogScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"SubscriptionLog"> | string
+    id?: IntWithAggregatesFilter<"SubscriptionLog"> | number
     eventType?: StringWithAggregatesFilter<"SubscriptionLog"> | string
     status?: StringWithAggregatesFilter<"SubscriptionLog"> | string
     userEmail?: StringWithAggregatesFilter<"SubscriptionLog"> | string
@@ -9551,7 +9555,6 @@ export namespace Prisma {
   }
 
   export type SubscriptionLogCreateInput = {
-    id?: string
     eventType: string
     status: string
     userEmail: string
@@ -9568,7 +9571,7 @@ export namespace Prisma {
   }
 
   export type SubscriptionLogUncheckedCreateInput = {
-    id?: string
+    id?: number
     eventType: string
     status: string
     userEmail: string
@@ -9585,7 +9588,6 @@ export namespace Prisma {
   }
 
   export type SubscriptionLogUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     eventType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     userEmail?: StringFieldUpdateOperationsInput | string
@@ -9602,7 +9604,7 @@ export namespace Prisma {
   }
 
   export type SubscriptionLogUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     eventType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     userEmail?: StringFieldUpdateOperationsInput | string
@@ -9619,7 +9621,7 @@ export namespace Prisma {
   }
 
   export type SubscriptionLogCreateManyInput = {
-    id?: string
+    id?: number
     eventType: string
     status: string
     userEmail: string
@@ -9636,7 +9638,6 @@ export namespace Prisma {
   }
 
   export type SubscriptionLogUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
     eventType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     userEmail?: StringFieldUpdateOperationsInput | string
@@ -9653,7 +9654,7 @@ export namespace Prisma {
   }
 
   export type SubscriptionLogUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     eventType?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     userEmail?: StringFieldUpdateOperationsInput | string
@@ -10229,6 +10230,7 @@ export namespace Prisma {
   }
 
   export type SubscriptionLogAvgOrderByAggregateInput = {
+    id?: SortOrder
     userId?: SortOrder
     amount?: SortOrder
   }
@@ -10266,6 +10268,7 @@ export namespace Prisma {
   }
 
   export type SubscriptionLogSumOrderByAggregateInput = {
+    id?: SortOrder
     userId?: SortOrder
     amount?: SortOrder
   }
