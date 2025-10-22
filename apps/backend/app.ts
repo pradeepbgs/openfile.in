@@ -33,10 +33,12 @@ app.use("*", async (c, next) => {
   return c.res;
 });
 
+const allowedOrigins = process.env.CORS_ORIGIN?.split(",") || [];
+
 app.use(
   '*',
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: allowedOrigins,
     // allowHeaders : ['Access-Control-Allow-Credentials: true'],
     credentials: true
   })
