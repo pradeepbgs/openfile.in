@@ -8,11 +8,15 @@ import { Middlewares } from "./src/api/hono/middleware/middleware";
 import { CONFIG } from "./src/config";
 import { createDBClient } from "./src/config/db";
 import { PrismaClient } from "./src/generated/prisma";
+import { IDeleteFileRepo } from "./src/interface/delete-file.interface";
+import { IFileRepo } from "./src/interface/file.interface";
 import { ILinkRepo } from "./src/interface/link.interface";
+import { ISubscriptionRepo } from "./src/interface/subsc.interface";
 import { IUserRepository } from "./src/interface/user.interface";
 import { DeletedFileRepository } from "./src/repository/deleted.file.repo";
 import { FileRepository } from "./src/repository/file.repo";
 import { LinkRepository } from "./src/repository/link.repo";
+import { SubscriptionRepositoryDrizzle } from "./src/repository/subscription.drizzle";
 import { SubscriptionRepository } from "./src/repository/subscription.repo";
 import UserRepositoryDrizzle, { DrizzleClient } from "./src/repository/user.drizzle";
 import UserRepository from "./src/repository/user.repo";
@@ -69,9 +73,9 @@ function createCacheService() {
 
 type RepositoryName = 'link' | 'deleted_file' | 'user' | 'file' | 'subscription'
 
-export function createRepository(repositoryName: RepositoryName)
-    : ILinkRepo | IUserRepository | FileRepository | DeletedFileRepository | SubscriptionRepository {
-    const clientType = CONFIG.DB_CLIENT;
+export function createRepository(repositoryName: RepositoryName, dbType?: string)
+    : ILinkRepo | IUserRepository | IFileRepo | IDeleteFileRepo | ISubscriptionRepo {
+    const clientType = dbType || CONFIG.DB_CLIENT;
     const client = createDBClient(clientType as any)
 
     switch (repositoryName) {
@@ -88,8 +92,8 @@ export function createRepository(repositoryName: RepositoryName)
             if (clientType === 'drizzle') return
             return FileRepository.getInstance(client as PrismaClient);
         case 'subscription':
-            if (clientType === 'drizzle') return
-            return SubscriptionRepository.getInstance(client as PrismaClient);
+            if (clientType === 'drizzle') return SubscriptionRepositoryDrizzle.getInstance(client as DrizzleClient) as ISubscriptionRepo
+            return SubscriptionRepository.getInstance(client as PrismaClient) as ISubscriptionRepo;
 
         default:
             throw new Error(`Repository ${repositoryName} not found`);
@@ -107,9 +111,9 @@ export const storageService = createStorageService();
 
 export const linkRepository = createRepository('link') as ILinkRepo
 export const deletedFileRepository = createRepository('deleted_file') as DeletedFileRepository
-export const userRepository = createRepository('user') as IUserRepository
+export const userRepository = createRepository('user', 'drizzle') as IUserRepository
 export const fileRepository = createRepository('file') as FileRepository
-export const subscriptionRepository = createRepository('subscription') as SubscriptionRepository
+export const subscriptionRepository = createRepository('subscription', 'drizzle') as SubscriptionRepository
 
 
 export const linkService = LinkService.getInstance(

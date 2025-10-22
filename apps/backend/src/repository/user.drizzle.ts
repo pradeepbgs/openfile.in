@@ -104,9 +104,9 @@ export default class UserRepositoryDrizzle implements IUserRepository {
     }
 }
 
-const dc = createDBClient('drizzle') as any
-const drizzleUser = UserRepositoryDrizzle.getInstance(dc)
-const prismaU = UserRepository.getInstance(createDBClient('prisma') as any)
+// const dc = createDBClient('drizzle') as any
+// const drizzleUser = UserRepositoryDrizzle.getInstance(dc)
+// const prismaU = UserRepository.getInstance(createDBClient('prisma') as any)
 // const user = await s.findUserId(1)
 // console.log(user)
 

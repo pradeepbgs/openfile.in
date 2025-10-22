@@ -84,8 +84,8 @@ export default function CreateLinkPage() {
       }
       const result: Result | void = await createLink({ payload, navigate, secretKey, iv });
       if (result) {
-        const { token, uploadUrl } = result;
-        const fullLink = `${uploadUrl}#key=${secretKey}&iv=${iv}`;
+        const { token } = result;
+        const fullLink = `${import.meta.env.VITE_UPLOAD_URL}?token=${token}#key=${secretKey}&iv=${iv}`;
         setUploadUrl(fullLink);
         toast('secure link created successfully')
         saveCryptoSecret(token!, { iv, key: secretKey })
@@ -93,6 +93,7 @@ export default function CreateLinkPage() {
       }
     } catch (err) {
       console.error("Failed to create link");
+      toast.error("Failed to create link");
     }
   };
 

@@ -117,7 +117,7 @@ model DeletedFile {
 }
 
 model SubscriptionLog {
-  id           String   @id @default(cuid())
+  id           Int   @id @default(autoincrement())
   eventType    String
   status       String
   userEmail    String

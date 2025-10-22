@@ -117,7 +117,6 @@ export default class LinkService implements ILinkService {
             {
                 id: link.id,
                 token,
-                uploadUrl: `${process.env.UPLOAD_URL}?token=${token}`
             },
         )
 
