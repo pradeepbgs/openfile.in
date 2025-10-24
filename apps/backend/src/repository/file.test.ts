@@ -9,7 +9,7 @@ describe("FileRepositoryDrizzle", () => {
     let repo: FileRepositoryDrizzle;
     let userId = 1;
     let linkId = 257;
-    const token = "019a15f0-08d4-78a5-9dc6-8b4d93ca2b61";
+    const token = process.env.TEST_LINK_TOKEN 
 
     beforeAll(() => {
         repo = FileRepositoryDrizzle.getInstance(mockClient);
