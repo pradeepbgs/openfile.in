@@ -5,8 +5,9 @@ import { eq } from "drizzle-orm";
 import { createDBClient } from "../config/db";
 import { User } from "../generated/prisma";
 import UserRepository from "./user.repo";
+import * as schema from '../db/index.js'
 
-export type DrizzleClient = ReturnType<typeof drizzle>;
+export type DrizzleClient = ReturnType<typeof drizzle<typeof schema>>;
 
 export default class UserRepositoryDrizzle implements IUserRepository {
 

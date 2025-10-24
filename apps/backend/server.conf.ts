@@ -14,7 +14,9 @@ import { ILinkRepo } from "./src/interface/link.interface";
 import { ISubscriptionRepo } from "./src/interface/subsc.interface";
 import { IUserRepository } from "./src/interface/user.interface";
 import { DeletedFileRepository } from "./src/repository/deleted.file.repo";
+import { FileRepositoryDrizzle } from "./src/repository/file.drizzle";
 import { FileRepository } from "./src/repository/file.repo";
+import { LinkRepositoryDrizzle } from "./src/repository/link.drizzle";
 import { LinkRepository } from "./src/repository/link.repo";
 import { SubscriptionRepositoryDrizzle } from "./src/repository/subscription.drizzle";
 import { SubscriptionRepository } from "./src/repository/subscription.repo";
@@ -80,7 +82,7 @@ export function createRepository(repositoryName: RepositoryName, dbType?: string
 
     switch (repositoryName) {
         case 'link':
-            if (clientType === 'drizzle') return // will create drizzleRepo
+            if (clientType === 'drizzle') return LinkRepositoryDrizzle.getInstance(client as DrizzleClient)
             return LinkRepository.getInstance(client as PrismaClient);
         case 'deleted_file':
             if (clientType === 'drizzle') return
@@ -89,7 +91,7 @@ export function createRepository(repositoryName: RepositoryName, dbType?: string
             if (clientType === 'drizzle') return UserRepositoryDrizzle.getInstance(client as DrizzleClient)
             return UserRepository.getInstance(client as PrismaClient);
         case 'file':
-            if (clientType === 'drizzle') return
+            if (clientType === 'drizzle') return FileRepositoryDrizzle.getInstance(client as DrizzleClient)
             return FileRepository.getInstance(client as PrismaClient);
         case 'subscription':
             if (clientType === 'drizzle') return SubscriptionRepositoryDrizzle.getInstance(client as DrizzleClient) as ISubscriptionRepo
@@ -109,11 +111,11 @@ export const notificationService = NotificationService.getInstance(mailer);
 // Instances
 export const storageService = createStorageService();
 
-export const linkRepository = createRepository('link') as ILinkRepo
-export const deletedFileRepository = createRepository('deleted_file') as DeletedFileRepository
+export const linkRepository = createRepository('link', 'drizzle') as ILinkRepo
 export const userRepository = createRepository('user', 'drizzle') as IUserRepository
-export const fileRepository = createRepository('file') as FileRepository
 export const subscriptionRepository = createRepository('subscription', 'drizzle') as SubscriptionRepository
+export const fileRepository = createRepository('file', 'drizzle') as FileRepository
+export const deletedFileRepository = createRepository('deleted_file') as DeletedFileRepository
 
 
 export const linkService = LinkService.getInstance(
