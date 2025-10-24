@@ -12,13 +12,66 @@ export interface IFileService {
 export interface IFileRepo {
     getUser(id: number): Promise<{ id: number } | null>
 
-    findLinkByTokenAndUserId(token: string, userId: number)
+    findLinkByTokenAndUserId(token: string, userId: number): Promise<{
+        name: string;
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        token: string;
+        maxUploads: number;
+        uploadCount: number;
+        expiresAt: Date;
+        expireAfterFirstUpload: boolean;
+        userId: number;
+    } | null>
 
-    findFileByIdUserIdAndLinkId(fileId: number, userId: number, linkId: number)
+    findFileByIdUserIdAndLinkId(fileId: number, userId: number, linkId: number): Promise<{
+        name: string;
+        id: number;
+        userId: number;
+        createdAt: Date;
+        updatedAt: Date;
+        url: string;
+        size: bigint;
+        keyUsed: boolean;
+        uploadLinkId: number;
+    }>
 
     storageUsed(userId: number)
 
-    createFileAndUpdateLink({ url, name, size }, linkId: number, userId: number)
+    createFileAndUpdateLink({ url, name, size }, linkId: number, userId: number):
+        Promise<[{
+            id: number;
+            name: string;
+            createdAt: Date;
+            updatedAt: Date;
+            userId: number;
+            url: string;
+            size: bigint;
+            keyUsed: boolean;
+            uploadLinkId: number;
+        }, {
+            name: string;
+            id: number;
+            token: string;
+            maxUploads: number;
+            uploadCount: number;
+            expiresAt: Date;
+            expireAfterFirstUpload: boolean;
+            userId: number;
+            createdAt: Date;
+            updatedAt: Date;
+        }]>
 
-    getFiles(linkId: number, userId: number, skip: number, limit: number)
+    getFiles(linkId: number, userId: number, skip: number, limit: number): Promise<{
+        url: string;
+        name: string;
+        size: bigint;
+        id: number;
+        userId: number;
+        createdAt: Date;
+        updatedAt: Date;
+        keyUsed: boolean;
+        uploadLinkId: number;
+    }[]>
 }
