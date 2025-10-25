@@ -10,11 +10,12 @@ import { fileRouter } from './src/api/hono/routes/file.route'
 import { webhookRouter } from './src/api/hono/routes/webhook'
 import { paymentsRouter } from './src/api/hono/routes/payments'
 
+import { serveStatic } from 'hono/bun'
+
 
 
 
 const app = new Hono()
-
 
 app.use(logger())
 
@@ -57,7 +58,7 @@ app.use(
 )
 
 app
-  .get('/', (c) => c.text('welcome lady boy!'))
+  // .get('/', (c) => c.text('welcome lady boy!'))
   .get('/health', (c) => c.text("i'm good lady boy!"))
 
 
@@ -80,9 +81,7 @@ app.get("/metrics", async (c) => {
   return c.text(metrics, 200, { "Content-Type": registry.contentType });
 });
 
-// app.onError((err, c) => {
-//   console.error(`checking err : ${err?.message}`)
-//   return c.json({ message: err.message }, 500)
-// })
+app.use('/assets/*', serveStatic({ root: './public' }))
+app.use('/*', serveStatic({ root: './public', path: 'index.html' })) // 
 
 export default app

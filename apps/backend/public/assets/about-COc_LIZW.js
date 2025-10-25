@@ -1,0 +1,1 @@
+import{w as s,j as t}from"./chunk-UH6JLGW7-BgIDLrGe.js";const r=s(function(){return t.jsxs("main",{className:"p-4",children:[t.jsx("h1",{children:"About Us"}),t.jsx("p",{children:"This is the about page of our app using React Router Future!"})]})});export{r as default};
