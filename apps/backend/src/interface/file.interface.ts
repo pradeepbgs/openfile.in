@@ -1,8 +1,8 @@
-import { Link } from "../generated/prisma";
+import { links } from "../db";
 import ApiResponse from "../utils/apiRespone";
 
 export interface IFileService {
-    notifyUpload(link: Link, { s3Key, fileSize, name }): Promise<ApiResponse>
+    notifyUpload(link: typeof links, { s3Key, fileSize, name }): Promise<ApiResponse>
     uploadPreSignedUrl(mimeType: string): Promise<ApiResponse>;
     getDownloadPreSignedUrl(userId: number, token: string, fileId: number, s3key: string): Promise<ApiResponse>;
     storageUsed(userId: number): Promise<ApiResponse>

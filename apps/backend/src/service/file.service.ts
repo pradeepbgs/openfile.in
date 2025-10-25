@@ -1,9 +1,9 @@
 import { redis } from "../config/redis";
-import { Link } from "../generated/prisma";
 import { ApiError } from "../utils/apiError";
 import ApiResponse from "../utils/apiRespone";
 import { IFileRepo, IFileService } from "../interface/file.interface";
 import { IStorage } from "../interface/storage.interface";
+import { links } from "../db";
 
 
 
@@ -24,7 +24,7 @@ export default class FileService implements IFileService {
         return FileService.instance;
     }
 
-    notifyUpload = async (link: Link, { s3Key, fileSize, name }) => {
+    notifyUpload = async (link: typeof links.$inferSelect, { s3Key, fileSize, name }) => {
 
         const user = await this.fileRepository.getUser(link.userId);
         if (!user) {
@@ -84,8 +84,7 @@ export default class FileService implements IFileService {
     storageUsed = async (userId: number) => {
         const storageUsed = await this.fileRepository.storageUsed(userId);
         if (!storageUsed) throw new ApiError('Failed to get storage used', 500);
-
-        return new ApiResponse(200, 'Storage used fetched successfully', { storageUsed: Number(storageUsed._sum.size) });
+        return new ApiResponse(200, 'Storage used fetched successfully', { storageUsed: Number(storageUsed.totalSize) });
     }
 
     getFilesByLinkAndToken = async (token: string, userId: number, page: number, limit: number, skip: number) => {

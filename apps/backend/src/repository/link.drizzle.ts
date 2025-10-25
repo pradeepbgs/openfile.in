@@ -3,8 +3,7 @@ import { ILinkRepo } from "../interface/link.interface";
 import { DrizzleClient } from "./user.drizzle";
 import { files, links, users } from "../db/schema";
 import { ONE_DAY } from "../service/link.service";
-import { createDBClient } from "../config/db";
-import { LinkRepository } from "./link.repo";
+
 
 
 

@@ -3,8 +3,8 @@ import { IFileService } from "../../../interface/file.interface";
 import { handleErrorResponse } from "../../../utils/handle-error";
 import ApiResponse from "../../../utils/apiRespone";
 import { notifyUploadSchema } from "../../../zod/schema";
-import { Link, User } from "../../../generated/prisma";
 import { HTTPException } from "diesel-core/http-exception";
+import { links, users } from "../../../db";
 
 
 
@@ -48,7 +48,7 @@ export default class DieselFileController {
 
     notifyFileUpload = async (c: ContextType) => {
         try {
-            const link: Link = c.get('link')
+            const link: typeof links.$inferSelect = c.get('link')
 
             const body = await c.req.json();
             const parsed = notifyUploadSchema.safeParse(body)
@@ -61,8 +61,7 @@ export default class DieselFileController {
                 return c.json({ error: 'Missing required fields' }, 400);
             }
 
-            const ip = 'getConnInfo(c)' as any
-            const apiResponse: ApiResponse = await this.fileService.notifyUpload(link, { s3Key, fileSize, name }, ip)
+            const apiResponse: ApiResponse = await this.fileService.notifyUpload(link, { s3Key, fileSize, name })
             return c.json({ message: apiResponse.message }, apiResponse.statusCode)
         } catch (error) {
             console.error("notifyFileUpload error:", error);
@@ -94,7 +93,7 @@ export default class DieselFileController {
         if (!token || !s3key || isNaN(fileId)) {
             return c.json({ error: "Missing or invalid parameters" }, 400);
         }
-        const user: User = c.get('user')
+        const user: typeof users.$inferSelect = c.get('user')
         try {
             const apiRespone: ApiResponse = await this.fileService.getDownloadPreSignedUrl(user.id, token, fileId, s3key)
 
@@ -108,7 +107,7 @@ export default class DieselFileController {
 
     storeageUsed = async (c: ContextType) => {
         try {
-            const user: User = c.get('user')
+            const user: typeof users.$inferSelect = c.get('user')
             const apiRespone = await this.fileService.storageUsed(user.id)
 
             return c.json(apiRespone, apiRespone.statusCode);

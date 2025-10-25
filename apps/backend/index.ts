@@ -1,14 +1,12 @@
 import app from "./app";
 import { deleteQueue } from "./src/queue/bullmq/queue/delete-files.queue";
 import { redis } from "./src/config/redis";
-import { cleanupService,  deletedFileRepository } from "./server.conf";
-
+import { cleanupService, deletedFileRepository, userRepository } from "./server.conf";
 
 
 const port = process.env.PORT || 8000;
 
 export async function pushPendingFilesToQueue() {
-    
     let totalExpiredFiles = await deletedFileRepository.findExpiredLinkCount('PENDING')
     console.log(`[Recovery] Found ${totalExpiredFiles} pending deleted files.`);
 
@@ -52,14 +50,16 @@ if (process.env.NODE_ENV === "development") {
 }
 
 
-cleanupService.LinkCleanup()
-cleanupService.run_delete_file_worker()
+// cleanupService.LinkCleanup()
+// cleanupService.run_delete_file_worker()
 
 
-cleanupService.addQueue(10);
-cleanupService.runInterval();
+// cleanupService.addQueue(10);
+// cleanupService.runInterval();
 // cleanup.runWoker();
 
+const user = await userRepository.findUserId(1)
+console.log('user ', user)
 
 pushPendingFilesToQueue()
     .catch(err =>

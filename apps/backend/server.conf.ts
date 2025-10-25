@@ -7,21 +7,16 @@ import LinkController from "./src/api/hono/controllers/link.controller";
 import { Middlewares } from "./src/api/hono/middleware/middleware";
 import { CONFIG } from "./src/config";
 import { createDBClient } from "./src/config/db";
-import { PrismaClient } from "./src/generated/prisma";
 import { IDeleteFileRepo } from "./src/interface/delete-file.interface";
 import { IFileRepo } from "./src/interface/file.interface";
 import { ILinkRepo } from "./src/interface/link.interface";
 import { ISubscriptionRepo } from "./src/interface/subsc.interface";
 import { IUserRepository } from "./src/interface/user.interface";
-import { DeletedFileRepository } from "./src/repository/deleted.file.repo";
+import { DeletedFileRepositoryDrizzle } from "./src/repository/deleted.file.drizzle";
 import { FileRepositoryDrizzle } from "./src/repository/file.drizzle";
-import { FileRepository } from "./src/repository/file.repo";
 import { LinkRepositoryDrizzle } from "./src/repository/link.drizzle";
-import { LinkRepository } from "./src/repository/link.repo";
 import { SubscriptionRepositoryDrizzle } from "./src/repository/subscription.drizzle";
-import { SubscriptionRepository } from "./src/repository/subscription.repo";
 import UserRepositoryDrizzle, { DrizzleClient } from "./src/repository/user.drizzle";
-import UserRepository from "./src/repository/user.repo";
 import { AuthService } from "./src/service/auth.service";
 import { RedisCache } from "./src/service/cache.service";
 import CleanupService from "./src/service/cleanup.service";
@@ -83,19 +78,19 @@ export function createRepository(repositoryName: RepositoryName, dbType?: string
     switch (repositoryName) {
         case 'link':
             if (clientType === 'drizzle') return LinkRepositoryDrizzle.getInstance(client as DrizzleClient)
-            return LinkRepository.getInstance(client as PrismaClient);
+            // return LinkRepository.getInstance(client as PrismaClient);
         case 'deleted_file':
-            if (clientType === 'drizzle') return
-            return DeletedFileRepository.getInstance(client as PrismaClient);
+            if (clientType === 'drizzle') return DeletedFileRepositoryDrizzle.getInstance(client as DrizzleClient)
+            // return DeletedFileRepository.getInstance(client as PrismaClient);
         case 'user':
             if (clientType === 'drizzle') return UserRepositoryDrizzle.getInstance(client as DrizzleClient)
-            return UserRepository.getInstance(client as PrismaClient);
+            // return UserRepository.getInstance(client as PrismaClient);
         case 'file':
             if (clientType === 'drizzle') return FileRepositoryDrizzle.getInstance(client as DrizzleClient)
-            return FileRepository.getInstance(client as PrismaClient);
+            // return FileRepository.getInstance(client as PrismaClient);
         case 'subscription':
             if (clientType === 'drizzle') return SubscriptionRepositoryDrizzle.getInstance(client as DrizzleClient) as ISubscriptionRepo
-            return SubscriptionRepository.getInstance(client as PrismaClient) as ISubscriptionRepo;
+            // return SubscriptionRepository.getInstance(client as PrismaClient) as ISubscriptionRepo;
 
         default:
             throw new Error(`Repository ${repositoryName} not found`);
@@ -111,11 +106,13 @@ export const notificationService = NotificationService.getInstance(mailer);
 // Instances
 export const storageService = createStorageService();
 
+// Repositories DB
+// now we have fully migrated to drizzle.
 export const linkRepository = createRepository('link', 'drizzle') as ILinkRepo
 export const userRepository = createRepository('user', 'drizzle') as IUserRepository
-export const subscriptionRepository = createRepository('subscription', 'drizzle') as SubscriptionRepository
-export const fileRepository = createRepository('file', 'drizzle') as FileRepository
-export const deletedFileRepository = createRepository('deleted_file') as DeletedFileRepository
+export const subscriptionRepository = createRepository('subscription', 'drizzle') as ISubscriptionRepo
+export const fileRepository = createRepository('file', 'drizzle') as IFileRepo
+export const deletedFileRepository = createRepository('deleted_file', 'drizzle') as IDeleteFileRepo
 
 
 export const linkService = LinkService.getInstance(
@@ -126,7 +123,7 @@ export const linkService = LinkService.getInstance(
 export const fileService = FileService.getInstance(fileRepository, storageService);
 
 export const linkController = LinkController.getInstance(linkService);
-export const fileController = FileController.getInstance(fileService);
+export const fileController = FileController.getInstance(fileService as any); // will solve ts err
 
 export const middleware = Middlewares.getInstance(userRepository, linkRepository);
 
@@ -144,4 +141,4 @@ export const cleanupService = CleanupService.getInstance(
 
 export const dieselAuthController = DieselAuthController.getInstance(authService)
 export const dieselMiddleware = DieselMiddlewares.getInstance(userRepository, linkRepository, cacheService);
-export const diesel_file_controller = DieselFileController.getInstance(fileService);
+export const diesel_file_controller = DieselFileController.getInstance(fileService as any); // will solve ts err

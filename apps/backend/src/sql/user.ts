@@ -7,14 +7,14 @@
 */}
 
 import { IUserRepository } from "../interface/user.interface";
-import { rawSqlPool } from "../config/db";
+// import { rawSqlPool } from "../config/db";
 
 
 
 export class UserSQL implements IUserRepository {
     pool:any
     constructor() {
-        this.pool = rawSqlPool
+        // this.pool = rawSqlPool
      }
 
     //
