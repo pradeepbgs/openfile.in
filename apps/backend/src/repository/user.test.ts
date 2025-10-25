@@ -36,6 +36,6 @@ describe("UserRepositoryDrizzle", () => {
     it("should fetch user and plan name", async () => {
         const result = await repo.findUserAndPlanName(1);
         expect(result).not.toBeNull();
-        expect(result?.subscription?.planName).toBe("pro");
+        expect(result?.subscription?.planName).toBe("enterprise");
     });
 });

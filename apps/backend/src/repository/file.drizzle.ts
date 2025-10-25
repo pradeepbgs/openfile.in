@@ -124,14 +124,15 @@ export class FileRepositoryDrizzle implements IFileRepo {
     }
 
     async storageUsed(userId: number) {
-        const result = this.client
+        const result = await this.client
             .select({
                 totalSize: sql<number>`SUM(${files.size})`
             })
             .from(files)
-            .where(eq(files.userId, userId));
+            .where(eq(files.userId, userId))
+            .limit(1)
         
-        return result;
+        return result[0]
     }
 }
 

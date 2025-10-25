@@ -7,8 +7,8 @@ import { verifyToken } from "../../utils/jwt"
 import { calculateTTL, script } from "../../utils/helper"
 import { redis } from "../../config/redis"
 import { uploadRequestSchema } from "../../zod/schema"
-import { Link } from "../../generated/prisma"
 import { RATE_LIMIT, WINDOW } from "../../../constant"
+import { links } from "../../db"
 
 
 export class DieselMiddlewares {
@@ -144,7 +144,7 @@ export class DieselMiddlewares {
 
     validateLinkAccess = async (c: ContextType) => {
         try {
-            const link: Link = c.get("link");
+            const link = c.get("link") as typeof links.$inferSelect;
             if (!link) throw new HTTPException(400, { message: "Link not found in context" });
 
 

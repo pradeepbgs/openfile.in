@@ -1,7 +1,6 @@
-import { Context, Hono } from 'hono'
+import {  Hono } from 'hono'
 import { Checkout, CustomerPortal } from '@dodopayments/hono'
-import { middleware, subscriptionRepository } from '../../../../server.conf'
-import { User } from '../../../generated/prisma'
+import { middleware } from '../../../../server.conf'
 import { HTTPException } from 'hono/http-exception'
 
 

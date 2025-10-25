@@ -1,16 +1,10 @@
+import { users } from "../db";
+
 interface Subscription {
     planName: 'free' | 'pro' | 'enterprise';
   }
   
-  interface User {
-    id: number;
-    email: string;
-    name: string;
-    avatar: string;
-    createdAt: Date;
-    updatedAt: Date;
-    subscription?: Subscription;
-  }
+  type User = ReturnType<typeof users> & { subscription?: Subscription };
   
   export class UserDTO {
     id: number;

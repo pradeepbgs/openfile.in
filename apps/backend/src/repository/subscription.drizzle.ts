@@ -1,9 +1,7 @@
 import { eq } from "drizzle-orm";
 import { ISubscriptionRepo, StatusType } from "../interface/subsc.interface";
-import UserRepositoryDrizzle, { DrizzleClient } from "./user.drizzle";
+import { DrizzleClient } from "./user.drizzle";
 import { subscriptionLogs, subscriptions } from "../db/schema";
-import { createDBClient } from "../config/db";
-import { SubscriptionRepository } from "./subscription.repo";
 
 interface dt {
     eventType: string;

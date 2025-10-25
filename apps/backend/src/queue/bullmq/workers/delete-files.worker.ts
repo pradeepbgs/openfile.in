@@ -2,7 +2,9 @@ import { Job, Worker } from "bullmq";
 import { redis } from "../../../config/redis";
 import { storageService } from "../../../../server.conf";
 import { createDBClient } from "../../../config/db";
-import { PrismaClient } from "../../../generated/prisma";
+import { DrizzleClient } from "../../../repository/user.drizzle";
+import { deletedFiles } from "../../../db";
+import { and, eq } from "drizzle-orm";
 
 interface FileItem {
     id: number;
@@ -29,7 +31,7 @@ interface FileItem {
 // )
 
 export async function deleteFiles(files: FileItem[], linkId: number) {
-    const prisma = createDBClient('prisma') as PrismaClient
+    const db = createDBClient('drizzle') as DrizzleClient
     const updatePromises = [];
 
     for (const file of files) {
@@ -37,15 +39,16 @@ export async function deleteFiles(files: FileItem[], linkId: number) {
 
             await storageService.deleteFiles([{ id: file.id, url: file.url }])
             updatePromises.push(
-                prisma.deletedFile.updateMany({
-                    where: {
-                        fileId: file.id
-                    },
-                    data: {
+                db
+                    .update(deletedFiles)
+                    .set({
                         status: 'DELETED',
                         deletedAt: new Date()
-                    }
-                })
+                    })
+                    .where(
+                        eq(deletedFiles.id, file.id)
+                    )
+
             );
         } catch (err) {
             console.log(`File not found in S3: ${file.url}, marking as deleted`);
@@ -55,29 +58,53 @@ export async function deleteFiles(files: FileItem[], linkId: number) {
                 err.statusCode === 204
             ) {
                 updatePromises.push(
-                    prisma.deletedFile.updateMany({
-                        where: {
-                            fileId: file.id,
-                            linkId: linkId,
-                        },
-                        data: {
-                            status: "DELETED",
-                            deletedAt: new Date(),
-                        },
-                    })
+                    db
+                        .update(deletedFiles)
+                        .set({
+                            status: 'DELETED',
+                            deletedAt: new Date()
+                        })
+                        .where(
+                            and(
+                                eq(deletedFiles.id, file.id),
+                                eq(deletedFiles.linkId, linkId)
+                            )
+                        )
+                    // db.deletedFile.updateMany({
+                    //     where: {
+                    //         fileId: file.id,
+                    //         linkId: linkId,
+                    //     },
+                    //     data: {
+                    //         status: "DELETED",
+                    //         deletedAt: new Date(),
+                    //     },
+                    // })
                 );
             }
             else {
                 updatePromises.push(
-                    prisma.deletedFile.updateMany({
-                        where: {
-                            fileId: file.id,
-                            linkId: linkId,
-                        },
-                        data: {
-                            status: "FAILED",
-                        },
-                    })
+                    db
+                        .update(deletedFiles)
+                        .set({
+                            status: 'FAILED',
+                            deletedAt: new Date()
+                        })
+                        .where(
+                            and(
+                                eq(deletedFiles.id, file.id),
+                                eq(deletedFiles.linkId, linkId)
+                            )
+                        )
+                    // db.deletedFile.updateMany({
+                    //     where: {
+                    //         fileId: file.id,
+                    //         linkId: linkId,
+                    //     },
+                    //     data: {
+                    //         status: "FAILED",
+                    //     },
+                    // })
                 );
             }
         }

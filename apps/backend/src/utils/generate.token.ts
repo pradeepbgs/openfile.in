@@ -1,8 +1,8 @@
 import * as jwt from 'jsonwebtoken'
-import { User } from '../generated/prisma';
+import { users } from '../db';
 
 
-export const generateAccessAndRefreshToken = async (user: User): Promise<{ accessToken: string, refreshToken: string }> => {
+export const generateAccessAndRefreshToken = async (user: typeof users): Promise<{ accessToken: string, refreshToken: string }> => {
     try {
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
@@ -17,7 +17,7 @@ export const generateAccessAndRefreshToken = async (user: User): Promise<{ acces
     }
 }
 
-export const generateAccessToken = (user: User): string => {
+export const generateAccessToken = (user: typeof users): string => {
     const ACCESS_TOKEN_SECRET = process.env.JWT_SECRET;
     const ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY;
 
@@ -31,7 +31,7 @@ export const generateAccessToken = (user: User): string => {
 };
 
 
-const generateRefreshToken = (user: User): string => {
+const generateRefreshToken = (user: typeof users): string => {
     const REFRESH_TOKEN_SECRET = process.env.JWT_SECRET;
     const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY;
 
