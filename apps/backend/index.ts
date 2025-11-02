@@ -68,10 +68,7 @@ pushPendingFilesToQueue()
 
 
 
-export default {
-    port,
-    fetch: app.fetch,
-}
+export default app
 
 // serve({
 //     port,

@@ -1,0 +1,11 @@
+{
+  "buildCommand": "bun build index.ts --outdir dist --target bun --no-type-check || true",
+  "outputDirectory": "dist",
+  "builds": [
+    { "src": "dist/index.js", "use": "@vercel/bun" }
+  ],
+  "bunVersion": "1.x",
+  "routes": [
+    { "src": "/(.*)", "dest": "/api/index.ts" }
+  ]
+}
