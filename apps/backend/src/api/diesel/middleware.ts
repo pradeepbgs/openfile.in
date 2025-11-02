@@ -1,4 +1,3 @@
-import { ContextType } from "diesel-core"
 import { ICache } from "../../interface/cache.interface"
 import { ILinkRepo } from "../../interface/link.interface"
 import { IUserRepository } from "../../interface/user.interface"
@@ -9,6 +8,7 @@ import { redis } from "../../config/redis"
 import { uploadRequestSchema } from "../../zod/schema"
 import { RATE_LIMIT, WINDOW } from "../../../constant"
 import { links } from "../../db"
+import { ContextType } from "diesel-core"
 
 
 export class DieselMiddlewares {
@@ -42,7 +42,7 @@ export class DieselMiddlewares {
             if (!token) {
                 throw new HTTPException(401, {
                     message: "Unauthorized",
-                    casue: "No token provided"
+                    cause: "No token provided"
                 });
             }
 
@@ -50,7 +50,7 @@ export class DieselMiddlewares {
             if (!decoded || !decoded.id) {
                 throw new HTTPException(401, {
                     message: "Unauthorized",
-                    casue: "Invalid token"
+                    cause: "Invalid token"
                 });
             }
 

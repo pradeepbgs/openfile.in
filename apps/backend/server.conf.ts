@@ -108,11 +108,11 @@ export const storageService = createStorageService();
 
 // Repositories DB
 // now we have fully migrated to drizzle.
-export const linkRepository = createRepository('link', 'drizzle') as ILinkRepo
-export const userRepository = createRepository('user', 'drizzle') as IUserRepository
-export const subscriptionRepository = createRepository('subscription', 'drizzle') as ISubscriptionRepo
-export const fileRepository = createRepository('file', 'drizzle') as IFileRepo
-export const deletedFileRepository = createRepository('deleted_file', 'drizzle') as IDeleteFileRepo
+export const linkRepository = createRepository('link') as ILinkRepo
+export const userRepository = createRepository('user') as IUserRepository
+export const subscriptionRepository = createRepository('subscription') as ISubscriptionRepo
+export const fileRepository = createRepository('file') as IFileRepo
+export const deletedFileRepository = createRepository('deleted_file') as IDeleteFileRepo
 
 
 export const linkService = LinkService.getInstance(

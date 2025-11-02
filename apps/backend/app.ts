@@ -58,7 +58,6 @@ app.use(
 )
 
 app
-  // .get('/', (c) => c.text('welcome lady boy!'))
   .get('/health', (c) => c.text("i'm good lady boy!"))
 
 
@@ -67,7 +66,7 @@ app
   // .route("/api/v1/auth", authRouter)
   .mount('/api/v1/auth', diesel_auth_router.fetch())
   .route("/api/v1/link", linkRouter)
-  .mount('/api/v1/file/upload-url', diesel_file_router.fetch())
+  // .mount('/api/v1/file/upload-url', diesel_file_router.fetch())
   .route('/api/v1/file', fileRouter)
   //
   .route('/api/v1/webhooks', webhookRouter)
@@ -81,7 +80,12 @@ app.get("/metrics", async (c) => {
   return c.text(metrics, 200, { "Content-Type": registry.contentType });
 });
 
-app.use('/assets/*', serveStatic({ root: './public' }))
-app.use('/*', serveStatic({ root: './public', path: 'index.html' })) // 
-
+//
+// app.use('/assets/*', serveStatic({ root: './public' }))
+// app.use('/*', async (c, next) => {
+//   if (c.req.path.startsWith('/api/')) {
+//     return next() 
+//   }
+//   return serveStatic({ root: './public', path: 'index.html' })(c, next)
+// })
 export default app

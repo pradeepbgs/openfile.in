@@ -22,7 +22,13 @@ export function FileCard({ file, iv, ivkey, token }: FileCardProps) {
   const handleDecrypt = async () => {
     if (decryptedBlob) return;
 
+    if (iv === "undefined" || ivkey === "undefined") {
+      toast.error("No Iv/Key found, please add Iv/Key");
+      return;
+    }
+    
     setIsProcessing(true);
+    
     try {
       const blob = await decryptAndDownloadFileWithCrypto(file, file.name, token, ivkey, iv);
       if (blob) {
@@ -57,7 +63,12 @@ export function FileCard({ file, iv, ivkey, token }: FileCardProps) {
       link.href = decryptedUrl!;
       link.download = file.name;
       link.click();
-    } 
+    }
+    
+    if (iv === "undefined" || ivkey === "undefined") {
+      toast.error("No Iv/Key found, please add Iv/Key");
+      return;
+    }
     // othwrwise do this.
     else {
       setIsProcessing(true);

@@ -6,7 +6,7 @@ import { GLOBAL_BG } from "constant";
 
 export default function AuthPage() {
     const handleGoogleLogin = useGoogleLoginHandler();
-    const [showCookieWarning, setShowCookieWarning] = useState(true); // or use detection logic
+    const [showCookieWarning, setShowCookieWarning] = useState(true); 
 
     const openHelpPage = () => {
         window.open("https://support.google.com/accounts/answer/61416?hl=en", "_blank");

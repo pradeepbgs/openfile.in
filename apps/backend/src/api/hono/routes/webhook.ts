@@ -2,6 +2,7 @@ import {  Hono } from 'hono'
 import { Webhooks } from '@dodopayments/hono'
 import { PaymentSucceededData, WebhookEvent } from '../../../../type';
 import { notificationService, subscriptionRepository, userRepository } from '../../../../server.conf';
+import { users } from '../../../db';
 
 export const webhookRouter = new Hono()
 
@@ -20,7 +21,7 @@ const subscription_logs = async (
         message?: string
         createdAt: Date
         updatedAt: Date
-        error?: String
+        error?: string
     }
 ) => {
     const isSuccessFull = await subscriptionRepository.update_subscription_logs(data)
@@ -37,7 +38,7 @@ const updatePlan = async (email: string, paymentData: PaymentSucceededData, retr
     try {
         console.log(`checking exitence of user: ${email}`)
 
-        const existingUser = await userRepository.findUserByEmail(email);
+        const existingUser = await userRepository.findUserByEmail(email) ;
         if (!existingUser) {
             console.warn('User not found');
 
@@ -60,7 +61,7 @@ const updatePlan = async (email: string, paymentData: PaymentSucceededData, retr
         }
 
         console.log(`found user: ${existingUser.email}, updating plan...`)
-        const updatingPlan = await subscriptionRepository.update_plan(existingUser.id, 'pro')
+        const updatingPlan = await subscriptionRepository.update_plan(existingUser.id as any, 'pro')
 
         if (!updatingPlan) {
             console.warn(`Subscription record missing for user: ${email}`);
@@ -69,7 +70,7 @@ const updatePlan = async (email: string, paymentData: PaymentSucceededData, retr
                 eventType: 'payment.succeeded',
                 status: 'failed',
                 userEmail: email,
-                userId: existingUser.id,
+                userId: existingUser.id as any,
                 paymentId: paymentData.payment_id,
                 subscriptionId: paymentData.subscription_id,
                 amount: paymentData.total_amount,
@@ -89,7 +90,7 @@ const updatePlan = async (email: string, paymentData: PaymentSucceededData, retr
             eventType: 'payment.succeeded',
             status: 'success',
             userEmail: email,
-            userId: existingUser.id,
+            userId: existingUser.id as any,
             paymentId: paymentData.payment_id,
             subscriptionId: paymentData.subscription_id,
             amount: paymentData.total_amount,
@@ -103,7 +104,7 @@ const updatePlan = async (email: string, paymentData: PaymentSucceededData, retr
 
         // sending mail
         notificationService.sendSubscriptionSuccessEmail(
-            existingUser.email,
+            existingUser.email as any,
             paymentData.total_amount,
             paymentData.currency
         );

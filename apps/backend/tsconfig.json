@@ -3,12 +3,14 @@
       "lib": [
          "es2021"
       ],
-      "target": "es2021",
-      "module": "commonjs",
-      "moduleResolution": "node",
+      "target": "esnext",
+      "module": "esnext",
+      "moduleResolution": "bundler",
       "outDir": "./build",
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
-      "sourceMap": true
+      "sourceMap": true,
+      "skipLibCheck": true,
+      "noEmitOnError": false
    }
 }
