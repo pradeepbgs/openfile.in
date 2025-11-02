@@ -52,7 +52,9 @@ export default class FileService implements IFileService {
 
 
     uploadPreSignedUrl = async (mimeType: string) => {
+        console.log('in file service before generate url')
         const { url, key } = await this.storageService.generatePresignedUploadUrl(mimeType);
+        console.log('in file service after generate url')
         return new ApiResponse(200, 'URL generated successfully', { url, key })
     }
 

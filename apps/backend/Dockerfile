@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package.json tsconfig.json ./
 
-RUN apt-get update
+# RUN apt-get update
 
 RUN bun install
 
