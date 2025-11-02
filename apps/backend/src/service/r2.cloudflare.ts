@@ -49,7 +49,10 @@ export class R2StorageService implements IStorage {
             Key: key,
             ContentType: mimeType,
         });
-        const url = await getSignedUrl(this.client as any, cmd, { expiresIn: 3600 });
+        console.log(" Before getSignedUrl in r2 service");
+        const url = await getSignedUrl(this.client, cmd, { expiresIn: 3600 });
+        console.log(" After getSignedUrl");
+
         return { url, key };
     }
 

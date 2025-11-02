@@ -29,7 +29,7 @@ import { S3Service } from "./src/service/s3.service";
 
 // Select storage
 function createStorageService() {
-    const name = CONFIG.STORAGE_TYPE.toLowerCase();
+    const name = CONFIG.STORAGE_TYPE.toLowerCase() || 'r2';
 
     switch (name) {
         case 's3':

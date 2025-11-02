@@ -71,7 +71,9 @@ export default class FileController {
         try {
             const safeMimeType = c.get('mimeType')
 
+            console.log('before upload controller')
             const res: ApiResponse = await this.fileService.uploadPreSignedUrl(safeMimeType)
+            console.log('after upload controller')
             return c.json(res.data, res.statusCode);
         } catch (error) {
             console.log('upload url error ', error)
