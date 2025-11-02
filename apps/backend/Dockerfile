@@ -21,7 +21,7 @@ FROM oven/bun:latest as runner
 WORKDIR /app
 
 COPY --from=builder /app/app-server ./
-COPY --from=builder /app/public ./public
+# COPY --from=builder /app/public ./public
 
 EXPOSE 8000
 
