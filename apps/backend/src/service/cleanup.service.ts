@@ -100,7 +100,7 @@ export default class CleanupService {
     runWorker = async () => {
         new Worker('cleanup', async () => {
             await this.runExclusive(this.cleanupExpiredLinks)
-        }, { connection: redis })
+        }, { connection: redis as any})
     }
 
 
@@ -116,7 +116,7 @@ export default class CleanupService {
             }
         },
             {
-                connection: redis,
+                connection: redis as any,
                 maxStalledCount: 2,
                 limiter: { max: 5, duration: 1000 },
                 concurrency: 3

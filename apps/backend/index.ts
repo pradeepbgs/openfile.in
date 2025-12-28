@@ -50,12 +50,12 @@ if (process.env.NODE_ENV === "development") {
 }
 
 
-// cleanupService.LinkCleanup()
-// cleanupService.run_delete_file_worker()
+cleanupService.LinkCleanup()
+cleanupService.run_delete_file_worker()
 
 
-// cleanupService.addQueue(10);
-// cleanupService.runInterval();
+cleanupService.addQueue(10);
+cleanupService.runInterval('1000');
 // cleanup.runWoker();
 
 const user = await userRepository.findUserId(1)
