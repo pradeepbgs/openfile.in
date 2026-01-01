@@ -7,6 +7,7 @@ import { IUserRepository } from "../interface/user.interface";
 import { INotification } from "../interface/notification.interface";
 import { IAuthService } from "../interface/auth.interface";
 import { users } from "../db";
+import { generateId } from "../utils/generate-id";
 
 export class AuthService implements IAuthService {
   private static instance: AuthService
@@ -41,7 +42,7 @@ export class AuthService implements IAuthService {
 
     let user = await this.userRepository.findUserByEmail(email) as typeof users
     if (!user) {
-      user = await this.userRepository.createUser(name, email, picture) as any
+      user = await this.userRepository.createUser(generateId(), name, email, picture) as any
       if (!user) throw new ApiError("Something went wrong while creating user", 500)
       this.notificationService.sendWelcomeEmail(email);
     }

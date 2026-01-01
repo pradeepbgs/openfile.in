@@ -55,7 +55,7 @@ export class Middlewares {
             }
 
 
-            const user = await this.userRepository.findUserAndPlanName(decoded.id)
+            const user = await this.userRepository.findUserAndPlanName(decoded.id as string)
 
             if (!user) {
                 throw new HTTPException(401, {
@@ -99,7 +99,7 @@ export class Middlewares {
             }
 
             const linkToken = c.req.param("token");
-            const linkId = Number(c.req.param('id'))
+            const linkId = c.req.param('id')
             if (!linkToken || !linkId) {
                 throw new HTTPException(400, {
                     res: c.json({ error: "Token param or linkId missing" }, 400)
@@ -151,7 +151,7 @@ export class Middlewares {
             }
 
 
-            const linkId = parseInt(c.req.param("id"));
+            const linkId = c.req.param("id")
             if (!linkId) {
                 throw new HTTPException(400, {
                     res: c.json({ error: "Invalid link ID" }, 400)

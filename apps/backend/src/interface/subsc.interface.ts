@@ -20,11 +20,11 @@ export interface ISubscriptionRepo {
         }
     )
         : Promise<{
-            id: number;
+            id: string;
             eventType: string;
             status: StatusType |  any
             userEmail: string;
-            userId: number;
+            userId: string;
             paymentId: string;
             subscriptionId: string;
             amount: number;
@@ -37,10 +37,10 @@ export interface ISubscriptionRepo {
         } | null >
 
 
-    update_plan(userId: number, planName: string): Promise<{
-        id: number;
+    update_plan(userId: string, planName: string): Promise<{
+        id: string;
         status: StatusType | any
-        userId: number;
+        userId: string;
         createdAt: Date;
         updatedAt: Date;
         planName: string;

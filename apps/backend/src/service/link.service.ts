@@ -97,6 +97,7 @@ export default class LinkService implements ILinkService {
         // Creating
         const [link] = await this.linkRepository.createLink(
             {
+                id: uuidv7(),
                 expireAfterFirstUpload,
                 finalExpiration,
                 finalMaxUploads,
@@ -132,7 +133,7 @@ export default class LinkService implements ILinkService {
         return true
     }
 
-    deleteLink = async (link: any, userId: number) => {
+    deleteLink = async (link: any, userId: string) => {
 
         // in future we have to make delete files async so it will delete all files in the background
         // for that we can store all files url in redis and db then run a background job that will clean all these 
@@ -166,7 +167,7 @@ export default class LinkService implements ILinkService {
     }
 
     // 
-    getLinksCount = async (userId: number) => {
+    getLinksCount = async (userId: string) => {
         const links = await this.linkRepository.FindUserLinksCount(userId)
         return new ApiResponse(
             200,

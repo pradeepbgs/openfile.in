@@ -1,7 +1,6 @@
 import { Context } from "hono";
 import ApiResponse from '../../../utils/apiRespone'
 import { handleErrorResponse } from '../../../utils/handle-error'
-import { User } from "../../../generated/prisma";
 import { notifyUploadSchema } from "../../../zod/schema";
 import { IFileService } from "../../../interface/file.interface";
 
@@ -84,10 +83,10 @@ export default class FileController {
     getDownloadPresignedUrl = async (c: Context) => {
         const token = c.req.query('token');
         const fileIdRaw = c.req.query('fileId');
-        const fileId = Number(fileIdRaw);
+        const fileId = fileIdRaw
         const s3key = c.req.query('s3key');
 
-        if (!token || !s3key || isNaN(fileId)) {
+        if (!token || !s3key || !fileId) {
             return c.json({ error: "Missing or invalid parameters" }, 400);
         }
         const user = c.get('user')
@@ -103,7 +102,7 @@ export default class FileController {
 
     storeageUsed = async (c: Context) => {
         try {
-            const user: User = c.get('user')
+            const user = c.get('user')
             const apiRespone = await this.fileService.storageUsed(user.id)
 
             return c.json(apiRespone, apiRespone.statusCode);

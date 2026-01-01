@@ -2,11 +2,11 @@ import { Readable } from "stream"
 
 export interface IStorage {
     name(): string
-    uploadFile(file: File, userId: number)
-    uploadStream(stream: Readable, contentType: string, userId: number)
+    uploadFile(file: File)
+    uploadStream(stream: Readable, contentType: string)
     generateSignedDownloadUrl(key: string)
     generatePresignedUploadUrl(mimeType: string)
-    deleteFiles(files: { id: number, url: string }[])
+    deleteFiles(files: { id: string, url: string }[])
 }
 
 

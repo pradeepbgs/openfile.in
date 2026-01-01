@@ -3,21 +3,21 @@ import ApiResponse from "../utils/apiRespone"
 
 
 export interface ILinkRepo {
-    findLinkByIdAndUser(linkId: number, userId: number): Promise<{
+    findLinkByIdAndUser(linkId: string, userId: string): Promise<{
         token: string;
-        id: number;
+        id: string;
         files: {
-            id: number;
+            id: string;
             url: string;
         }[];
     }>
 
-    findLinkByTokenAndUserId(token: string, userId: number): Promise<{
+    findLinkByTokenAndUserId(token: string, userId: string): Promise<{
         token: string;
         expireAfterFirstUpload: boolean;
         name: string;
-        userId: number;
-        id: number;
+        userId: string;
+        id: string;
         maxUploads: number;
         uploadCount: number;
         expiresAt: Date;
@@ -29,8 +29,8 @@ export interface ILinkRepo {
         token: string;
         expireAfterFirstUpload: boolean;
         name: string;
-        userId: number;
-        id: number;
+        userId: string;
+        id: string;
         maxUploads: number;
         uploadCount: number;
         expiresAt: Date;
@@ -42,8 +42,8 @@ export interface ILinkRepo {
         token: string;
         expireAfterFirstUpload: boolean;
         name: string;
-        userId: number;
-        id: number;
+        userId: string;
+        id: string;
         maxUploads: number;
         uploadCount: number;
         expiresAt: Date;
@@ -51,26 +51,26 @@ export interface ILinkRepo {
         updatedAt: Date;
     }>
 
-    findFilesForLink(linkId: number, userId: number): Promise<{
+    findFilesForLink(linkId: string, userId: string): Promise<{
         name: string;
-        userId: number;
-        id: number;
+        userId: string;
+        id: string;
         createdAt: Date;
         updatedAt: Date;
         url: string;
         size: bigint;
         keyUsed: boolean;
-        uploadLinkId: number;
+        uploadLinkId: string;
     }[]>
 
-    deleteFilesForLink(linkId: number, userId: number)
+    deleteFilesForLink(linkId: string, userId: string)
 
-    deleteLink(linkId: number, userId: number): Promise<{
+    deleteLink(linkId: string, userId: string): Promise<{
         token: string;
         expireAfterFirstUpload: boolean;
         name: string;
-        userId: number;
-        id: number;
+        userId: string;
+        id: string;
         maxUploads: number;
         uploadCount: number;
         expiresAt: Date;
@@ -78,24 +78,24 @@ export interface ILinkRepo {
         updatedAt: Date;
     }>
 
-    delete_link_by_id(id: number): Promise<{
-        id: number;
+    delete_link_by_id(id: string): Promise<{
+        id: string;
         token: string;
         name: string;
         maxUploads: number;
         uploadCount: number;
         expiresAt: Date;
         expireAfterFirstUpload: boolean;
-        userId: number;
+        userId: string;
         createdAt: Date;
         updatedAt: Date;
     }>
 
-    findLinkWithFilesByTokenAndUserId(linkId: number, token: string, userId: number, skip: number, limit: number): Promise<{
-        id: number;
+    findLinkWithFilesByTokenAndUserId(linkId: string, token: string, userId: string, skip: number, limit: number): Promise<{
+        id: string;
         files: {
             name: string;
-            id: number;
+            id: string;
             createdAt: Date;
             url: string;
             size: bigint;
@@ -103,24 +103,25 @@ export interface ILinkRepo {
     }>
 
 
-    findUserLinks(userId: number, query: string, skip: number, limit: number): Promise<{
+    findUserLinks(userId: string, query: string, skip: number, limit: number): Promise<{
         token: string;
         name: string;
-        id: number;
+        id: string;
         maxUploads: number;
         uploadCount: number;
         expiresAt: Date;
         createdAt: Date;
     }[]>
 
-    findLinkUploadCount(linkId: number): Promise<{
+    findLinkUploadCount(linkId: string): Promise<{
         uploadCount: number;
     }>
 
-    FindUserLinksCount(userId: number): Promise<number>
+    FindUserLinksCount(userId: string): Promise<number>
 
     createLink(
         {
+            id,
             finalMaxUploads,
             token,
             expireAfterFirstUpload,
@@ -132,10 +133,11 @@ export interface ILinkRepo {
             linkCountexpireAt
         }
             : {
+                id: string
                 finalMaxUploads: number
                 token: string
                 finalExpiration: Date | string
-                userId: number
+                userId: string
                 name: string
                 expireAfterFirstUpload: boolean
                 shouldResetLinkCountExpiration: boolean
@@ -147,8 +149,8 @@ export interface ILinkRepo {
             token: string;
             expireAfterFirstUpload: boolean;
             name: string;
-            userId: number;
-            id: number;
+            userId: string;
+            id: string;
             maxUploads: number;
             uploadCount: number;
             expiresAt: Date;
@@ -156,7 +158,7 @@ export interface ILinkRepo {
             updatedAt: Date;
         }, {
             name: string;
-            id: number;
+            id: string;
             createdAt: Date;
             updatedAt: Date;
             email: string;
@@ -171,21 +173,21 @@ export interface ILinkRepo {
         Promise<({
             files: {
                 name: string;
-                userId: number;
-                id: number;
+                userId: string;
+                id: string;
                 createdAt: Date;
                 updatedAt: Date;
                 url: string;
                 size: bigint;
                 keyUsed: boolean;
-                uploadLinkId: number;
+                uploadLinkId: string;
             }[];
         } & {
             token: string;
             expireAfterFirstUpload: boolean;
             name: string;
-            userId: number;
-            id: number;
+            userId: string;
+            id: string;
             maxUploads: number;
             uploadCount: number;
             expiresAt: Date;
@@ -202,7 +204,7 @@ export interface ILinkService {
 
     validateLink(token: string): Promise<boolean>
 
-    deleteLink(link: any, userId: number): Promise<ApiResponse | ApiError>
+    deleteLink(link: any, userId: string): Promise<ApiResponse | ApiError>
 
-    getLinksCount(userId: number): Promise<ApiResponse | ApiError>
+    getLinksCount(userId: string): Promise<ApiResponse | ApiError>
 }

@@ -4,6 +4,7 @@ import ApiResponse from "../utils/apiRespone";
 import { IFileRepo, IFileService } from "../interface/file.interface";
 import { IStorage } from "../interface/storage.interface";
 import { links } from "../db";
+import { generateId } from "../utils/generate-id";
 
 
 
@@ -35,12 +36,13 @@ export default class FileService implements IFileService {
 
         const [fileRes, linkRes] = await this.fileRepository.createFileAndUpdateLink(
             {
+                fileId:generateId(),
+                linkId:link.id,
+                userId:user.id,
                 name,
                 size: fileSize,
                 url
             },
-            link.id,
-            user.id
         )
 
         if (!fileRes || !linkRes) {
@@ -58,7 +60,7 @@ export default class FileService implements IFileService {
         return new ApiResponse(200, 'URL generated successfully', { url, key })
     }
 
-    getDownloadPreSignedUrl = async (userId: number, token: string, fileId: number, s3key: string) => {
+    getDownloadPreSignedUrl = async (userId: string, token: string, fileId: string, s3key: string) => {
         const link = await this.fileRepository.findLinkByTokenAndUserId(token, userId);
         if (!link) {
             throw new ApiError("Invalid link or unauthorized", 404);
@@ -83,13 +85,13 @@ export default class FileService implements IFileService {
         return new ApiResponse(200, 'URL generated successfully', { url })
     }
 
-    storageUsed = async (userId: number) => {
+    storageUsed = async (userId: string) => {
         const storageUsed = await this.fileRepository.storageUsed(userId);
         if (!storageUsed) throw new ApiError('Failed to get storage used', 500);
         return new ApiResponse(200, 'Storage used fetched successfully', { storageUsed: Number(storageUsed.totalSize) });
     }
 
-    getFilesByLinkAndToken = async (token: string, userId: number, page: number, limit: number, skip: number) => {
+    getFilesByLinkAndToken = async (token: string, userId: string, page: number, limit: number, skip: number) => {
         const link = await this.fileRepository.findLinkByTokenAndUserId(token, userId);
 
         if (!link) {

@@ -1,10 +1,10 @@
-import { Context } from 'diesel-core/dist/ctx';
 import { IAuthService } from '../../../interface/auth.interface';
 import ApiResponse from '../../../utils/apiRespone';
 import { accessTokenOptions, refreshTokenOptions } from '../../../utils/cookie-options';
 import { handleErrorResponse } from '../../../utils/handle-error';
 import { authSchema } from '../../../zod/schema';
 import { HTTPException } from 'diesel-core/http-exception';
+import { ContextType } from 'diesel-core';
 
 export class DieselAuthController {
     private static instance: DieselAuthController
@@ -21,7 +21,7 @@ export class DieselAuthController {
         return DieselAuthController.instance;
     }
 
-    handleGoogleSignIn = async (c: Context) => {
+    handleGoogleSignIn = async (c: ContextType) => {
         try {
             const body = await c.body
             const result = authSchema.safeParse(body)
@@ -51,7 +51,7 @@ export class DieselAuthController {
         }
     };
 
-    logout = async (c: Context) => {
+    logout = async (c: ContextType) => {
         try {
             c.setCookie("accessToken", "", accessTokenOptions as any);
             c.setCookie("refreshToken", "", refreshTokenOptions as any);
@@ -65,7 +65,7 @@ export class DieselAuthController {
         }
     };
 
-    checkAuth = async (c: Context) => {
+    checkAuth = async (c: ContextType) => {
         try {
             const user = c.get("user");
             return c.json({ user });

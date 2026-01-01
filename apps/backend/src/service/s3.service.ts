@@ -41,7 +41,7 @@ export class S3Service implements IStorage {
         return this.instanceName
     }
 
-    public async uploadFile(file: File, userId: number) {
+    public async uploadFile(file: File) {
         const key = getKey(file.type);
         const upload = new Upload({
             client: this.client,
@@ -57,7 +57,7 @@ export class S3Service implements IStorage {
         return { url, key };
     }
 
-    public async uploadStream(stream: Readable, contentType: string, userId: number) {
+    public async uploadStream(stream: Readable, contentType: string) {
         const key = getKey(contentType);
         const upload = new Upload({
             client: this.client,
@@ -94,7 +94,7 @@ export class S3Service implements IStorage {
     }
 
 
-    deleteFiles = async (files: { id: number, url: string }[]) => {
+    deleteFiles = async (files: { id: string, url: string }[]) => {
         console.log('called s3 deleted method ', this.name());
         if (files.length === 0) return;
 

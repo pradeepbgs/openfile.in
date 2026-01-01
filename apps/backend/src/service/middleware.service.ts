@@ -15,7 +15,7 @@ export class MiddlewareService {
         const decoded = verifyToken(token);
         if (!decoded?.id) throw new ApiError("Invalid token", 401);
 
-        const user = await userRepository.findUserAndPlanName(decoded.id as number);
+        const user = await userRepository.findUserAndPlanName(decoded.id as string);
         if (!user) throw new ApiError("User not found", 401);
 
         return user;
@@ -29,7 +29,7 @@ export class MiddlewareService {
         const decoded = verifyToken(token);
         if (!decoded?.id) throw new ApiError("Invalid token", 401);
 
-        const user = await userRepository.findUserId(decoded.id as number);
+        const user = await userRepository.findUserId(decoded.id as string);
         if (!user) throw new ApiError("User not found", 401);
 
         return user;
@@ -42,31 +42,31 @@ export class MiddlewareService {
         if (!decoded?.id) throw new ApiError("Invalid token", 401);
 
         const skip = (page - 1) * limit;
-        const links = await linkRepository.findUserLinks(decoded.id as number, query, skip, limit);
+        const links = await linkRepository.findUserLinks(decoded.id as string, query, skip, limit);
 
         return { userId: decoded.id, links };
     }
 
-    static async fetchLinkWithUser(token: string, linkId: number) {
+    static async fetchLinkWithUser(token: string, linkId: string) {
         if (token.startsWith("Bearer ")) token = token.slice(7);
 
         const decoded = verifyToken(token);
         if (!decoded?.id) throw new ApiError("Invalid token", 401);
 
-        const link = await linkRepository.findLinkByIdAndUser(linkId, decoded.id as number);
+        const link = await linkRepository.findLinkByIdAndUser(linkId, decoded.id as string);
         if (!link) throw new ApiError("Not Found", 404);
 
         return { userId: decoded.id, link };
     }
 
-    static async fetchFilesByToken(token: string, linkId: number, linkToken: string, page: number, limit: number) {
+    static async fetchFilesByToken(token: string, linkId: string, linkToken: string, page: number, limit: number) {
         if (token.startsWith("Bearer ")) token = token.slice(7);
 
         const decoded = verifyToken(token);
         if (!decoded?.id) throw new ApiError("Invalid token", 401);
 
         const skip = (page - 1) * limit;
-        const link = await linkRepository.findLinkWithFilesByTokenAndUserId(linkId, linkToken, decoded.id as number, skip, limit);
+        const link = await linkRepository.findLinkWithFilesByTokenAndUserId(linkId, linkToken, decoded.id as string, skip, limit);
         if (!link) throw new ApiError("No files found or unauthorized access", 404);
 
         return link;

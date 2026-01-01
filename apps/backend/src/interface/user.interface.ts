@@ -2,15 +2,15 @@ import { users } from "../db/schema";
 
 export interface IUserRepository {
 
-    findUserId(id: number): Promise<{ id: number } | null>;
+    findUserId(id: string): Promise<{ id: number } | null>;
 
 
     findUserByEmail(email: string): Promise< typeof users | null>;
 
-    createUser(name: string, email: string, avatar: string): Promise< typeof users | null>;
+    createUser(id: string, name: string, email: string, avatar: string): Promise< typeof users | null>;
 
-    findUserAndPlanName(userId: number): Promise<{
-        id: number;
+    findUserAndPlanName(userId: string): Promise<{
+        id: string;
         name: string;
         email: string;
         avatar: string;

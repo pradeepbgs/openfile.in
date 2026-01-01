@@ -87,10 +87,10 @@ export default class DieselFileController {
     getDownloadPresignedUrl = async (c: ContextType) => {
         const token = c.req.query('token');
         const fileIdRaw = c.req.query('fileId');
-        const fileId = Number(fileIdRaw);
+        const fileId = fileIdRaw;
         const s3key = c.req.query('s3key');
 
-        if (!token || !s3key || isNaN(fileId)) {
+        if (!token || !s3key || !fileId) {
             return c.json({ error: "Missing or invalid parameters" }, 400);
         }
         const user: typeof users.$inferSelect = c.get('user')

@@ -56,7 +56,7 @@ export class R2StorageService implements IStorage {
         return { url, key };
     }
 
-    async uploadFile(file: File, userId: number) {
+    async uploadFile(file: File) {
         const key = getKey(file.type);
         const upload = new Upload({
             client: this.client,
@@ -72,7 +72,7 @@ export class R2StorageService implements IStorage {
         return { url, key };
     }
 
-    async uploadStream(stream: Readable, contentType: string, userId: number) {
+    async uploadStream(stream: Readable, contentType: string) {
         const key = getKey(contentType);
         const upload = new Upload({
             client: this.client,
@@ -88,7 +88,7 @@ export class R2StorageService implements IStorage {
         return { url, key };
     }
 
-    async deleteFiles(files: { id: number, url: string }[]) {
+    async deleteFiles(files: { id: string, url: string }[]) {
         // console.log("called r2 delete ", this.name())
         // console.log(files)
 

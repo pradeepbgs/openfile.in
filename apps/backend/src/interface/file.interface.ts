@@ -2,19 +2,19 @@ import { links } from "../db";
 import ApiResponse from "../utils/apiRespone";
 
 export interface IFileService {
-    notifyUpload(link: typeof links, { s3Key, fileSize, name }): Promise<ApiResponse>
+    notifyUpload(link: typeof links.$inferSelect, { s3Key, fileSize, name }): Promise<ApiResponse>
     uploadPreSignedUrl(mimeType: string): Promise<ApiResponse>;
-    getDownloadPreSignedUrl(userId: number, token: string, fileId: number, s3key: string): Promise<ApiResponse>;
-    storageUsed(userId: number): Promise<ApiResponse>
-    getFilesByLinkAndToken(token: string, userId: number, page: number, limit: number, skip: number): Promise<ApiResponse>
+    getDownloadPreSignedUrl(userId: string, token: string, fileId: string, s3key: string): Promise<ApiResponse>;
+    storageUsed(userId: string): Promise<ApiResponse>
+    getFilesByLinkAndToken(token: string, userId: string, page: number, limit: number, skip: number): Promise<ApiResponse>
 }
 
 export interface IFileRepo {
-    getUser(id: number): Promise<{ id: number } | null>
+    getUser(id: string): Promise<{ id: string } | null>
 
-    findLinkByTokenAndUserId(token: string, userId: number): Promise<{
+    findLinkByTokenAndUserId(token: string, userId: string): Promise<{
         name: string;
-        id: number;
+        id: string;
         createdAt: Date;
         updatedAt: Date;
         token: string;
@@ -22,56 +22,56 @@ export interface IFileRepo {
         uploadCount: number;
         expiresAt: Date;
         expireAfterFirstUpload: boolean;
-        userId: number;
+        userId: string;
     } | null>
 
-    findFileByIdUserIdAndLinkId(fileId: number, userId: number, linkId: number): Promise<{
+    findFileByIdUserIdAndLinkId(fileId: string, userId: string, linkId: string): Promise<{
         name: string;
-        id: number;
-        userId: number;
+        id: string;
+        userId: string;
         createdAt: Date;
         updatedAt: Date;
         url: string;
         size: bigint;
         keyUsed: boolean;
-        uploadLinkId: number;
+        uploadLinkId: string;
     }>
 
-    storageUsed(userId: number)
+    storageUsed(userId: string)
 
-    createFileAndUpdateLink({ url, name, size }, linkId: number, userId: number):
+    createFileAndUpdateLink({ fileId, linkId, userId, url, name, size }: { fileId: string, linkId: string, userId: string, url: string, name: string, size: bigint }):
         Promise<[{
-            id: number;
+            id: string;
             name: string;
             createdAt: Date;
             updatedAt: Date;
-            userId: number;
+            userId: string;
             url: string;
             size: bigint;
             keyUsed: boolean;
-            uploadLinkId: number;
+            uploadLinkId: string;
         }, {
             name: string;
-            id: number;
+            id: string;
             token: string;
             maxUploads: number;
             uploadCount: number;
             expiresAt: Date;
             expireAfterFirstUpload: boolean;
-            userId: number;
+            userId: string;
             createdAt: Date;
             updatedAt: Date;
         }]>
 
-    getFiles(linkId: number, userId: number, skip: number, limit: number): Promise<{
+    getFiles(linkId: string, userId: string, skip: number, limit: number): Promise<{
         url: string;
         name: string;
         size: bigint;
-        id: number;
-        userId: number;
+        id: string;
+        userId: string;
         createdAt: Date;
         updatedAt: Date;
         keyUsed: boolean;
-        uploadLinkId: number;
+        uploadLinkId: string;
     }[]>
 }
