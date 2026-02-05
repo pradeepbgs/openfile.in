@@ -117,7 +117,8 @@ export const deletedFileRepository = createRepository('deleted_file') as IDelete
 
 export const linkService = LinkService.getInstance(
     linkRepository,
-    deletedFileRepository,
+  deletedFileRepository,
+  cacheService
 );
 
 export const fileService = FileService.getInstance(fileRepository, storageService);
