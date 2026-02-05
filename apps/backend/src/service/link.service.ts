@@ -5,6 +5,7 @@ import { getFinalLinkExpiration } from "../utils/getLinkExpiration";
 import { deleteQueue } from "../queue/bullmq/queue/delete-files.queue";
 import { ILinkRepo, ILinkService } from "../interface/link.interface";
 import { IDeleteFileRepo } from "../interface/delete-file.interface";
+import { RedisCache } from "./cache.service";
 
 export const planLimits = {
     free: { maxLinks: 5, maxUploadsPerLink: 2, fileExpiration: 1 },
@@ -26,18 +27,21 @@ export default class LinkService implements ILinkService {
     private static instance: LinkService
     private linkRepository: ILinkRepo
     private deletedFileRepository: IDeleteFileRepo
+    private cache: RedisCache
 
     constructor(
         linkRepository: ILinkRepo,
         deletedFileRepository: IDeleteFileRepo,
+        cache: RedisCache
     ) {
         this.linkRepository = linkRepository
         this.deletedFileRepository = deletedFileRepository
+        this.cache = cache
     }
 
-    static getInstance(linkRepository: ILinkRepo, deletedFileRepository: IDeleteFileRepo) {
+    static getInstance(linkRepository: ILinkRepo, deletedFileRepository: IDeleteFileRepo, cache: RedisCache) {
         if (!LinkService.instance) {
-            LinkService.instance = new LinkService(linkRepository, deletedFileRepository)
+            LinkService.instance = new LinkService(linkRepository, deletedFileRepository, cache)
         }
         return LinkService.instance;
     }
@@ -124,8 +128,15 @@ export default class LinkService implements ILinkService {
     }
 
 
-    validateLink = async (token: string): Promise<boolean> => {
-        const link = await this.linkRepository.FindLinkWithTokenIvAndKey(token)
+  validateLink = async (token: string): Promise<boolean> => {
+      let link:any = await this.cache.get(`link:${token}`);
+      if (link) {
+          link = JSON.parse(link);
+      }
+        else {
+          await this.cache.setWithOptions(`link:${token}`, JSON.stringify(link), { EX: 60 });
+          link = await this.linkRepository.FindLinkWithTokenIvAndKey(token);
+      }
         const now = new Date();
         if (!link || new Date(link.expiresAt) < now) {
             throw new ApiError("Link is not valid", 400)
@@ -136,8 +147,8 @@ export default class LinkService implements ILinkService {
     deleteLink = async (link: any, userId: string) => {
 
         // in future we have to make delete files async so it will delete all files in the background
-        // for that we can store all files url in redis and db then run a background job that will clean all these 
-        // url so even if server shuts down or link /file gets deleted we will have therir files url saved and 
+        // for that we can store all files url in redis and db then run a background job that will clean all these
+        // url so even if server shuts down or link /file gets deleted we will have therir files url saved and
         // can delete by brute force thet if deleted then delete from local db or for next round cron job
         const files = link.files;
         if (files.length > 0) {
@@ -166,7 +177,7 @@ export default class LinkService implements ILinkService {
         )
     }
 
-    // 
+    //
     getLinksCount = async (userId: string) => {
         const links = await this.linkRepository.FindUserLinksCount(userId)
         return new ApiResponse(
@@ -176,5 +187,3 @@ export default class LinkService implements ILinkService {
         )
     }
 }
-
-
