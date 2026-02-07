@@ -11,10 +11,10 @@ jobs:
       
       steps:
         - name: Deploy to the server
-          uses: appleboy/ssh-action@master
+          uses: appleboy/ssh-action@v1.0.3
           with:
              host: ${{ secrets.EC2_HOST }}
-             username: ${{ secrets.EC2_USERNAME }}
+             username: ${{ secrets.EC2_USER }}
              key: ${{ secrets.EC2_SSH_KEY_OPENFILE }}
              script: |
                cd openfile.in
