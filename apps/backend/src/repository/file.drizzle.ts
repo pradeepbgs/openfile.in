@@ -21,17 +21,16 @@ export class FileRepositoryDrizzle implements IFileRepo {
     }
 
     async createFileAndUpdateLink(
-        { url, name, size }:
-            { url: any; name: any; size: any; },
-        linkId: number, userId: number) {
-
+        { linkId, userId, url, name, size }:
+            { linkId: number, userId: number, url: string, name: string, size: bigint }) {
+                console.log('creating file', name, size, userId, linkId)
         const [createdFile] = await this
             .client
             .insert(files)
             .values({
                 url,
                 name,
-                size: BigInt(size),
+                size,
                 userId,
                 uploadLinkId: linkId,
                 createdAt: new Date(),
@@ -51,6 +50,7 @@ export class FileRepositoryDrizzle implements IFileRepo {
                 uploadCount: sql`${links.uploadCount}+1`,
             })
             .where(and(eq(links.id, linkId), eq(links.userId, userId)))
+
             .returning();
 
         if (!updatedLink) {

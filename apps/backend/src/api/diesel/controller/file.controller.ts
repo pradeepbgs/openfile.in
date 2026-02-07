@@ -4,7 +4,8 @@ import { handleErrorResponse } from "../../../utils/handle-error";
 import ApiResponse from "../../../utils/apiRespone";
 import { notifyUploadSchema } from "../../../zod/schema";
 import { HTTPException } from "diesel-core/http-exception";
-import { links, users } from "../../../db";
+import { User } from "../../../interface/user.interface";
+import { Link } from "../../../interface/link.interface";
 
 
 
@@ -48,7 +49,7 @@ export default class DieselFileController {
 
     notifyFileUpload = async (c: ContextType) => {
         try {
-            const link: typeof links.$inferSelect = c.get('link')
+            const link: Link = c.get('link')
 
             const body = await c.req.json();
             const parsed = notifyUploadSchema.safeParse(body)
@@ -87,13 +88,13 @@ export default class DieselFileController {
     getDownloadPresignedUrl = async (c: ContextType) => {
         const token = c.req.query('token');
         const fileIdRaw = c.req.query('fileId');
-        const fileId = fileIdRaw;
+        const fileId = Number(fileIdRaw);
         const s3key = c.req.query('s3key');
 
         if (!token || !s3key || !fileId) {
             return c.json({ error: "Missing or invalid parameters" }, 400);
         }
-        const user: typeof users.$inferSelect = c.get('user')
+        const user: User = c.get('user')
         try {
             const apiRespone: ApiResponse = await this.fileService.getDownloadPreSignedUrl(user.id, token, fileId, s3key)
 
@@ -107,7 +108,7 @@ export default class DieselFileController {
 
     storeageUsed = async (c: ContextType) => {
         try {
-            const user: typeof users.$inferSelect = c.get('user')
+            const user: User = c.get('user')
             const apiRespone = await this.fileService.storageUsed(user.id)
 
             return c.json(apiRespone, apiRespone.statusCode);

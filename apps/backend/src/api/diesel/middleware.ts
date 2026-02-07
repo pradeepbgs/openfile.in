@@ -1,5 +1,5 @@
 import { ICache } from "../../interface/cache.interface"
-import { ILinkRepo } from "../../interface/link.interface"
+import { ILinkRepo, Link } from "../../interface/link.interface"
 import { IUserRepository } from "../../interface/user.interface"
 import { HTTPException } from "diesel-core/http-exception"
 import { verifyToken } from "../../utils/jwt"
@@ -7,7 +7,6 @@ import { calculateTTL, script } from "../../utils/helper"
 import { redis } from "../../config/redis"
 import { uploadRequestSchema } from "../../zod/schema"
 import { RATE_LIMIT, WINDOW } from "../../../constant"
-import { links } from "../../db"
 import { ContextType } from "diesel-core"
 
 
@@ -55,7 +54,7 @@ export class DieselMiddlewares {
             }
 
 
-            const user = await this.userRepository.findUserAndPlanName(decoded.id as string)
+            const user = await this.userRepository.findUserAndPlanName(decoded.id as number)
 
             if (!user) {
                 throw new HTTPException(401, {
@@ -144,7 +143,7 @@ export class DieselMiddlewares {
 
     validateLinkAccess = async (c: ContextType) => {
         try {
-            const link = c.get("link") as typeof links.$inferSelect;
+            const link = c.get("link") as Link
             if (!link) throw new HTTPException(400, { message: "Link not found in context" });
 
 

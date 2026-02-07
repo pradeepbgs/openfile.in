@@ -4,7 +4,7 @@ import ApiResponse from "../utils/apiRespone";
 import { IFileRepo, IFileService } from "../interface/file.interface";
 import { IStorage } from "../interface/storage.interface";
 import { links } from "../db";
-import { generateId } from "../utils/generate-id";
+import { Link } from "../interface/link.interface";
 
 
 
@@ -25,7 +25,7 @@ export default class FileService implements IFileService {
         return FileService.instance;
     }
 
-    notifyUpload = async (link: typeof links.$inferSelect, { s3Key, fileSize, name }) => {
+    notifyUpload = async (link: Link, { s3Key, fileSize, name }) => {
 
         const user = await this.fileRepository.getUser(link.userId);
         if (!user) {
@@ -33,17 +33,15 @@ export default class FileService implements IFileService {
         }
 
         const url = `https://${process.env.AWS_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Key}`;
-
-        const [fileRes, linkRes] = await this.fileRepository.createFileAndUpdateLink(
-            {
-                fileId:generateId(),
-                linkId:link.id,
-                userId:user.id,
-                name,
-                size: fileSize,
-                url
-            },
-        )
+        console.log('userid', user)
+        console.log('link ', link)
+        const [fileRes, linkRes] = await this.fileRepository.createFileAndUpdateLink({
+            linkId: link.id,
+            userId: user.id,
+            url,
+            name,
+            size: BigInt(fileSize),
+        })
 
         if (!fileRes || !linkRes) {
             throw new ApiError("Partial failure updating DB.", 500)
@@ -60,7 +58,7 @@ export default class FileService implements IFileService {
         return new ApiResponse(200, 'URL generated successfully', { url, key })
     }
 
-    getDownloadPreSignedUrl = async (userId: string, token: string, fileId: string, s3key: string) => {
+    getDownloadPreSignedUrl = async (userId: number, token: string, fileId: number, s3key: string) => {
         const link = await this.fileRepository.findLinkByTokenAndUserId(token, userId);
         if (!link) {
             throw new ApiError("Invalid link or unauthorized", 404);
@@ -85,13 +83,13 @@ export default class FileService implements IFileService {
         return new ApiResponse(200, 'URL generated successfully', { url })
     }
 
-    storageUsed = async (userId: string) => {
+    storageUsed = async (userId: number) => {
         const storageUsed = await this.fileRepository.storageUsed(userId);
         if (!storageUsed) throw new ApiError('Failed to get storage used', 500);
         return new ApiResponse(200, 'Storage used fetched successfully', { storageUsed: Number(storageUsed.totalSize) });
     }
 
-    getFilesByLinkAndToken = async (token: string, userId: string, page: number, limit: number, skip: number) => {
+    getFilesByLinkAndToken = async (token: string, userId: number, page: number, limit: number, skip: number) => {
         const link = await this.fileRepository.findLinkByTokenAndUserId(token, userId);
 
         if (!link) {

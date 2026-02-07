@@ -128,21 +128,35 @@ export default class LinkService implements ILinkService {
     }
 
 
-  validateLink = async (token: string): Promise<boolean> => {
-      let link:any = await this.cache.get(`link:${token}`);
-      if (link) {
-          link = JSON.parse(link);
-      }
-        else {
-          await this.cache.setWithOptions(`link:${token}`, JSON.stringify(link), { EX: 60 });
-          link = await this.linkRepository.FindLinkWithTokenIvAndKey(token);
-      }
-        const now = new Date();
-        if (!link || new Date(link.expiresAt) < now) {
-            throw new ApiError("Link is not valid", 400)
+    validateLink = async (token: string): Promise<boolean> => {
+        const cacheKey = `link:${token}`;
+
+        let cached = await this.cache.get(cacheKey);
+        let link = cached ? JSON.parse(cached) : null;
+
+        if (!link) {
+            link = await this.linkRepository.FindLinkWithTokenIvAndKey(token);
+
+            if (link) {
+                const ttl = Math.max(
+                    0,
+                    Math.floor((new Date(link.expiresAt).getTime() - Date.now()) / 1000)
+                );
+
+                if (ttl > 0) {
+                    await this.cache.setWithOptions(cacheKey, JSON.stringify(link), { EX: ttl });
+                }
+            }
         }
-        return true
-    }
+
+        const expiresAt = link ? new Date(link.expiresAt) : null;
+
+        if (!link || !expiresAt || isNaN(expiresAt.getTime()) || expiresAt < new Date()) {
+            throw new ApiError("Link is not valid", 400);
+        }
+
+        return true;
+    };
 
     deleteLink = async (link: any, userId: string) => {
 

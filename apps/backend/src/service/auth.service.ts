@@ -40,9 +40,9 @@ export class AuthService implements IAuthService {
 
     const { email, name, picture } = payload;
 
-    let user = await this.userRepository.findUserByEmail(email) as typeof users
+    let user = await this.userRepository.findUserByEmail(email)
     if (!user) {
-      user = await this.userRepository.createUser(generateId(), name, email, picture) as any
+      user = await this.userRepository.createUser(name, email, picture) as any
       if (!user) throw new ApiError("Something went wrong while creating user", 500)
       this.notificationService.sendWelcomeEmail(email);
     }

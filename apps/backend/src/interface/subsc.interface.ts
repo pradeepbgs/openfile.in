@@ -20,27 +20,27 @@ export interface ISubscriptionRepo {
         }
     )
         : Promise<{
-            id: string;
+            id: number;
             eventType: string;
-            status: StatusType |  any
+            status: StatusType | any;
             userEmail: string;
-            userId: string;
+            userId: number;
             paymentId: string;
-            subscriptionId: string;
+            subscriptionId: string | null;
             amount: number;
             currency: string;
-            rawPayload: any;
+            rawPayload: unknown;
             message: string;
             error: string | null;
             createdAt: Date;
             updatedAt: Date;
-        } | null >
+        } | null>
 
 
-    update_plan(userId: string, planName: string): Promise<{
-        id: string;
-        status: StatusType | any
-        userId: string;
+    update_plan(userId: number, planName?: string): Promise<{
+        id: number;
+        status: "ACTIVE" | "INACTIVE" | "CANCELLED" | null;
+        userId: number;
         createdAt: Date;
         updatedAt: Date;
         planName: string;

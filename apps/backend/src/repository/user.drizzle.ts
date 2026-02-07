@@ -1,5 +1,5 @@
 import { drizzle } from "drizzle-orm/neon-http";
-import { IUserRepository } from "../interface/user.interface";
+import { IUserRepository, User } from "../interface/user.interface";
 import { subscriptions, users } from "../db/schema";
 import { eq } from "drizzle-orm";
 import * as schema from '../db/index.js'
@@ -22,7 +22,7 @@ export default class UserRepositoryDrizzle implements IUserRepository {
         return UserRepositoryDrizzle.instance;
     }
 
-    async createUser(name: string, email: string, avatar: string): Promise< typeof users | null> {
+    async createUser(name: string, email: string, avatar: string): Promise<User | null> {
         const now = new Date();     
         try {
             const [newUser] = await this.client
@@ -82,7 +82,7 @@ export default class UserRepositoryDrizzle implements IUserRepository {
         return data[0] ?? null
     }
 
-    findUserByEmail = async (email: string): Promise< typeof users | null> => {
+    findUserByEmail = async (email: string): Promise<User | null> => {
         const data = await this.client
             .select()
             .from(users)

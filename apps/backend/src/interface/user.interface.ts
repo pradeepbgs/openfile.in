@@ -1,16 +1,18 @@
 import { users } from "../db/schema";
 
+export type User = typeof users.$inferSelect
+
 export interface IUserRepository {
 
-    findUserId(id: string): Promise<{ id: number } | null>;
+    findUserId(id: number): Promise<{ id: number } | null>;
 
 
-    findUserByEmail(email: string): Promise< typeof users | null>;
+    findUserByEmail(email: string): Promise<User | null>;
 
-    createUser(id: string, name: string, email: string, avatar: string): Promise< typeof users | null>;
+    createUser(name: string, email: string, avatar: string): Promise<User | null>;
 
-    findUserAndPlanName(userId: string): Promise<{
-        id: string;
+    findUserAndPlanName(userId: number): Promise<{
+        id: number;
         name: string;
         email: string;
         avatar: string;

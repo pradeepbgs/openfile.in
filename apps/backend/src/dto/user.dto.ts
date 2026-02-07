@@ -1,10 +1,10 @@
-import { users } from "../db";
+import { User } from "../interface/user.interface";
 
 interface Subscription {
     planName: 'free' | 'pro' | 'enterprise';
   }
   
-  type User = ReturnType<typeof users> & { subscription?: Subscription };
+  type UserT = User & { subscription?: Subscription };
   
   export class UserDTO {
     id: number;
@@ -15,7 +15,7 @@ interface Subscription {
     updatedAt: Date;
     plan: 'free' | 'pro' | 'enterprise';
   
-    constructor(user: User) {
+    constructor(user: UserT) {
 
       this.id = user.id;
       this.email = user.email;

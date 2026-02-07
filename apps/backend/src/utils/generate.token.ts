@@ -1,8 +1,9 @@
 import * as jwt from 'jsonwebtoken'
-import { users } from '../db';
+import type { StringValue } from 'ms'
+import { User } from '../interface/user.interface';
 
 
-export const generateAccessAndRefreshToken = async (user: typeof users): Promise<{ accessToken: string, refreshToken: string }> => {
+export const generateAccessAndRefreshToken = async (user: User): Promise<{ accessToken: string, refreshToken: string }> => {
     try {
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
@@ -17,7 +18,7 @@ export const generateAccessAndRefreshToken = async (user: typeof users): Promise
     }
 }
 
-export const generateAccessToken = (user: typeof users): string => {
+export const generateAccessToken = (user: User): string => {
     const ACCESS_TOKEN_SECRET = process.env.JWT_SECRET;
     const ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY;
 
@@ -26,12 +27,12 @@ export const generateAccessToken = (user: typeof users): string => {
     }
 
     return jwt.sign({ id: user?.id, email: user?.email, }, ACCESS_TOKEN_SECRET, {
-        expiresIn: ACCESS_TOKEN_EXPIRY,
+        expiresIn: ACCESS_TOKEN_EXPIRY as StringValue,
     });
 };
 
 
-const generateRefreshToken = (user: typeof users): string => {
+const generateRefreshToken = (user: User): string => {
     const REFRESH_TOKEN_SECRET = process.env.JWT_SECRET;
     const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY;
 
@@ -46,7 +47,7 @@ const generateRefreshToken = (user: typeof users): string => {
         },
         REFRESH_TOKEN_SECRET,
         {
-            expiresIn: REFRESH_TOKEN_EXPIRY,
+            expiresIn: REFRESH_TOKEN_EXPIRY as StringValue,
         }
     );
 };

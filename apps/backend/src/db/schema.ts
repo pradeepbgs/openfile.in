@@ -1,5 +1,5 @@
 // src/schema.ts
-import { pgTable, varchar, text, integer, boolean, bigint, timestamp, json, doublePrecision, pgEnum, uuid } from "drizzle-orm/pg-core";
+import { pgTable, serial, varchar, text, integer, boolean, bigint, timestamp, json, doublePrecision, pgEnum } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
 // Enums
@@ -8,7 +8,7 @@ export const deletedStatus = pgEnum("DeletedStatus", ["PENDING", "DELETED", "FAI
 
 // Users table
 export const users = pgTable("User", {
-  id: uuid("id").primaryKey(),
+  id: serial("id").primaryKey(),
   email: varchar("email", { length: 255 }).notNull(),
   name: varchar("name", { length: 255 }).notNull(),
   avatar: varchar("avatar", { length: 255 }).notNull(),
@@ -28,14 +28,14 @@ export const usersRelations = relations(users, ({ one, many }) => ({
 export const links = pgTable(
   "Link",
   {
-    id: uuid("id").primaryKey(),
+    id: serial("id").primaryKey(),
     token: varchar("token", { length: 255 }).notNull(),
     name: varchar("name", { length: 255 }).default(""),
     maxUploads: integer("maxUploads").notNull(),
     uploadCount: integer("uploadCount").notNull(),
     expiresAt: timestamp("expiresAt").notNull(),
     expireAfterFirstUpload: boolean("expireAfterFirstUpload").default(false).notNull(),
-    userId: uuid("userId").notNull(),
+    userId: integer("userId").notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   },
@@ -50,13 +50,13 @@ export const linksRelations = relations(links, ({ one, many }) => ({
 export const files = pgTable(
   "File",
   {
-    id: uuid("id").primaryKey(),
+    id: serial("id").primaryKey(),
     url: text("url").notNull(),
     name: varchar("name", { length: 255 }).notNull(),
     size: bigint("size", { mode: "bigint" }).notNull(),
     keyUsed: boolean("keyUsed").default(false).notNull(),
-    uploadLinkId: uuid("uploadLinkId").notNull(),
-    userId: uuid("userId").notNull(),
+    uploadLinkId: integer("uploadLinkId").notNull(),
+    userId: integer("userId").notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   },
@@ -71,8 +71,8 @@ export const filesRelations = relations(files, ({ one }) => ({
 export const subscriptions = pgTable(
   "Subscription",
   {
-    id: uuid("id").primaryKey(),
-    userId: uuid("userId").unique().notNull(),
+    id: serial("id").primaryKey(),
+    userId: integer("userId").unique().notNull(),
     planName: varchar("planName", { length: 255 }).default("free").notNull(),
     price: doublePrecision("price").default(0.0).notNull(),
     status: subscriptionStatus("status").default("ACTIVE"),
@@ -92,9 +92,9 @@ export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
 export const deletedFiles = pgTable(
   "DeletedFile",
   {
-    id: uuid("id").primaryKey(),
-    fileId: uuid("fileId").notNull(),
-    linkId: uuid("linkId").notNull(),
+    id: serial("id").primaryKey(),
+    fileId: integer("fileId").notNull(),
+    linkId: integer("linkId").notNull(),
     fileUrl: text("fileUrl").notNull(),
     status: deletedStatus("status").default("PENDING").notNull(),
     deletedAt: timestamp("deletedAt"),
@@ -107,13 +107,13 @@ export const deletedFiles = pgTable(
 export const subscriptionLogs = pgTable(
   "SubscriptionLog",
   {
-    id: uuid('id').primaryKey(),
+    id: serial('id').primaryKey(),
     eventType: varchar("eventType", { length: 255 }).notNull(),
     status: varchar("status", { length: 255 }).notNull(),
     userEmail: varchar("userEmail", { length: 255 }).notNull(),
-    userId: uuid("userId"),
+    userId: integer("userId"),
     paymentId: varchar("paymentId", { length: 255 }).unique().notNull(),
-    subscriptionId: uuid("subscriptionId"),
+    subscriptionId: varchar("subscriptionId", { length: 255 }),
     amount: integer("amount").notNull(),
     currency: varchar("currency", { length: 10 }).notNull(),
     rawPayload: json("rawPayload").notNull(),

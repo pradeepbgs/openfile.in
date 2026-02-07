@@ -16,7 +16,7 @@ interface dt {
     message?: string;
     createdAt: Date;
     updatedAt: Date;
-    error?: String;
+    error?: string;
 }
 
 export class SubscriptionRepositoryDrizzle implements ISubscriptionRepo {
@@ -46,6 +46,7 @@ export class SubscriptionRepositoryDrizzle implements ISubscriptionRepo {
             .insert(subscriptionLogs)
             .values({
                 ...data,
+                message: data.message ?? '',
                 rawPayload: payload,
                 createdAt: new Date(),
                 updatedAt: new Date()
@@ -54,6 +55,7 @@ export class SubscriptionRepositoryDrizzle implements ISubscriptionRepo {
                 target: subscriptionLogs.paymentId,
                 set: {
                     ...data,
+                    message: data.message ?? '',
                     rawPayload: payload,
                     updatedAt: new Date()
                 }
