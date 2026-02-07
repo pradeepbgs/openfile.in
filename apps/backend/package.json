@@ -41,6 +41,7 @@
       "hono": "^4.9.10",
       "ioredis": "^5.8.2",
       "jsonwebtoken": "^9.0.2",
+      "k6": "^0.0.0",
       "mime-types": "^3.0.1",
       "nodemailer": "^7.0.3",
       "pg": "^8.16.3",

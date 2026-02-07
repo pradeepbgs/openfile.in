@@ -1,0 +1,23 @@
+name: Deploy to ec2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+   deploy:
+      runs-on: ubuntu-latest
+      
+      steps:
+        - name: Deploy to the server
+          uses: appleboy/ssh-action@master
+          with:
+             host: ${{ secrets.EC2_HOST }}
+             username: ${{ secrets.EC2_USERNAME }}
+             key: ${{ secrets.EC2_SSH_KEY_OPENFILE }}
+             script: |
+               cd openfile.in
+               git reset --hard HEAD
+               git pull origin main
+               docker compose -f apps/backend/compose.yml up --build -d
