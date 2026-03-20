@@ -18,6 +18,6 @@ jobs:
              key: ${{ secrets.EC2_SSH_KEY_OPENFILE }}
              script: |
                cd openfile.in
-               git reset --hard HEAD
-               git pull origin main
+               git fetch origin
+               git reset --hard origin/main
                docker compose -f apps/backend/compose.yml up --build -d
