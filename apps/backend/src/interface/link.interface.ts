@@ -123,7 +123,6 @@ export interface ILinkRepo {
 
     createLink(
         {
-            id,
             finalMaxUploads,
             token,
             expireAfterFirstUpload,
@@ -135,7 +134,6 @@ export interface ILinkRepo {
             linkCountexpireAt
         }
             : {
-                id: number
                 finalMaxUploads: number
                 token: string
                 finalExpiration: Date | string

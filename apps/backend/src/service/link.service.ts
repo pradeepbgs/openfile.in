@@ -101,7 +101,6 @@ export default class LinkService implements ILinkService {
         // Creating
         const [link] = await this.linkRepository.createLink(
             {
-                id: uuidv7(),
                 expireAfterFirstUpload,
                 finalExpiration,
                 finalMaxUploads,
@@ -137,28 +136,26 @@ export default class LinkService implements ILinkService {
         if (!link) {
             link = await this.linkRepository.FindLinkWithTokenIvAndKey(token);
 
-            if (link) {
-                const ttl = Math.max(
-                    0,
-                    Math.floor((new Date(link.expiresAt).getTime() - Date.now()) / 1000)
-                );
-
-                if (ttl > 0) {
-                    await this.cache.setWithOptions(cacheKey, JSON.stringify(link), { EX: ttl });
-                }
+            if (!link) {
+                throw new ApiError("Link is not valid", 400);
             }
+
+            await this.cache.setWithOptions(cacheKey, JSON.stringify(link), { EX: 60 });
         }
 
-        const expiresAt = link ? new Date(link.expiresAt) : null;
+        const expiresAt = new Date(link.expiresAt);
 
-        if (!link || !expiresAt || isNaN(expiresAt.getTime()) || expiresAt < new Date()) {
+        if (
+            isNaN(expiresAt.getTime()) ||
+            expiresAt.getTime() <= Date.now()
+        ) {
             throw new ApiError("Link is not valid", 400);
         }
 
         return true;
     };
 
-    deleteLink = async (link: any, userId: string) => {
+    deleteLink = async (link: any, userId: number) => {
 
         // in future we have to make delete files async so it will delete all files in the background
         // for that we can store all files url in redis and db then run a background job that will clean all these
@@ -192,7 +189,7 @@ export default class LinkService implements ILinkService {
     }
 
     //
-    getLinksCount = async (userId: string) => {
+    getLinksCount = async (userId: number) => {
         const links = await this.linkRepository.FindUserLinksCount(userId)
         return new ApiResponse(
             200,
