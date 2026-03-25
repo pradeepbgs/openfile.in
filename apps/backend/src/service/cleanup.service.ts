@@ -42,7 +42,7 @@ export default class CleanupService {
         const lockKey = "cleanup-lock";
         const lockTtlMs = 60 * 1000;
         const acquired = await this.cache.setWithOptions(lockKey, "locked", { PX: lockTtlMs, NX: true });
-        if (acquired) {
+        if (!acquired) {
             console.warn("Skipped: cleanup already in progress by another process.");
             return;
         }

@@ -50,13 +50,8 @@ if (process.env.NODE_ENV === "development") {
 }
 
 
-cleanupService.LinkCleanup()
 cleanupService.run_delete_file_worker()
-
-
-cleanupService.addQueue(10);
 cleanupService.runInterval(process.env.CLEANUP_INTERVAL ?? "10m");
-// cleanup.runWoker();
 
 const user = await userRepository.findUserId(1)
 console.log('user ', user)

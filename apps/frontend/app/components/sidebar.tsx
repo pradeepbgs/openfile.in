@@ -1,61 +1,74 @@
 import { useState } from 'react'
-import { Link, NavLink, } from 'react-router'
-import { FiHome, FiUser, FiChevronDown, FiMenu, FiLink } from 'react-icons/fi'
+import { Link, NavLink } from 'react-router'
+import { FiHome, FiChevronDown, FiMenu, FiLink, FiX } from 'react-icons/fi'
 import { useAuth } from '~/zustand/store';
 import SidebarDropdown from './sidebar-dropdown';
 import OpenfileLogo from './openfile-logo';
 
-const tabHoverBg = `bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500`;
-const tabNonHoverBg = ``
-
 const Tabs = [
-  { name: "Home", path: "/dashboard", icon: <FiHome /> },
-  { name: "Links", path: "/dashboard/links", icon: <FiLink /> },
-  // { name: "Settings", path: "/dashboard/settings", icon: <FiSettings /> },
+  { name: "Create Link", path: "/dashboard", icon: <FiHome size={16} /> },
+  { name: "My Links", path: "/dashboard/links", icon: <FiLink size={16} /> },
 ];
 
 export default function Sidebar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false); // For mobile toggle
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const user = useAuth.getState().user;
+  const planName = user?.subscription?.planName || 'free';
 
   return (
     <>
-      {/* Hamburger for mobile */}
-      {!sidebarOpen &&
+      {/* Mobile hamburger */}
+      {!sidebarOpen && (
         <button
-          className="md:hidden p-3 text-2xl absolute left-2 z-50 "
-          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="md:hidden p-3 text-gray-400 hover:text-white absolute left-2 top-2 z-50 transition-colors"
+          onClick={() => setSidebarOpen(true)}
         >
-          <FiMenu
-            color='white'
-          />
-        </button>}
+          <FiMenu size={22} />
+        </button>
+      )}
 
       <aside
-        className={`bg-black/90 md:bg-white/0 flex flex-col justify-between gap-90
-          fixed top-0 left-0 h-[100vh] w-64  p-4 border-r-2 border-indigo-900 z-40 
+        className={`
+          flex flex-col justify-between
+          fixed top-0 left-0 h-screen w-60 z-40
+          bg-[#080810] border-r border-white/8
           transform transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
-          md:relative md:translate-x-0 
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          md:relative md:translate-x-0
         `}
       >
-        <div className='text-white'>
-          <div className="flex items-center space-x-2 mb-4">
-            <OpenfileLogo />
-            <Link to={'/'} className="text-2xl font-bold text-white">OpenFile</Link>
+        {/* Top */}
+        <div className="flex flex-col gap-6 p-4">
+          {/* Logo + close button on mobile */}
+          <div className="flex items-center justify-between">
+            <Link to="/" className="flex items-center gap-2.5">
+              <OpenfileLogo />
+              <span className="text-base font-bold text-white">OpenFile</span>
+            </Link>
+            <button
+              className="md:hidden text-gray-500 hover:text-white transition-colors"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <FiX size={18} />
+            </button>
           </div>
-          <nav className="flex flex-col space-y-2">
+
+          {/* Nav */}
+          <nav className="flex flex-col gap-1">
             {Tabs.map((tab) => (
               <NavLink
                 key={tab.name}
                 to={tab.path}
                 end={tab.path === "/dashboard"}
+                onClick={() => setSidebarOpen(false)}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200
-                  ${isActive ? `${tabHoverBg} text-white font-semibold shadow`
-                    : "text-gray-300 hover:bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 hover:text-white"}`
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200 ${
+                    isActive
+                      ? 'bg-white/10 text-white font-semibold'
+                      : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                  }`
                 }
               >
                 {tab.icon}
@@ -65,29 +78,45 @@ export default function Sidebar() {
           </nav>
         </div>
 
-        {/* user icon */}
-        <div
-          className="py-3 rounded-lg bg-[#2a2b3d] text-white cursor-pointer hover:bg-[#34364a] transition-all p-2 relative"
-          onClick={() => setDropdownOpen(!dropdownOpen)}
-        >
-          <button className='flex gap-3 items-center w-full'>
-            <img
-              src={user?.avatar || 'https://ui-avatars.com/api/?name=User'}
-              alt="User avatar"
-              className="w-8 h-8 rounded-full object-cover"
-              referrerPolicy="no-referrer"
-            />
-            <span className="text-sm font-medium truncate">{user?.name || "Username"}</span>
-            <FiChevronDown className={`ml-auto transform transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
-          </button>
-          {dropdownOpen && <SidebarDropdown />}
+        {/* Bottom — User */}
+        <div className="p-4">
+          {/* Plan badge */}
+          <div className="mb-3 px-3">
+            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+              planName === 'pro'
+                ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                : 'bg-white/5 text-gray-500 border border-white/10'
+            }`}>
+              {planName === 'pro' ? '⭐ Pro' : 'Free plan'}
+            </span>
+          </div>
+
+          <div
+            className="relative rounded-xl bg-white/5 border border-white/8 hover:bg-white/8 transition-colors cursor-pointer p-3"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+          >
+            <button className="flex items-center gap-2.5 w-full">
+              <img
+                src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'U')}&background=6d28d9&color=fff`}
+                alt="avatar"
+                className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                referrerPolicy="no-referrer"
+              />
+              <span className="text-sm text-white truncate flex-1 text-left">{user?.name || "User"}</span>
+              <FiChevronDown
+                size={14}
+                className={`text-gray-400 flex-shrink-0 transform transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`}
+              />
+            </button>
+            {dropdownOpen && <SidebarDropdown />}
+          </div>
         </div>
       </aside>
 
-      {/* Overlay for mobile */}
+      {/* Overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black opacity-30 z-30 md:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}

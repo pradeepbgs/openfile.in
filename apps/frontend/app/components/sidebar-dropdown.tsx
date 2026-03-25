@@ -1,16 +1,7 @@
 import React from 'react'
-import { FiLogOut } from 'react-icons/fi'
-import { MdWorkspacePremium } from 'react-icons/md'
+import { FiLogOut, FiStar } from 'react-icons/fi'
 import { useNavigate } from 'react-router'
 import { logout } from '~/service/api'
-
-const tabs = [
-    {
-        name: "Premium Pro",
-        icon: <MdWorkspacePremium className="text-yellow-500" />,
-        navigateTo: '/plan'
-    }
-]
 
 function SidebarDropdown() {
     const navigate = useNavigate()
@@ -21,26 +12,24 @@ function SidebarDropdown() {
     }
 
     return (
-        <div className="absolute left-0 bottom-14 w-full bg-white border rounded-md shadow-lg z-10">
-            <ul className="py-2 text-sm text-gray-700">
-                {tabs.map((tab, index) => (
-                    <li key={index}>
-                        <button
-                            onClick={() => navigate(tab.navigateTo)}
-                            className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2"
-                        >
-                            {tab.icon}
-                            {tab.name}
-                        </button>
-                    </li>
-                ))}
+        <div className="absolute left-0 bottom-[calc(100%+8px)] w-full bg-[#0f0f1a] border border-white/10 rounded-xl shadow-xl shadow-black/50 z-50 overflow-hidden">
+            <ul className="py-1.5 text-sm">
                 <li>
                     <button
-                        onClick={handleLogout}
-                        className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center gap-2"
+                        onClick={() => navigate('/plan')}
+                        className="w-full text-left px-4 py-2.5 text-gray-300 hover:bg-white/5 hover:text-white flex items-center gap-2.5 transition-colors"
                     >
-                        <FiLogOut />
-                        Logout
+                        <FiStar className="text-yellow-400" size={15} />
+                        Upgrade to Pro
+                    </button>
+                </li>
+                <li className="border-t border-white/8 mt-1 pt-1">
+                    <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2.5 text-red-400 hover:bg-red-500/10 hover:text-red-300 flex items-center gap-2.5 transition-colors"
+                    >
+                        <FiLogOut size={15} />
+                        Sign out
                     </button>
                 </li>
             </ul>

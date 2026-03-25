@@ -1,128 +1,70 @@
 import React from 'react'
 import type { LinkItem } from 'types/types'
 import { filesize } from 'filesize'
-import Spinner from './spinner'
+import { Link2, CheckCircle, Upload, HardDrive } from 'lucide-react'
 
 interface StatCardProps {
   label: string;
   value: React.ReactNode;
-  icon?: React.ReactNode;
-  className?: string;
+  icon: React.ReactNode;
+  accent: string;
 }
 
-
-function UserStats(
-  {
-    links,
-    storageUsed,
-    storageUsedLoading,
-    storageUsedError,
-    linkCount,
-  }: {
-    links: LinkItem[],
-    storageUsed: number,
-    storageUsedLoading: boolean,
-    storageUsedError: Error | null,
-    linkCount: number,
-  }
-) {
-  const totalUploads = links.length && links?.reduce((sum, l) => sum + (l.uploadCount || 0), 0)
-  const activeLinks = links && links?.filter(link => {
+function UserStats({
+  links,
+  storageUsed,
+  linkCount,
+}: {
+  links: LinkItem[],
+  storageUsed: number,
+  storageUsedLoading: boolean,
+  storageUsedError: Error | null,
+  linkCount: number,
+}) {
+  const totalUploads = links.length ? links.reduce((sum, l) => sum + (l.uploadCount || 0), 0) : 0;
+  const activeLinks = links ? links.filter(link => {
     if (!link.expiresAt) return true;
     return new Date(link.expiresAt) > new Date();
-  }).length;
-
+  }).length : 0;
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       <StatCard
         label="Total Links"
-        value={linkCount}
-        className="border-l-2 border-blue-500"
-        icon={
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              className='text-blue-400'
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-          </svg>
-        }
+        value={linkCount ?? 0}
+        accent="border-blue-500/50 bg-blue-500/5"
+        icon={<Link2 size={16} className="text-blue-400" />}
       />
-
       <StatCard
         label="Active Links"
         value={activeLinks}
-        className="border-l-2 border-green-500"
-        icon={
-          <svg className="w-5 h-5 " fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              className='text-green-400'
-            />
-          </svg>
-        }
+        accent="border-green-500/50 bg-green-500/5"
+        icon={<CheckCircle size={16} className="text-green-400" />}
       />
-
       <StatCard
         label="Total Uploads"
         value={totalUploads}
-        className="border-l-2 border-yellow-500"
-        icon={
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              className='text-yellow-400'
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-          </svg>
-        }
+        accent="border-yellow-500/50 bg-yellow-500/5"
+        icon={<Upload size={16} className="text-yellow-400" />}
       />
-
       <StatCard
         label="Storage Used"
-        value={filesize(storageUsed)}
-        className="border-l-2 border-red-400"
-        icon={
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              className='text-red-400'
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
-          </svg>
-        }
+        value={filesize(storageUsed || 0)}
+        accent="border-red-400/50 bg-red-500/5"
+        icon={<HardDrive size={16} className="text-red-400" />}
       />
-
     </div>
-  )
+  );
 }
 
-const StatCard: React.FC<StatCardProps> = ({
-  label,
-  value,
-  icon,
-  className = ''
-}) => (
-  <div className={`bg-white/5 border border-white/10 rounded-lg px-4 py-3 ${className}`}>
-    <div className="flex items-center justify-between">
-      <div>
-        <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
-          {label}
-        </p>
-        <p className="text-lg font-semibold text-white mt-1">
-          {value}
-        </p>
-      </div>
-      {icon && (
-        <div className="p-2 rounded-lg bg-white/10 text-gray-400">
-          {icon}
-        </div>
-      )}
+const StatCard: React.FC<StatCardProps> = ({ label, value, icon, accent }) => (
+  <div className={`rounded-xl border px-4 py-3.5 bg-white/3 ${accent}`}>
+    <div className="flex items-center justify-between mb-2">
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{label}</p>
+      <div className="p-1.5 rounded-lg bg-white/5">{icon}</div>
     </div>
+    <p className="text-2xl font-bold text-white">{value}</p>
   </div>
-)
+);
 
-export default React.memo(UserStats)
+export default React.memo(UserStats);
