@@ -1,56 +1,76 @@
-import { FileText } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import React from 'react';
+import { Link } from 'react-router';
 
 function Footer() {
     return (
-        <footer className="px-6 py-12 bg-black/50">
-            <div className="max-w-7xl mx-auto">
-                <div className="grid md:grid-cols-4 gap-8">
-                    <div>
-                        <div className="flex items-center space-x-2 mb-4">
-                            <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-                                <FileText className="w-5 h-5 text-white" />
+        <footer className="relative border-t border-white/6 mt-8">
+            {/* Top gradient line accent */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-px bg-gradient-to-r from-transparent via-purple-500/40 to-transparent" />
+
+            <div className="max-w-6xl mx-auto px-6 py-14">
+                <div className="grid md:grid-cols-4 gap-10 mb-12">
+                    {/* Brand */}
+                    <div className="md:col-span-2">
+                        <Link to="/" className="inline-flex items-center gap-2.5 mb-4">
+                            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                                <Shield className="w-4 h-4 text-white" />
                             </div>
-                            <span className="text-2xl font-bold text-white">OpenFile</span>
-                        </div>
-                        <p className="text-gray-400">
-                            Secure, private, and reliable file sharing for everyone.
+                            <span className="text-lg font-bold text-white">OpenFile</span>
+                        </Link>
+                        <p className="text-gray-500 text-sm leading-relaxed max-w-xs mb-4">
+                            Secure, zero-knowledge file receiving. Your files are encrypted before they leave the sender's device.
                         </p>
-                        <p className='text-gray-300'>
-                            Mail us @<a href="mailto:exvillagerbgs@gmail.com" className="text-blue-500 hover:text-blue-400 transition-colors">exvillagerbgs@gmail.com</a>
-                        </p>
+                        <a
+                            href="mailto:exvillagerbgs@gmail.com"
+                            className="text-sm text-gray-600 hover:text-gray-400 transition-colors"
+                        >
+                            exvillagerbgs@gmail.com
+                        </a>
                     </div>
 
+                    {/* Product */}
                     <div>
-                        <h4 className="text-white font-semibold mb-4">Product</h4>
-                        <ul className="space-y-2 text-gray-400">
-                            <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
-                            <li><a href="/plan" className="hover:text-white transition-colors">Pricing</a></li>
-                            <li><a href="/privacy-policy/#security" className="hover:text-white transition-colors">Security</a></li>
+                        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Product</h4>
+                        <ul className="space-y-2.5">
+                            {[
+                                { label: 'Features', href: '#features' },
+                                { label: 'Pricing', href: '#pricing' },
+                                { label: 'Security', href: '/privacy-policy/#security' },
+                                { label: 'Dashboard', href: '/dashboard' },
+                            ].map(l => (
+                                <li key={l.label}>
+                                    <a href={l.href} className="text-sm text-gray-500 hover:text-white transition-colors">{l.label}</a>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
-                    {/* <div>
-                        <h4 className="text-white font-semibold mb-4">Company</h4>
-                        <ul className="space-y-2 text-gray-400">
-                            <li><a href="" className="hover:text-white transition-colors">About</a></li>
-                            <li><a href="" className="hover:text-white transition-colors">Blog</a></li>
-                            <li><a href="" className="hover:text-white transition-colors">Careers</a></li>
-                        </ul>
-                    </div> */}
-
+                    {/* Legal */}
                     <div>
-                        <h4 className="text-white font-semibold mb-4">Support</h4>
-                        <ul className="space-y-2 text-gray-400">
-                            <li><a href="/privacy-policy/" className="hover:text-white transition-colors">Help Center</a></li>
-                            <li><a href="/privacy-policy/#contact" className="hover:text-white transition-colors">Contact</a></li>
-                            <li><a href="/privacy-policy" className="hover:text-white transition-colors">Privacy</a></li>
+                        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Legal</h4>
+                        <ul className="space-y-2.5">
+                            {[
+                                { label: 'Privacy Policy', href: '/privacy-policy' },
+                                { label: 'Contact', href: '/privacy-policy/#contact' },
+                                { label: 'Help Center', href: '/privacy-policy/' },
+                            ].map(l => (
+                                <li key={l.label}>
+                                    <a href={l.href} className="text-sm text-gray-500 hover:text-white transition-colors">{l.label}</a>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </div>
 
-                <div className="border-t border-white/8 mt-12 pt-8 text-center text-gray-500 text-sm">
-                    <p>&copy; {new Date().getFullYear()} OpenFile. All rights reserved.</p>
+                <div className="border-t border-white/6 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <p className="text-xs text-gray-600">
+                        © {new Date().getFullYear()} OpenFile. All rights reserved.
+                    </p>
+                    <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                        <Shield className="w-3 h-3 text-green-500/60" />
+                        End-to-end encrypted
+                    </div>
                 </div>
             </div>
         </footer>
