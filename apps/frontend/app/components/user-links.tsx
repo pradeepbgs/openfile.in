@@ -67,7 +67,7 @@ function UserLinks({ links, handleRefresh }: { links: LinkItem[], handleRefresh:
       <div className="bg-white/5 border-white/5 rounded-lg shadow-md overflow-x-auto">
         <table className="min-w-full divide-y divide-neutral-700">
           <thead className="">
-            <tr>
+            <tr className="py-3">
               <th className="px-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                 <button
                   onClick={handleRefreshLink}
@@ -92,7 +92,7 @@ function UserLinks({ links, handleRefresh }: { links: LinkItem[], handleRefresh:
                 const fullLink = `${import.meta.env.VITE_UPLOAD_URL}?token=${link.token}#key=${secret?.key}&iv=${secret?.iv}`;
 
                 return (
-                  <tr key={link.id} className=" transition-colors duration-200">
+                  <tr key={link.id} className="hover:bg-white/5 transition-colors duration-200">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-3">
                         <FaCopy
@@ -133,9 +133,9 @@ function UserLinks({ links, handleRefresh }: { links: LinkItem[], handleRefresh:
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       {link.expiresAt
                         ? isBefore(new Date(link.expiresAt), new Date())
-                          ? `Expired ${formatDistanceToNow(new Date(link.expiresAt))} ago`
-                          : `in ${formatDistanceToNow(new Date(link.expiresAt))}`
-                        : 'Never'}
+                          ? <span className="text-red-400 text-xs">{`Expired ${formatDistanceToNow(new Date(link.expiresAt))} ago`}</span>
+                          : <span className="text-green-400 text-xs">{`in ${formatDistanceToNow(new Date(link.expiresAt))}`}</span>
+                        : <span className="text-gray-400 text-xs">Never</span>}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <AlertMenu onConfirm={() => handleLinkDelete(link.id)} />
@@ -148,7 +148,7 @@ function UserLinks({ links, handleRefresh }: { links: LinkItem[], handleRefresh:
                 <td colSpan={4} className="px-6 py-5 text-center text-gray-200 text-lg">
                   <button
                     onClick={() => navigate('/dashboard')}
-                    className='bg-blue-700 hover:bg-blue-600 px-2 py-1 rounded-md cursor-pointer'>Create new Link</button>
+                    className='bg-purple-600 hover:bg-purple-500 px-2 py-1 rounded-md cursor-pointer'>Create new Link</button>
                 </td>
               </tr>
             )}

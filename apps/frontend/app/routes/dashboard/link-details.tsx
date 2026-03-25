@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router';
+import { useParams, useSearchParams, useNavigate } from 'react-router';
 import { useUserFilesQuery } from '~/service/api';
 import type { FileItem } from 'types/types';
 import { FileCard } from '~/components/file-card';
@@ -11,6 +11,7 @@ function LinkPage() {
   const token = searchParams.get("token") ?? "";
   const { id } = useParams();
 
+  const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [key, setKey] = useState('');
   const [iv, setIv] = useState('');
@@ -64,11 +65,12 @@ function LinkPage() {
   return (
     <>
       <div className="max-w-6xl mx-auto min-h-screen text-white">
-        <h3 className="text-sm text-yellow-400 text-center mb-4 max-w-3xl mx-auto">
-          ⚠️ Please note: When you click "Decrypt", the file will first be downloaded and then decrypted in your browser.
-          This process may take some time depending on the file size and your device performance.
-          Please do not close or refresh the tab while decryption is in progress.
-        </h3>
+        <button onClick={() => navigate(-1)} className="mb-4 flex items-center gap-1 text-sm text-gray-400 hover:text-white transition-colors">
+          ← Back
+        </button>
+        <div className="text-sm text-yellow-300 text-center mb-6 max-w-3xl mx-auto bg-yellow-900/20 border border-yellow-500/30 rounded-lg px-4 py-3">
+          ⚠️ When you click "Decrypt", the file will be downloaded and decrypted in your browser. This may take time depending on file size. Do not close or refresh the tab during decryption.
+        </div>
 
         {showKeyIvInput ? (
           <div className="mb-6 p-4 border border-yellow-500/50 rounded-lg bg-yellow-900/20 backdrop-blur-sm">
@@ -98,8 +100,8 @@ function LinkPage() {
           </div>
         ) : (
           <div className="mb-6 flex justify-end">
-            <button onClick={() => setShowKeyIvInput(true)} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition text-sm">
-              Add Backup Key/IV
+            <button onClick={() => setShowKeyIvInput(true)} className="px-4 py-2 bg-white/10 hover:bg-white/15 border border-white/10 text-white rounded-lg transition text-sm flex items-center gap-2">
+              🔑 Add Backup Key/IV
             </button>
           </div>
         )}
@@ -117,25 +119,26 @@ function LinkPage() {
         </div>
 
         {!files?.length && (
-          <div className='flex justify-center items-center'>
-            <p className="p-4 text-gray-300">No files available.</p>
+          <div className='flex flex-col justify-center items-center gap-2 py-16'>
+            <p className="text-gray-500 text-lg">No files uploaded yet</p>
+            <p className="text-gray-600 text-sm">Share the upload link to receive encrypted files</p>
           </div>
         )}
 
         <div className="mt-6 flex justify-center items-center gap-3">
           <button
-            className="px-3 py-1 bg-gray-700 rounded disabled:opacity-50"
+            className="px-4 py-1.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-lg text-sm disabled:opacity-40 transition-colors"
             onClick={loadPrevPage}
             disabled={page === 1}
           >
-            Previous
+            ← Prev
           </button>
-          <span className="text-white">Page {currentPage}</span>
+          <span className="text-sm text-gray-400">Page {currentPage}</span>
           <button
-            className="px-3 py-1 bg-gray-700 rounded"
+            className="px-4 py-1.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-lg text-sm disabled:opacity-40 transition-colors"
             onClick={loadNextPage}
           >
-            Next
+            Next →
           </button>
         </div>
       </div>

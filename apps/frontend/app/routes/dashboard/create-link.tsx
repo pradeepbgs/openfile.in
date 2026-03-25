@@ -103,13 +103,14 @@ export default function CreateLinkPage() {
         Create Secure Upload Link
       </h1>
 
-      <div className="max-w-5xl md:w-[60%] gap-6 border border-white/10 rounded-md p-6 shadow-lg bg-white/5 text-white">
+      <p className="text-gray-400 text-sm text-center mb-6">Generate a one-time encrypted upload link to securely receive files.</p>
+      <div className="w-full max-w-2xl gap-6 border border-white/10 rounded-md p-6 shadow-lg bg-white/5 text-white">
         {/* FORM */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Uploads + Expiry */}
           <div className="flex flex-col md:flex-row gap-4">
             <div>
-              <label htmlFor="">Name ( optional )</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Name <span className="text-gray-500 text-xs">(optional)</span></label>
               <input
                 type="text"
                 {...register("name")}
@@ -193,7 +194,7 @@ export default function CreateLinkPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-md bg-purple-600 hover:bg-purple-700 text-white py-2 text-sm disabled:opacity-60 transition duration-300"
+            className="w-full rounded-md bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-2 text-sm disabled:opacity-60 transition duration-300"
           >
             {isCreateLinkPending ? <Spinner size={15} /> : "Generate Link"}
           </button>
@@ -211,6 +212,7 @@ export default function CreateLinkPage() {
           )}
 
 
+          <p className="text-xs text-gray-400 font-medium uppercase tracking-wide mb-2">Generated Link</p>
           <div className="w-full border border-white/10 rounded-md p-4 text-sm break-words bg-white/5 backdrop-blur text-white">
             {uploadUrl ? (
               <div className="flex items-start gap-4">

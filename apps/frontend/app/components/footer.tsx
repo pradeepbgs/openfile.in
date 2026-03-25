@@ -49,8 +49,8 @@ function Footer() {
                     </div>
                 </div>
 
-                <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-                    <p>&copy; 2025 OpenFile. All rights reserved.</p>
+                <div className="border-t border-white/8 mt-12 pt-8 text-center text-gray-500 text-sm">
+                    <p>&copy; {new Date().getFullYear()} OpenFile. All rights reserved.</p>
                 </div>
             </div>
         </footer>

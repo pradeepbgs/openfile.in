@@ -1,4 +1,5 @@
 import { FiDownload } from "react-icons/fi";
+import { filesize } from 'filesize';
 import type { FileItem } from "types/types";
 import { useState } from "react";
 import { decryptAndDownloadFileWithCrypto } from "~/utils/encrypt-decrypt";
@@ -92,11 +93,12 @@ export function FileCard({ file, iv, ivkey, token }: FileCardProps) {
   };
 
   return (
-    <div className="bg-white/5 border border-white/20 rounded-2xl shadow-md p-4 flex flex-col justify-between gap-2 hover:shadow-lg transition-all">
+    <div className="bg-white/5 border border-white/20 rounded-2xl shadow-md p-4 flex flex-col justify-between gap-2 hover:shadow-lg hover:border-white/30 transition-all">
       <div className="flex flex-col gap-1">
+        <span className="text-xs px-1.5 py-0.5 rounded bg-white/10 text-gray-400 font-mono w-fit">{file.name.split('.').pop()?.toUpperCase() ?? 'FILE'}</span>
         <p className="font-semibold text-white truncate">{file.name}</p>
         <p className="text-sm text-gray-400">
-          {(file.size / 1024).toFixed(1)} KB
+          {filesize(file.size)}
         </p>
       </div>
 

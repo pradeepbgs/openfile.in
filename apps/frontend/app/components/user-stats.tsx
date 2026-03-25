@@ -38,6 +38,7 @@ function UserStats(
       <StatCard
         label="Total Links"
         value={linkCount}
+        className="border-l-2 border-blue-500"
         icon={
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -52,6 +53,7 @@ function UserStats(
       <StatCard
         label="Active Links"
         value={activeLinks}
+        className="border-l-2 border-green-500"
         icon={
           <svg className="w-5 h-5 " fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -67,6 +69,7 @@ function UserStats(
       <StatCard
         label="Total Uploads"
         value={totalUploads}
+        className="border-l-2 border-yellow-500"
         icon={
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -81,6 +84,7 @@ function UserStats(
       <StatCard
         label="Storage Used"
         value={filesize(storageUsed)}
+        className="border-l-2 border-red-400"
         icon={
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -102,10 +106,10 @@ const StatCard: React.FC<StatCardProps> = ({
   icon,
   className = ''
 }) => (
-  <div className={`bg-white/5 rounded-lg px-4 py-3 ${className}`}>
+  <div className={`bg-white/5 border border-white/10 rounded-lg px-4 py-3 ${className}`}>
     <div className="flex items-center justify-between">
       <div>
-        <p className="text-xs text-white font-medium text-gray-400 uppercase tracking-wider">
+        <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
           {label}
         </p>
         <p className="text-lg font-semibold text-white mt-1">
@@ -113,7 +117,7 @@ const StatCard: React.FC<StatCardProps> = ({
         </p>
       </div>
       {icon && (
-        <div className="text-gray-400">
+        <div className="p-2 rounded-lg bg-white/10 text-gray-400">
           {icon}
         </div>
       )}
