@@ -9,7 +9,7 @@ import { GLOBAL_BG } from "constant";
 
 const DashboardLayout = () => {
   const navigate = useNavigate()
-  const user = useAuth.getState().user?.email
+  const user = useAuth.getState().user?.username
 
   useEffect(() => {
     if (!user) navigate('/auth')

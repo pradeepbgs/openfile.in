@@ -1,6 +1,6 @@
 import { Context } from "hono";
 import { deleteCookie, setCookie } from "hono/cookie";
-import { authSchema } from "../../../zod/schema";
+import { loginSchema, registerSchema } from "../../../zod/schema";
 import ApiResponse from "../../../utils/apiRespone";
 import { handleErrorResponse } from "../../../utils/handle-error";
 import { accessTokenOptions, refreshTokenOptions } from "../../../utils/cookie-options";
@@ -21,26 +21,61 @@ export class AuthController {
         return AuthController.instance;
     }
 
-    handleGoogleSignIn = async (c: Context) => {
+    // --- OAuth (Google) sign-in disabled ---
+    // handleGoogleSignIn = async (c: Context) => {
+    //     try {
+    //         const body = await c.req.json()
+    //         const result = authSchema.safeParse(body)
+    //         if (!result.success) {
+    //             const message = result.error.errors[0].message
+    //             return c.json({ error: message }, 400)
+    //         }
+    //         const { token } = result.data
+    //         const apiRespone: ApiResponse = await this.authService.signInWithGoogle(token);
+    //         setCookie(c, "accessToken", apiRespone.data.accessToken, accessTokenOptions);
+    //         setCookie(c, "refreshToken", apiRespone.data.refreshToken, refreshTokenOptions);
+    //         return c.json(apiRespone.data, apiRespone.statusCode);
+    //     } catch (error) {
+    //         console.error("Auth error:", error.message);
+    //         return handleErrorResponse(c, error)
+    //     }
+    // };
+    // --- end OAuth ---
+
+    signup = async (c: Context) => {
         try {
             const body = await c.req.json()
-
-            const result = authSchema.safeParse(body)
+            const result = registerSchema.safeParse(body)
             if (!result.success) {
                 const message = result.error.errors[0].message
                 return c.json({ error: message }, 400)
             }
-
-            const { token } = result.data
-
-            const apiRespone: ApiResponse = await this.authService.signInWithGoogle(token);
-
-            setCookie(c, "accessToken", apiRespone.data.accessToken, accessTokenOptions);
-            setCookie(c, "refreshToken", apiRespone.data.refreshToken, refreshTokenOptions);
-
-            return c.json(apiRespone.data, apiRespone.statusCode);
+            const { username, password } = result.data
+            const apiResponse: ApiResponse = await this.authService.signup(username, password);
+            setCookie(c, "accessToken", apiResponse.data.accessToken, accessTokenOptions);
+            setCookie(c, "refreshToken", apiResponse.data.refreshToken, refreshTokenOptions);
+            return c.json(apiResponse.data, apiResponse.statusCode);
         } catch (error) {
-            console.error("Auth error:", error.message);
+            console.error("Signup error:", error.message);
+            return handleErrorResponse(c, error)
+        }
+    };
+
+    login = async (c: Context) => {
+        try {
+            const body = await c.req.json()
+            const result = loginSchema.safeParse(body)
+            if (!result.success) {
+                const message = result.error.errors[0].message
+                return c.json({ error: message }, 400)
+            }
+            const { username, password } = result.data
+            const apiResponse: ApiResponse = await this.authService.login(username, password);
+            setCookie(c, "accessToken", apiResponse.data.accessToken, accessTokenOptions);
+            setCookie(c, "refreshToken", apiResponse.data.refreshToken, refreshTokenOptions);
+            return c.json(apiResponse.data, apiResponse.statusCode);
+        } catch (error) {
+            console.error("Login error:", error.message);
             return handleErrorResponse(c, error)
         }
     };

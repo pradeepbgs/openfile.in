@@ -37,7 +37,7 @@ export interface MailPayload {
 
 export interface jwtToken extends JwtPayload {
     id: string;
-    email: string;
+    username: string;
 }
 
 export interface Billing {

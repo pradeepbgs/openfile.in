@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import { uuidv7 } from "uuidv7";
 import { deletedFiles } from "../db";
 import { IDeleteFileRepo } from "../interface/delete-file.interface";
 import { DrizzleClient } from "./user.drizzle";
@@ -24,6 +25,7 @@ export class DeletedFileRepositoryDrizzle implements IDeleteFileRepo {
             .insert(deletedFiles)
             .values(
                 files.map((file: any) => ({
+                    id: uuidv7(),
                     fileId: file.id,
                     linkId,
                     fileUrl: file.url,

@@ -21,7 +21,7 @@ function LinkPage() {
 
   const limit = 10;
 
-  const { data, isError, error, isLoading, refetch } = useUserFilesQuery(Number(id), token, page, limit);
+  const { data, isError, error, isLoading, refetch } = useUserFilesQuery(id ?? '', token, page, limit);
   const files = data?.data;
   const currentPage = data?.page;
 

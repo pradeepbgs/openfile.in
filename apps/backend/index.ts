@@ -17,7 +17,7 @@ export async function pushPendingFilesToQueue() {
         const limit = Math.min(BATCH_SIZE, totalExpiredFiles)
         const files = await deletedFileRepository.findExpiredFiles('PENDING', limit, offset)
 
-        const grouped = new Map<number, { id: number, url: string }[]>();
+        const grouped = new Map<string, { id: string, url: string }[]>();
         for (const file of files) {
             const group = grouped.get(file.linkId) || [];
             group.push({ id: file.fileId, url: file.fileUrl });
@@ -53,7 +53,7 @@ if (process.env.NODE_ENV === "development") {
 cleanupService.run_delete_file_worker()
 cleanupService.runInterval(process.env.CLEANUP_INTERVAL ?? "10m");
 
-const user = await userRepository.findUserId(1)
+const user = await userRepository.findUserByUsername("okay")
 console.log('user ', user)
 
 pushPendingFilesToQueue()

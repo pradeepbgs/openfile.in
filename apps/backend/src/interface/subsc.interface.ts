@@ -7,7 +7,7 @@ export interface ISubscriptionRepo {
             eventType: string
             status: StatusType | any
             userEmail: string
-            userId?: number | null
+            userId?: string | null
             paymentId: string
             subscriptionId?: string | null
             amount: number
@@ -20,7 +20,7 @@ export interface ISubscriptionRepo {
         }
     )
         : Promise<{
-            id: number;
+            id: string;
             eventType: string;
             status: StatusType | any;
             userEmail: string;
@@ -37,10 +37,10 @@ export interface ISubscriptionRepo {
         } | null>
 
 
-    update_plan(userId: number, planName?: string): Promise<{
-        id: number;
+    update_plan(userId: string, planName?: string): Promise<{
+        id: string;
         status: "ACTIVE" | "INACTIVE" | "CANCELLED" | null;
-        userId: number;
+        userId: string;
         createdAt: Date;
         updatedAt: Date;
         planName: string;

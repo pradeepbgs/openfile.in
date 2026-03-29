@@ -26,7 +26,7 @@ export const generateAccessToken = (user: User): string => {
         throw new Error("Access token environment variables are not defined.");
     }
 
-    return jwt.sign({ id: user?.id, email: user?.email, }, ACCESS_TOKEN_SECRET, {
+    return jwt.sign({ id: user?.id, username: user?.username }, ACCESS_TOKEN_SECRET, {
         expiresIn: ACCESS_TOKEN_EXPIRY as StringValue,
     });
 };
@@ -43,7 +43,7 @@ const generateRefreshToken = (user: User): string => {
     return jwt.sign(
         {
             id: user?.id,
-            email: user?.email,
+            username: user?.username,
         },
         REFRESH_TOKEN_SECRET,
         {

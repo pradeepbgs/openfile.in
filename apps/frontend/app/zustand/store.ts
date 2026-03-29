@@ -3,9 +3,10 @@ import { persist } from 'zustand/middleware';
 
 export interface User {
     id: string;
-    email: string;
-    name:string;
-    avatar: string
+    username: string;
+    email?: string | null;
+    name?: string | null;
+    avatar?: string | null;
     subscription:{
       planName: string
     }

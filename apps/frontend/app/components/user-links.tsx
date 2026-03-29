@@ -19,12 +19,12 @@ function UserLinks({ links, handleRefresh }: { links: LinkItem[], handleRefresh:
     toast("Copied to clipboard");
   };
 
-  const route = (linkId: number, token: string, secret: { key: string, iv: string }) => {
+  const route = (linkId: string, token: string, secret: { key: string, iv: string }) => {
     navigate(`/dashboard/link/${linkId}?token=${token}#key=${secret?.key}&iv=${secret?.iv}`);
   };
 
   const { mutateAsync: deleteLink } = useDeleteLink();
-  const handleLinkDelete = async (id: number) => {
+  const handleLinkDelete = async (id: string) => {
     await deleteLink(id);
     toast("Link deleted");
     handleRefresh();

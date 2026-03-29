@@ -1,4 +1,5 @@
 import { and, eq, sql } from "drizzle-orm";
+import { uuidv7 } from "uuidv7";
 import { files, links } from "../db";
 import { IFileRepo } from "../interface/file.interface";
 import { DrizzleClient } from "./user.drizzle";
@@ -22,12 +23,13 @@ export class FileRepositoryDrizzle implements IFileRepo {
 
     async createFileAndUpdateLink(
         { linkId, userId, url, name, size }:
-            { linkId: number, userId: number, url: string, name: string, size: bigint }) {
+            { linkId: string, userId: string, url: string, name: string, size: bigint }) {
                 console.log('creating file', name, size, userId, linkId)
         const [createdFile] = await this
             .client
             .insert(files)
             .values({
+                id: uuidv7(),
                 url,
                 name,
                 size,
@@ -61,7 +63,7 @@ export class FileRepositoryDrizzle implements IFileRepo {
         return [createdFile!, updatedLink!] as [typeof createdFile, typeof updatedLink];
     }
 
-    async findFileByIdUserIdAndLinkId(fileId: number, userId: number, linkId: number) {
+    async findFileByIdUserIdAndLinkId(fileId: string, userId: string, linkId: string) {
         const result = await this
             .client
             .query
@@ -77,7 +79,7 @@ export class FileRepositoryDrizzle implements IFileRepo {
         return result
     }
 
-    async findLinkByTokenAndUserId(token: string, userId: number) {
+    async findLinkByTokenAndUserId(token: string, userId: string) {
         const result = await this
             .client
             .query
@@ -92,7 +94,7 @@ export class FileRepositoryDrizzle implements IFileRepo {
         return result;
     }
 
-    async getFiles(linkId: number, userId: number, skip: number, limit: number) {
+    async getFiles(linkId: string, userId: string, skip: number, limit: number) {
         const result = await this
             .client
             .query
@@ -110,7 +112,7 @@ export class FileRepositoryDrizzle implements IFileRepo {
         return result;
     }
 
-    async getUser(id: number): Promise<{ id: number; } | null> {
+    async getUser(id: string): Promise<{ id: string; } | null> {
         const result = await this
             .client
             .query
@@ -123,7 +125,7 @@ export class FileRepositoryDrizzle implements IFileRepo {
         return result;
     }
 
-    async storageUsed(userId: number) {
+    async storageUsed(userId: string) {
         const result = await this.client
             .select({
                 totalSize: sql<number>`SUM(${files.size})`

@@ -11,6 +11,8 @@ diesel_auth_router
         //c.setHeader('Content-Type', 'text/plain')
         return c.text('auth route mounted to diesel')
     })
-    .post("/google", dieselAuthController.handleGoogleSignIn)
+    // .post("/google", dieselAuthController.handleGoogleSignIn)  // OAuth disabled
+    .post("/signup", dieselAuthController.signup)
+    .post("/login", dieselAuthController.login)
     .get('/check', dieselMiddleware.authJwt as any, dieselAuthController.checkAuth)
     .get('/logout', dieselAuthController.logout)

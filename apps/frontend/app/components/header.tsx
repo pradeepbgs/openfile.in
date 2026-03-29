@@ -5,7 +5,7 @@ import OpenfileLogo from './openfile-logo'
 import { FiMenu, FiX } from 'react-icons/fi'
 
 function Header() {
-  const isLoggedIn = useAuth.getState()?.user?.email
+  const isLoggedIn = useAuth.getState()?.user?.username
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (

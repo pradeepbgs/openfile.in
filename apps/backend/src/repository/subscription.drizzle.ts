@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import { uuidv7 } from "uuidv7";
 import { ISubscriptionRepo, StatusType } from "../interface/subsc.interface";
 import { DrizzleClient } from "./user.drizzle";
 import { subscriptionLogs, subscriptions } from "../db/schema";
@@ -7,7 +8,7 @@ interface dt {
     eventType: string;
     status: StatusType
     userEmail: string;
-    userId?: number | null;
+    userId?: string | null;
     paymentId: string;
     subscriptionId?: string | null;
     amount: number;
@@ -45,6 +46,7 @@ export class SubscriptionRepositoryDrizzle implements ISubscriptionRepo {
             .client
             .insert(subscriptionLogs)
             .values({
+                id: uuidv7(),
                 ...data,
                 message: data.message ?? '',
                 rawPayload: payload,
@@ -65,7 +67,7 @@ export class SubscriptionRepositoryDrizzle implements ISubscriptionRepo {
         return result[0] ?? null
     }
 
-    update_plan = async (userId: number, planName: string = 'pro') => {
+    update_plan = async (userId: string, planName: string = 'pro') => {
         const result = await this
             .client
             .update(subscriptions)
@@ -75,7 +77,7 @@ export class SubscriptionRepositoryDrizzle implements ISubscriptionRepo {
         return result[0] ?? null
     }
 
-    check_plan = async (userId: number) => {
+    check_plan = async (userId: string) => {
         const result = await this
             .client
             .select({ planName: subscriptions.planName })

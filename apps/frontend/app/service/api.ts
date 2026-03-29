@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useCallback } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import type { createLinkArgs } from "types/types";
 import { useAuth } from "~/zustand/store";
 import axios from 'axios'
@@ -9,44 +8,34 @@ import { useUploadStatusStore } from "~/zustand/upload-status-store";
 
 const backendUrl = import.meta.env.VITE_BACKEND_APP_URL
 
-export function useGoogleLoginHandler() {
+// Google OAuth disabled
+// export function useGoogleLoginHandler() { ... }
 
-    const navigate = useNavigate();
-    const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
+export const signup = async (username: string, password: string) => {
+    const res = await fetch(`${backendUrl}/api/v1/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+        credentials: 'include',
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || "Signup failed");
+    useAuth.getState().setUser(data.user);
+    return data;
+};
 
-    const handleGoogleLogin = useCallback(async (token: string | undefined) => {
-        if (!token) {
-            console.log("Google token not found.");
-            return;
-        }
-
-        try {
-            const res = await fetch(`${backendUrl}/api/v1/auth/google`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token }),
-                credentials: 'include'
-            });
-
-            if (!res.ok) {
-                const error = await res.json();
-                console.log(error?.message || "Google login failed.")
-                return;
-            }
-
-            const data = await res.json();
-            useAuth.getState().setUser(data.user);
-            navigate(from, { replace: true });
-
-        } catch (err) {
-            console.error("Login error:", err);
-        }
-
-    }, [navigate, from]);
-
-    return handleGoogleLogin;
-}
+export const login = async (username: string, password: string) => {
+    const res = await fetch(`${backendUrl}/api/v1/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+        credentials: 'include',
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || "Login failed");
+    useAuth.getState().setUser(data.user);
+    return data;
+};
 
 export const authCheck = async () => {
     try {
@@ -204,7 +193,7 @@ export function useUploadS3Mutation() {
 
 
 
-const fetchUserFiles = async (linkId: number, token: string, page: number, limit: number) => {
+const fetchUserFiles = async (linkId: string, token: string, page: number, limit: number) => {
     const res = await fetch(
         `${backendUrl}/api/v1/file/${linkId}/${token}/files?page=${page}&limit=${limit}`, {
         method: "GET",
@@ -218,7 +207,7 @@ const fetchUserFiles = async (linkId: number, token: string, page: number, limit
     return res.json();
 }
 
-export function useUserFilesQuery(linkId: number, token: string, page: number, limit: number) {
+export function useUserFilesQuery(linkId: string, token: string, page: number, limit: number) {
     return useQuery({
         queryKey: ["user-files"],
         queryFn: () => fetchUserFiles(linkId, token, page, limit),

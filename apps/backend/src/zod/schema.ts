@@ -1,15 +1,21 @@
 import { z } from 'zod';
 
-export const authSchema = z.object({
-    token: z.string().min(1, 'Access token is required'),
-});
+// OAuth schema (disabled)
+// export const authSchema = z.object({
+//     token: z.string().min(1, 'Access token is required'),
+// });
 
 export const registerSchema = z.object({
-    email: z.string().email('Invalid email format'),
+    username: z.string().min(3, 'Username must be at least 3 characters').max(50, 'Username is too long'),
     password: z
         .string()
-        .min(4, 'Password must be at least 6 characters')
+        .min(4, 'Password must be at least 4 characters')
         .max(100, 'Password is too long'),
+})
+
+export const loginSchema = z.object({
+    username: z.string().min(1, 'Username is required'),
+    password: z.string().min(1, 'Password is required'),
 })
 
 export const createLinkSchema = z.object({

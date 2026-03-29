@@ -1,5 +1,5 @@
 export interface LinkItem {
-  id: number;
+  id: string;
   iv: string;
   name?:string,
   maxUploads: number;
@@ -14,15 +14,15 @@ export interface LinkItem {
 
 export interface FileItem {
   createdAt: string
-  id:number
+  id: string
   name: string;
   iv: string
   keyUsed: boolean
   size:number
   updatedAt:string
-  uploadLinkId: number
+  uploadLinkId: string
   url: string
-  userId: number
+  userId: string
 }
 
 export interface createLinkArgs {

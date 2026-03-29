@@ -1,4 +1,5 @@
 import { and, count, eq, ilike, lt, or, sql } from "drizzle-orm";
+import { uuidv7 } from "uuidv7";
 import { ILinkRepo } from "../interface/link.interface";
 import { DrizzleClient } from "./user.drizzle";
 import { files, links, users } from "../db/schema";
@@ -32,7 +33,7 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
         return result[0] ?? null;
     }
 
-    async FindUserLinksCount(userId: number) {
+    async FindUserLinksCount(userId: string) {
         const result = this
             .client
             .$count(links, eq(links.userId, userId))
@@ -54,7 +55,7 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
                 finalMaxUploads: number;
                 token: string;
                 finalExpiration: Date | string;
-                userId: number;
+                userId: string;
                 name: string;
                 expireAfterFirstUpload: boolean;
                 shouldResetLinkCountExpiration: boolean;
@@ -66,6 +67,7 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
             .client
             .insert(links)
             .values({
+                id: uuidv7(),
                 maxUploads: finalMaxUploads,
                 token,
                 uploadCount: 0,
@@ -105,7 +107,7 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
         return [createdLink!, updatedUser!] as [typeof createdLink, typeof updatedUser];
     }
 
-    async deleteFilesForLink(linkId: number, userId: number) {
+    async deleteFilesForLink(linkId: string, userId: string) {
         const result = await this
             .client
             .delete(files)
@@ -114,7 +116,7 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
         return { count: result.length };
     }
 
-    async deleteLink(linkId: number, userId: number) {
+    async deleteLink(linkId: string, userId: string) {
         const result = await this
             .client
             .delete(links)
@@ -123,7 +125,7 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
         return result[0] ?? null;
     }
 
-    async delete_link_by_id(id: number) {
+    async delete_link_by_id(id: string) {
         const result = await this
             .client
             .delete(links)
@@ -142,7 +144,7 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
         return result[0]?.count ?? 0;
     }
 
-    async findFilesForLink(linkId: number, userId: number) {
+    async findFilesForLink(linkId: string, userId: string) {
         const result = await this
             .client
             .select()
@@ -152,7 +154,7 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
         return result;
     }
 
-    async findLinkByIdAndUser(linkId: number, userId: number) {
+    async findLinkByIdAndUser(linkId: string, userId: string) {
         const result = await this
             .client
             .query
@@ -190,7 +192,7 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
         return result[0] ?? null;
     }
 
-    async findLinkByTokenAndUserId(token: string, userId: number) {
+    async findLinkByTokenAndUserId(token: string, userId: string) {
         const result = await this
             .client
             .select()
@@ -201,7 +203,7 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
         return result[0] ?? null;
     }
 
-    async findLinkUploadCount(linkId: number) {
+    async findLinkUploadCount(linkId: string) {
         const result = await this
             .client
             .select({ uploadCount: links.uploadCount })
@@ -212,7 +214,7 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
         return result[0] ?? null;
     }
 
-    async findLinkWithFilesByTokenAndUserId(linkId: number, token: string, userId: number, skip: number, limit: number) {
+    async findLinkWithFilesByTokenAndUserId(linkId: string, token: string, userId: string, skip: number, limit: number) {
         const link = await this
             .client
             .query
@@ -253,7 +255,7 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
         return { ...link, files: fileList };
     }
 
-    async findUserLinks(userId: number, query: string, skip: number, limit: number) {
+    async findUserLinks(userId: string, query: string, skip: number, limit: number) {
         const result = await this
             .client
             .select({

@@ -2,7 +2,7 @@ import { IAuthService } from '../../../interface/auth.interface';
 import ApiResponse from '../../../utils/apiRespone';
 import { accessTokenOptions, refreshTokenOptions } from '../../../utils/cookie-options';
 import { handleErrorResponse } from '../../../utils/handle-error';
-import { authSchema } from '../../../zod/schema';
+import { loginSchema, registerSchema } from '../../../zod/schema';
 import { HTTPException } from 'diesel-core/http-exception';
 import { ContextType } from 'diesel-core';
 
@@ -21,32 +21,64 @@ export class DieselAuthController {
         return DieselAuthController.instance;
     }
 
-    handleGoogleSignIn = async (c: ContextType) => {
+    // --- OAuth (Google) sign-in disabled ---
+    // handleGoogleSignIn = async (c: ContextType) => {
+    //     try {
+    //         const body = await c.body
+    //         const result = authSchema.safeParse(body)
+    //         if (!result.success) {
+    //             const message = result.error.errors[0].message
+    //             throw new HTTPException(400, { res: c.json({ error: message }, 400) })
+    //         }
+    //         const { token } = result.data
+    //         const apiRespone: ApiResponse = await this.authService.signInWithGoogle(token);
+    //         c.setCookie("accessToken", apiRespone.data.accessToken, accessTokenOptions as any);
+    //         c.setCookie("refreshToken", apiRespone.data.refreshToken, refreshTokenOptions as any);
+    //         return c.json(apiRespone.data, apiRespone.statusCode);
+    //     } catch (error) {
+    //         console.error("Auth error:", error.message);
+    //         throw new HTTPException(500, { res: handleErrorResponse(c, error) })
+    //         return handleErrorResponse(c, error)
+    //     }
+    // };
+    // --- end OAuth ---
+
+    signup = async (c: ContextType) => {
         try {
             const body = await c.body
-            const result = authSchema.safeParse(body)
+            const result = registerSchema.safeParse(body)
             if (!result.success) {
                 const message = result.error.errors[0].message
-                throw new HTTPException(400, {
-                     res: c.json({ error: message }, 400) 
-                    })
-                // return c.json({ error: message }, 400)
+                throw new HTTPException(400, { res: c.json({ error: message }, 400) })
             }
-
-            const { token } = result.data
-
-            const apiRespone: ApiResponse = await this.authService.signInWithGoogle(token);
-
-            c.setCookie("accessToken", apiRespone.data.accessToken, accessTokenOptions as any);
-            c.setCookie("refreshToken", apiRespone.data.refreshToken, refreshTokenOptions as any);
-
-            return c.json(apiRespone.data, apiRespone.statusCode);
+            const { username, password } = result.data
+            const apiResponse: ApiResponse = await this.authService.signup(username, password);
+            c.setCookie("accessToken", apiResponse.data.accessToken, accessTokenOptions as any);
+            c.setCookie("refreshToken", apiResponse.data.refreshToken, refreshTokenOptions as any);
+            return c.json(apiResponse.data, apiResponse.statusCode);
         } catch (error) {
-            console.error("Auth error:", error.message);
-            throw new HTTPException(500, {
-                res: handleErrorResponse(c, error)
-            })
-        
+            console.error("Signup error:", error.message);
+            throw new HTTPException(500, { res: handleErrorResponse(c, error) })
+            return handleErrorResponse(c, error)
+        }
+    };
+
+    login = async (c: ContextType) => {
+        try {
+            const body = await c.body
+            const result = loginSchema.safeParse(body)
+            if (!result.success) {
+                const message = result.error.errors[0].message
+                throw new HTTPException(400, { res: c.json({ error: message }, 400) })
+            }
+            const { username, password } = result.data
+            const apiResponse: ApiResponse = await this.authService.login(username, password);
+            c.setCookie("accessToken", apiResponse.data.accessToken, accessTokenOptions as any);
+            c.setCookie("refreshToken", apiResponse.data.refreshToken, refreshTokenOptions as any);
+            return c.json(apiResponse.data, apiResponse.statusCode);
+        } catch (error) {
+            console.error("Login error:", error.message);
+            throw new HTTPException(500, { res: handleErrorResponse(c, error) })
             return handleErrorResponse(c, error)
         }
     };
@@ -58,9 +90,7 @@ export class DieselAuthController {
             return c.json({ message: "User logged out successfully" });
         } catch (error) {
             console.error("Logout error:", error.message);
-            throw new HTTPException(500, {
-                res: handleErrorResponse(c, error)
-            })
+            throw new HTTPException(500, { res: handleErrorResponse(c, error) })
             return handleErrorResponse(c, error)
         }
     };
@@ -71,9 +101,7 @@ export class DieselAuthController {
             return c.json({ user });
         } catch (error) {
             console.error("check auth error:", error.message);
-            throw new HTTPException(500, {
-                res: handleErrorResponse(c, error)
-            })
+            throw new HTTPException(500, { res: handleErrorResponse(c, error) })
             return handleErrorResponse(c, error)
         }
     };
