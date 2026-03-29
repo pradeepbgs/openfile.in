@@ -20,7 +20,7 @@ export class DeletedFileRepositoryDrizzle implements IDeleteFileRepo {
         return DeletedFileRepositoryDrizzle.instance
     }
 
-    async createMany(files: any, linkId: number) {
+    async createMany(files: any, linkId: string) {
         const result = await this.client
             .insert(deletedFiles)
             .values(
@@ -41,7 +41,7 @@ export class DeletedFileRepositoryDrizzle implements IDeleteFileRepo {
     async findExpiredFiles(
         type: "PENDING" | "DELETED" | "FAILED",
         limit: number,
-        offset: number): Promise<{ linkId: number; fileUrl: string; fileId: number; }[]> {
+        offset: number): Promise<{ linkId: string; fileUrl: string; fileId: string; }[]> {
 
         const result = await this.client
             .query

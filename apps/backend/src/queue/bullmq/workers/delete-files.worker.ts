@@ -7,7 +7,7 @@ import { deletedFiles } from "../../../db";
 import { and, eq } from "drizzle-orm";
 
 interface FileItem {
-    id: number;
+    id: string;
     url: string;
 }
 
@@ -30,7 +30,7 @@ interface FileItem {
 //     }
 // )
 
-export async function deleteFiles(files: FileItem[], linkId: number) {
+export async function deleteFiles(files: FileItem[], linkId: string) {
     const db = createDBClient('drizzle') as DrizzleClient
     const updatePromises = [];
 
@@ -46,7 +46,7 @@ export async function deleteFiles(files: FileItem[], linkId: number) {
                         deletedAt: new Date()
                     })
                     .where(
-                        eq(deletedFiles.id, file.id)
+                        eq(deletedFiles.fileId, file.id)
                     )
 
             );
@@ -66,7 +66,7 @@ export async function deleteFiles(files: FileItem[], linkId: number) {
                         })
                         .where(
                             and(
-                                eq(deletedFiles.id, file.id),
+                                eq(deletedFiles.fileId, file.id),
                                 eq(deletedFiles.linkId, linkId)
                             )
                         )
@@ -92,7 +92,7 @@ export async function deleteFiles(files: FileItem[], linkId: number) {
                         })
                         .where(
                             and(
-                                eq(deletedFiles.id, file.id),
+                                eq(deletedFiles.fileId, file.id),
                                 eq(deletedFiles.linkId, linkId)
                             )
                         )
