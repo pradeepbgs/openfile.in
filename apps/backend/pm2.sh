@@ -1,7 +1,7 @@
 
 echo "Starting PM2 manager..."
 
-pm2 restart pm2.config.cjs
+pm2 start bun --name openfile -- index.ts
 
 echo "Started services..."
 

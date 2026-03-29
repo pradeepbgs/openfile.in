@@ -20,4 +20,8 @@ jobs:
                cd openfile.in
                git fetch origin
                git reset --hard origin/main
-               docker compose -f apps/backend/compose.yml up --build -d
+               cd apps/backend
+               chmod +x ./pm2.sh
+               ./pm2.sh
+              #  docker compose -f apps/backend/compose.yml up --build -d
+               

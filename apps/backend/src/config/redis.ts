@@ -8,7 +8,7 @@ class RedisClient {
         if (!RedisClient.instance) {
             RedisClient.instance = process.env.PRODUCTION === 'true'
                 ? new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null })
-                : new Redis({maxRetriesPerRequest: null})
+                : new Redis({ maxRetriesPerRequest: null })
 
             RedisClient.instance.set('animal', 'cat');
             RedisClient.instance.get('animal').then((result) => {
