@@ -7,6 +7,8 @@ temp/
 .env
 .env.aws.rds
 prisma/dev.db
+dev.db
+drizzle/sqlite
 prisma/reset.ts
 
 src/utils/app.log

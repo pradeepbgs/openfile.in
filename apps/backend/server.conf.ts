@@ -72,7 +72,7 @@ type RepositoryName = 'link' | 'deleted_file' | 'user' | 'file' | 'subscription'
 
 export function createRepository(repositoryName: RepositoryName, dbType?: string)
     : ILinkRepo | IUserRepository | IFileRepo | IDeleteFileRepo | ISubscriptionRepo {
-    const clientType = dbType || CONFIG.DB_CLIENT;
+    const clientType =  CONFIG.DB_CLIENT || dbType;
     const client = createDBClient(clientType as any)
 
     switch (repositoryName) {

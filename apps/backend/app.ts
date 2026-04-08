@@ -10,10 +10,6 @@ import { fileRouter } from './src/api/hono/routes/file.route'
 import { webhookRouter } from './src/api/hono/routes/webhook'
 import { paymentsRouter } from './src/api/hono/routes/payments'
 
-import { serveStatic } from 'hono/bun'
-
-
-
 
 const app = new Hono()
 
