@@ -54,7 +54,7 @@ export class DieselMiddlewares {
             }
 
 
-            const user = await this.userRepository.findUserAndPlanName(decoded.id as number)
+            const user = await this.userRepository.findUserAndPlanName(decoded.id as string)
 
             if (!user) {
                 throw new HTTPException(401, {
