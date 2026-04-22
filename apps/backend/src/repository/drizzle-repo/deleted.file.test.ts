@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from "bun:test";
 import { DeletedFileRepositoryDrizzle } from "./deleted.file.drizzle";
-import { createDBClient } from "../config/db";
+import { createDBClient } from "../../config/db";
 
 
 describe("DeletedFileRepositoryDrizzle", () => {
