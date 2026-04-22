@@ -2,7 +2,7 @@ import { Job, Worker } from "bullmq";
 import { redis } from "../../../config/redis";
 import { storageService } from "../../../../server.conf";
 import { createDBClient } from "../../../config/db";
-import { DrizzleClient } from "../../../repository/user.drizzle";
+import { DrizzleClient } from "../../../repository/drizzle-repo/user.drizzle";
 import { deletedFiles } from "../../../db";
 import { and, eq } from "drizzle-orm";
 

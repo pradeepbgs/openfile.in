@@ -2,7 +2,7 @@
 
 import { describe, it, expect, beforeAll } from "bun:test";
 import UserRepositoryDrizzle from "./user.drizzle";
-import { createDBClient } from "../config/db";
+import { createDBClient } from "../../config/db";
 
 const mockClient = createDBClient('drizzle')
 

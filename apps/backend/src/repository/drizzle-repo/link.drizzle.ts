@@ -1,9 +1,9 @@
 import { and, count, eq, ilike, lt, or, sql } from "drizzle-orm";
 import { uuidv7 } from "uuidv7";
-import { ILinkRepo } from "../interface/link.interface";
+import { ILinkRepo } from "../../interface/link.interface";
+import { files, links, users } from "../../db/schema";
+import { ONE_DAY } from "../../service/link.service";
 import { DrizzleClient } from "./user.drizzle";
-import { files, links, users } from "../db/schema";
-import { ONE_DAY } from "../service/link.service";
 
 
 
