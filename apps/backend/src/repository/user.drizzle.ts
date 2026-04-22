@@ -1,4 +1,4 @@
-import { drizzle } from "drizzle-orm/neon-http";
+import { drizzle } from "drizzle-orm/node-postgres";
 import { IUserRepository, User } from "../interface/user.interface";
 import { subscriptions, users } from "../db/schema";
 import { eq } from "drizzle-orm";
