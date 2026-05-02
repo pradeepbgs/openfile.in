@@ -1,15 +1,23 @@
-name: CI
+name: Mobile CI
 
 on:
   push:
     branches: [main]
+    paths:
+      - "apps/mobile/**"
   pull_request:
     branches: [main]
+    paths:
+      - "apps/mobile/**"
 
 jobs:
   checks:
     name: Checks
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mobile
+
     steps:
       - uses: actions/checkout@v4
 
