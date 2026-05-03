@@ -24,7 +24,7 @@ export interface ISubscriptionRepo {
             eventType: string;
             status: StatusType | any;
             userEmail: string;
-            userId: number;
+            userId: string;
             paymentId: string;
             subscriptionId: string | null;
             amount: number;

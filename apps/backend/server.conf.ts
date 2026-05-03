@@ -89,7 +89,7 @@ export function createRepository(repositoryName: RepositoryName, dbType?: string
             if (clientType === 'drizzle') return FileRepositoryDrizzle.getInstance(client as DrizzleClient)
             // return FileRepository.getInstance(client as PrismaClient);
         case 'subscription':
-            if (clientType === 'drizzle') return SubscriptionRepositoryDrizzle.getInstance(client as DrizzleClient) as ISubscriptionRepo
+            if (clientType === 'drizzle') return SubscriptionRepositoryDrizzle.getInstance(client as DrizzleClient)
             // return SubscriptionRepository.getInstance(client as PrismaClient) as ISubscriptionRepo;
 
         default:
@@ -124,7 +124,7 @@ export const linkService = LinkService.getInstance(
 export const fileService = FileService.getInstance(fileRepository, storageService);
 
 export const linkController = LinkController.getInstance(linkService);
-export const fileController = FileController.getInstance(fileService as any); // will solve ts err
+export const fileController = FileController.getInstance(fileService);
 
 export const middleware = Middlewares.getInstance(userRepository, linkRepository);
 
