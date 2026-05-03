@@ -38,6 +38,7 @@ export async function deleteFiles(files: FileItem[], linkId: string) {
         try {
 
             await storageService.deleteFiles([{ id: file.id, url: file.url }])
+            redis.del(`signed-url:${file.id}`)
             updatePromises.push(
                 db
                     .update(deletedFiles)

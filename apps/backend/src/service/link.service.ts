@@ -180,6 +180,7 @@ export default class LinkService implements ILinkService {
         // await this.storageService.deleteFiles(files)
 
         await this.linkRepository.deleteLink(link.id, userId)
+        this.cache.del(`link:${link.token}`)
 
         return new ApiResponse(
             200,

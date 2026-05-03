@@ -19,7 +19,7 @@ export const generateAccessAndRefreshToken = async (user: User): Promise<{ acces
 }
 
 export const generateAccessToken = (user: User): string => {
-    const ACCESS_TOKEN_SECRET = process.env.JWT_SECRET;
+    const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
     const ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY;
 
     if (!ACCESS_TOKEN_SECRET || !ACCESS_TOKEN_EXPIRY) {
@@ -33,7 +33,7 @@ export const generateAccessToken = (user: User): string => {
 
 
 const generateRefreshToken = (user: User): string => {
-    const REFRESH_TOKEN_SECRET = process.env.JWT_SECRET;
+    const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
     const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY;
 
     if (!REFRESH_TOKEN_SECRET || !REFRESH_TOKEN_EXPIRY) {

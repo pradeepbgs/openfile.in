@@ -47,7 +47,7 @@ export class Middlewares {
                 token = token.slice(7);
             }
 
-            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwtToken;
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as jwtToken;
             if (!decoded || !decoded.id) {
                 throw new HTTPException(401, {
                     res: c.json({ message: "Unauthorized", error: "Invalid token" }, 401)
@@ -91,7 +91,7 @@ export class Middlewares {
             }
             if (token.startsWith("Bearer ")) token = token.slice(7);
 
-            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwtToken;
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as jwtToken;
             if (!decoded || !decoded.id) {
                 throw new HTTPException(401, {
                     res: c.json({ message: "Unauthorized", error: "Invalid token" }, 401)
@@ -143,7 +143,7 @@ export class Middlewares {
             }
             if (token.startsWith("Bearer ")) token = token.slice(7);
 
-            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwtToken;
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as jwtToken;
             if (!decoded || !decoded.id) {
                 throw new HTTPException(401, {
                     res: c.json({ message: "Unauthorized", error: "Invalid token" }, 401)
@@ -193,7 +193,7 @@ export class Middlewares {
                 token = token.slice(7);
             }
 
-            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwtToken;
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as jwtToken;
             if (!decoded || !decoded.id) {
                 throw new HTTPException(401, {
                     res: c.json({ message: "Unauthorized", error: "Invalid token" }, 401)
@@ -233,7 +233,7 @@ export class Middlewares {
 
             if (token.startsWith("Bearer ")) token = token.slice(7);
 
-            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as jwtToken;
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as jwtToken;
             if (!decoded || !decoded.id) {
                 throw new HTTPException(401, {
                     res: c.json({ message: "Unauthorized", error: "Invalid token" }, 401)

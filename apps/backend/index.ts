@@ -6,16 +6,16 @@ import { cleanupService, deletedFileRepository, userRepository } from "./server.
 
 const port = process.env.PORT || 8000;
 
-export async function pushPendingFilesToQueue() {
-    let totalExpiredFiles = await deletedFileRepository.findExpiredLinkCount('PENDING')
-    console.log(`[Recovery] Found ${totalExpiredFiles} pending deleted files.`);
+async function requeueFilesByStatus(status: 'PENDING' | 'FAILED') {
+    let total = await deletedFileRepository.findExpiredLinkCount(status)
+    console.log(`[Recovery] Found ${total} ${status} deleted files.`);
 
     let offset = 0;
     const BATCH_SIZE = 50;
 
-    while (totalExpiredFiles > 0) {
-        const limit = Math.min(BATCH_SIZE, totalExpiredFiles)
-        const files = await deletedFileRepository.findExpiredFiles('PENDING', limit, offset)
+    while (total > 0) {
+        const limit = Math.min(BATCH_SIZE, total)
+        const files = await deletedFileRepository.findExpiredFiles(status, limit, offset)
 
         const grouped = new Map<string, { id: string, url: string }[]>();
         for (const file of files) {
@@ -24,14 +24,19 @@ export async function pushPendingFilesToQueue() {
             grouped.set(file.linkId, group);
         }
 
-        for (const [linkId, files] of grouped) {
-            deleteQueue.add('delete-files', { linkId, files });
+        for (const [linkId, groupedFiles] of grouped) {
+            deleteQueue.add('delete-files', { linkId, files: groupedFiles });
         }
 
-        totalExpiredFiles = totalExpiredFiles - limit
+        total = total - limit
         offset = offset + limit
-        console.log(`[Recovery] Requeued ${files.length} pending deleted files.`);
+        console.log(`[Recovery] Requeued ${files.length} ${status} deleted files.`);
     }
+}
+
+export async function pushPendingFilesToQueue() {
+    await requeueFilesByStatus('PENDING');
+    await requeueFilesByStatus('FAILED');
 }
 
 

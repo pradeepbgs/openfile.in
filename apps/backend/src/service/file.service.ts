@@ -69,7 +69,7 @@ export default class FileService implements IFileService {
             throw new ApiError("File not found or unauthorized", 404);
         }
 
-        const cacheKey = `signed-url:${userId}:${fileId}`;
+        const cacheKey = `signed-url:${fileId}`;
         const cached = await redis.get(cacheKey);
         if (cached) {
             const cachedStr = cached.toString();

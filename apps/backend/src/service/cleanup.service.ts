@@ -11,6 +11,7 @@ import { redis } from "../config/redis";
 export default class CleanupService {
     private static instance: CleanupService;
     private intervalId: NodeJS.Timeout | null
+    private intervalMs: number
     private cache: ICache
 
     private linkRepository: ILinkRepo
@@ -24,6 +25,7 @@ export default class CleanupService {
         this.linkRepository = linkRepository
         this.deletedFileRepo = deletedFileRepo
         this.intervalId = null;
+        this.intervalMs = 60_000;
         this.cache = cache
     }
 
@@ -40,7 +42,7 @@ export default class CleanupService {
 
     private async runExclusive(fn: () => Promise<void>) {
         const lockKey = "cleanup-lock";
-        const lockTtlMs = 60 * 1000;
+        const lockTtlMs = Math.min(Math.floor(this.intervalMs * 0.9), 10 * 60 * 1000);
         const acquired = await this.cache.setWithOptions(lockKey, "locked", { PX: lockTtlMs, NX: true });
         if (!acquired) {
             console.warn("Skipped: cleanup already in progress by another process.");
@@ -73,6 +75,7 @@ export default class CleanupService {
 
     runInterval = async (interval = "10s") => {
         const intervalMs = this.parseInterval(interval);
+        this.intervalMs = intervalMs;
 
         this.intervalId = setInterval(async () => {
             await this.runExclusive(this.cleanupExpiredLinks)
