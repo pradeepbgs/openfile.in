@@ -173,11 +173,9 @@ export default class LinkService implements ILinkService {
                     url: file.url
                 }))
             });
-            // const s3Deleted = await deleteFilesFromS3(fileUrls);
 
-            // if (!s3Deleted) throw new ApiError("Failed to delete files from S3", 500);
+            await this.linkRepository.deleteFilesForLink(link.id, userId)
         }
-        // await this.storageService.deleteFiles(files)
 
         await this.linkRepository.deleteLink(link.id, userId)
         this.cache.del(`link:${link.token}`)

@@ -1,4 +1,4 @@
-import { View, Text, Switch } from 'react-native'
+import { View, Text, Switch, TouchableOpacity } from 'react-native'
 import { COLORS } from '@/src/constant'
 
 interface ToggleProps {
@@ -9,7 +9,10 @@ interface ToggleProps {
 }
 
 const Toggle = ({ label, description, value, onValueChange }: ToggleProps) => (
-  <View className="flex-row items-center justify-between py-3">
+  <TouchableOpacity
+    activeOpacity={1}
+    onPress={() => onValueChange(!value)}
+    className="flex-row items-center justify-between py-3">
     <View className="flex-1 mr-4">
       <Text className="text-zinc-100 font-medium">{label}</Text>
       {description && <Text className="text-zinc-500 text-sm mt-0.5">{description}</Text>}
@@ -20,7 +23,7 @@ const Toggle = ({ label, description, value, onValueChange }: ToggleProps) => (
       trackColor={{ false: COLORS.iconDim, true: COLORS.brand }}
       thumbColor={COLORS.white}
     />
-  </View>
+  </TouchableOpacity>
 )
 
 export default Toggle
