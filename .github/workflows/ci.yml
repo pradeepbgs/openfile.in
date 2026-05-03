@@ -2,7 +2,7 @@ name: openfile backend
 
 on:
   push:
-    branches: [main, dev-new]
+    branches: [main]
     paths:
       - "apps/backend/**"
   pull_request:
