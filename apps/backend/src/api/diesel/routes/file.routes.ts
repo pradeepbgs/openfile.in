@@ -1,40 +1,21 @@
-import { Diesel } from "diesel-core";
-import { diesel_file_controller, dieselMiddleware } from "../../../../server.conf";
-
-
-
+import { Diesel } from 'diesel-core'
+import { diesel_file_controller, dieselMiddleware } from '../../../../server.conf'
+import { cors } from 'diesel-core/cors'
 
 export const diesel_file_router = new Diesel({ logger: true, errorFormat: 'json' })
-    // .get(
-    //     '/:id/:token/files',
-    //     dieselMiddleware.fetchFilesByTokenMiddleware,
-    //     fileController.getFilesByLinkToken
-    // )
-    // .get(
-    //     '/storage-used',
-    //     middleware.fetchUser,
-    //     fileController.storeageUsed
-    // )
-
-    // to get download s3 presigned url
-    // .get("/signed-url", dieselMiddleware.fetchUser, fileController.getDownloadPresignedUrl)
-
-    // to get post s3 upload presigned url for uploading
+diesel_file_router.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}))
+diesel_file_router
+    .get('/:id/:token/files', dieselMiddleware.fetchFilesByTokenMiddleware as any, diesel_file_controller.getFilesByLinkToken)
+    .get('/storage-used', dieselMiddleware.fetchUser as any, diesel_file_controller.storeageUsed)
+    .get('/signed-url', dieselMiddleware.fetchUser as any, diesel_file_controller.getDownloadPresignedUrl)
     .post(
-        '/',
+        '/upload-url',
         dieselMiddleware.UploadRateLimit,
         dieselMiddleware.validateToken,
         dieselMiddleware.validateLinkAccess,
         diesel_file_controller.getUploadPresignedUrl
     )
-// to notify file has uploaded to s3 and save meta data to db
-// .post(
-//     "/notify-upload",
-//     middleware.validateToken,
-//     // middleware.validateLinkAccess,
-//     fileController.notifyFileUpload
-// )
-// .post('/stream', (c: Context) => {
-//     return c.text('got stream')
-// })
-
+    .post('/notify-upload', dieselMiddleware.validateToken as any, diesel_file_controller.notifyFileUpload)

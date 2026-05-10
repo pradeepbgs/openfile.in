@@ -39,7 +39,7 @@
       "@types/mime-types": "^2.1.4",
       "bcrypt": "^6.0.0",
       "bullmq": "^5.55.0",
-      "diesel-core": "^1.7.0",
+      "diesel-core": "^2.0.6",
       "dotenv": "^17.2.3",
       "drizzle-orm": "^0.44.6",
       "ejs": "^3.1.10",

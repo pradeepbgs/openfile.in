@@ -67,14 +67,11 @@ pushPendingFilesToQueue()
     );
 
 
+Bun?.serve({
+    port,
+    fetch: app.fetch() as any,
+    // key: Bun.file("./localhost.key"),
+    // cert: Bun.file("./localhost.crt"),
+});
 
-export default app
-
-// serve({
-//     port,
-//     fetch: app.fetch,
-//     // key: Bun.file("./localhost.key"),
-//     // cert: Bun.file("./localhost.crt"),
-// });
-
-// console.log(`Listening on http://localhost:${port}`);
+console.log(`Listening on http://localhost:${port}`);
