@@ -1,49 +1,58 @@
 
+function get_or_throw_env(name: string): string {
+    const value = process.env[name]
+    if (!value) throw new Error(`Missing required env var: ${name}`)
+    return value
+}
+
+function get_env(name:string){
+    return process.env[name]
+}
+
 export const CONFIG = {
-    // SEVER
-    PORT: process.env.PORT,
-    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    // SERVER
+    PORT: get_env('PORT'),
+    NODE_ENV: get_env('NODE_ENV'),
+    GOOGLE_CLIENT_ID: get_env('GOOGLE_CLIENT_ID'),
+    CORS_ORIGINS: get_or_throw_env('CORS_ORIGIN'),
 
-    // cloud flare storage related
-    CLOUDFLARE_BUCKET: process.env.CLOUDFLARE_BUCKET,
-    CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID,
-    CLOUDFLARE_ACCESS_KEY: process.env.CLOUDFLARE_ACCESS_KEY,
-    CLOUDFLARE_SECRET_KEY: process.env.CLOUDFLARE_SECRET_KEY,
-    CLOUDFLARE_TOKEN_VALUE: process.env.CLOUDFLARE_TOKEN_VALUE,
-    STORAGE_TYPE: process.env.STORAGE_TYPE || 'r2',
+    // database
+    DATABASE_URL: get_or_throw_env('DATABASE_URL'),
+    DB_CLIENT: get_env('DB_CLIENT'),
+    DB_HOST: get_env('DB_HOST'),
+    DB_USER: get_env('DB_USER'),
+    DB_PORT: get_env('DB_PORT'),
+    DB_NAME: get_env('DB_NAME'),
+    DB_PASS: get_env('DB_PASS'),
 
-    // database related
-    DB_HOST: process.env.DB_HOST,
-    DB_USER: process.env.DB_USER,
-    DB_PORT: process.env.DB_PORT,
-    DB_NAME: process.env.DB_NAME,
-    DB_PASS: process.env.DB_PASS,
-    DATABASE_URL: process.env.DATABASE_URL,
-    DB_CLIENT:process.env.DB_CLIENT,
+    // auth
+    JWT_SECRET: get_or_throw_env('JWT_SECRET'),
+    ACCESS_TOKEN_SECRET: get_or_throw_env('ACCESS_TOKEN_SECRET'),
+    ACCESS_TOKEN_EXPIRY: get_env('ACCESS_TOKEN_EXPIRY') ?? '5d',
+    REFRESH_TOKEN_SECRET: get_or_throw_env('REFRESH_TOKEN_SECRET'),
+    REFRESH_TOKEN_EXPIRY: get_env('REFRESH_TOKEN_EXPIRY') ?? '15d',
 
-    // MAIL_ related
-    MAIL_SERVICE: process.env.MAIL_SERVICE,
-    MAIL_USER: process.env.MAIL_USER,
-    MAIL_PASS: process.env.MAIL_PASS,
+    // cloudflare storage
+    CLOUDFLARE_BUCKET: get_env('CLOUDFLARE_BUCKET'),
+    CLOUDFLARE_ACCOUNT_ID: get_env('CLOUDFLARE_ACCOUNT_ID'),
+    CLOUDFLARE_ACCESS_KEY: get_env('CLOUDFLARE_ACCESS_KEY'),
+    CLOUDFLARE_SECRET_KEY: get_env('CLOUDFLARE_SECRET_KEY'),
+    CLOUDFLARE_TOKEN_VALUE: get_env('CLOUDFLARE_TOKEN_VALUE'),
+    STORAGE_TYPE: get_env('STORAGE_TYPE') ?? 'r2',
 
-    // REDIS
-    REDIS_PASS: process.env.REDIS_PASS,
-    REDIS_HOST: process.env.REDIS_HOST,
+    // mail
+    MAIL_SERVICE: get_env('MAIL_SERVICE'),
+    MAIL_USER: get_env('MAIL_USER'),
+    MAIL_PASS: get_env('MAIL_PASS'),
+    RESEND_API_KEY: get_env('RESEND_API_KEY'),
 
-    // DODO_PAYMENTS
-    DODO_PAYMENTS_API_KEY: process.env.DODO_PAYMENTS_API_KEY,
-    DODO_PAYMENTS_WEBHOOK_KEY: process.env.DODO_PAYMENTS_WEBHOOK_KEY,
-    DODO_PAYMENTS_ENVIRONMENT: process.env.DODO_PAYMENTS_ENVIRONMENT ?? 'test_mode',
-    DODO_PAYMENTS_RETURN_URL: process.env.DODO_PAYMENTS_RETURN_URL,
+    // redis
+    REDIS_HOST: get_env('REDIS_HOST'),
+    REDIS_PASS: get_env('REDIS_PASS'),
 
-    //
-    NODE_ENV: process.env.NODE_ENV,
-    JWT_SECRET: process.env.JWT_SECRET,
-    ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
-    ACCESS_TOKEN_EXPIRY: process.env.ACCESS_TOKEN_EXPIRY ?? '5d',
-    REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
-    REFRESH_TOKEN_EXPIRY: process.env.REFRESH_TOKEN_EXPIRY ?? '15d',
-
-    RESNED_API_KEY:process.env.RESEND_API_KEY,
-
+    // dodo payments
+    DODO_PAYMENTS_API_KEY: get_env('DODO_PAYMENTS_API_KEY'),
+    DODO_PAYMENTS_WEBHOOK_KEY: get_env('DODO_PAYMENTS_WEBHOOK_KEY'),
+    DODO_PAYMENTS_ENVIRONMENT: get_env('DODO_PAYMENTS_ENVIRONMENT') ?? 'test_mode',
+    DODO_PAYMENTS_RETURN_URL: get_env('DODO_PAYMENTS_RETURN_URL'),
 }

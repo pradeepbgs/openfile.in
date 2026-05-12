@@ -1,6 +1,5 @@
 import { Diesel } from 'diesel-core'
 import { diesel_file_controller, dieselMiddleware } from '../../../../server.conf'
-import { cors } from 'diesel-core/cors'
 
 export const diesel_file_router = new Diesel({ logger: true, errorFormat: 'json' })
 

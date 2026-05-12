@@ -1,4 +1,3 @@
-import app from "./app";
 import { deleteQueue } from "./src/queue/bullmq/queue/delete-files.queue";
 import { redis } from "./src/config/redis";
 import { cleanupService, deletedFileRepository, userRepository } from "./server.conf";
@@ -6,9 +5,9 @@ import { cleanupService, deletedFileRepository, userRepository } from "./server.
 
 const port = process.env.PORT || 8000;
 
-async function requeueFilesByStatus(status: 'PENDING' | 'FAILED') {
-    let total = await deletedFileRepository.findExpiredLinkCount(status)
-    console.log(`[Recovery] Found ${total} ${status} deleted files.`);
+export async function pushPendingFilesToQueue() {
+    let totalExpiredFiles = await deletedFileRepository.findExpiredLinkCount('PENDING')
+    console.log(`[Recovery] Found ${totalExpiredFiles} pending deleted files.`);
 
     let offset = 0;
     const BATCH_SIZE = 50;
@@ -41,37 +40,18 @@ export async function pushPendingFilesToQueue() {
 
 
 if (process.env.NODE_ENV === "development") {
-    (
-        async () => {
-            await redis.flushall();
-            await redis.flushdb();
-        }
-    )()
-
-    // prisma.ipLog.deleteMany()
-    // prisma.file.deleteMany()
-    // prisma.link.deleteMany()
-    // await prisma.user.deleteMany()
+    await redis.flushall();
+    await redis.flushdb();
 }
-
 
 cleanupService.run_delete_file_worker()
 cleanupService.runInterval(process.env.CLEANUP_INTERVAL ?? "10m");
 
-const user = await userRepository.findUserByUsername("okay")
-console.log('user ', user)
-
 pushPendingFilesToQueue()
-    .catch(err =>
-        console.error("Failed to requeue deleted files:", err)
-    );
+    .catch(err => console.error("Failed to requeue deleted files:", err));
 
-
-Bun?.serve({
-    port,
-    fetch: app.fetch() as any,
-    // key: Bun.file("./localhost.key"),
-    // cert: Bun.file("./localhost.crt"),
-});
-
-console.log(`Listening on http://localhost:${port}`);
+startServer()
+    .catch(err => {
+        console.error('[Server] Failed to start:', err)
+        process.exit(1)
+    })
