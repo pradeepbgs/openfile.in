@@ -1,13 +1,12 @@
 import { deleteQueue } from "./src/queue/bullmq/queue/delete-files.queue";
 import { redis } from "./src/config/redis";
-import { cleanupService, deletedFileRepository, userRepository } from "./server.conf";
+import { cleanupService, deletedFileRepository } from "./server.conf";
+import { startServer } from "./serve";
 
 
-const port = process.env.PORT || 8000;
-
-export async function pushPendingFilesToQueue() {
-    let totalExpiredFiles = await deletedFileRepository.findExpiredLinkCount('PENDING')
-    console.log(`[Recovery] Found ${totalExpiredFiles} pending deleted files.`);
+async function requeueFilesByStatus(status: 'PENDING' | 'FAILED') {
+    let total = await deletedFileRepository.findExpiredLinkCount(status)
+    console.log(`[Recovery] Found ${total} ${status} deleted files.`);
 
     let offset = 0;
     const BATCH_SIZE = 50;
