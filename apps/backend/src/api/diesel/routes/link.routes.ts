@@ -3,10 +3,7 @@ import { diesel_link_controller, dieselMiddleware } from '../../../../server.con
 import { cors } from 'diesel-core/cors'
 
 export const diesel_link_router = new Diesel({ logger: true })
-diesel_link_router.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}))
+
 diesel_link_router
     .get('/', dieselMiddleware.fetchUserLinks as any, diesel_link_controller.getUserLinks)
     .get('/count', dieselMiddleware.fetchUser as any, diesel_link_controller.getLinksCount)

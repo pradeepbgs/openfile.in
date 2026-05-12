@@ -3,10 +3,7 @@ import { diesel_file_controller, dieselMiddleware } from '../../../../server.con
 import { cors } from 'diesel-core/cors'
 
 export const diesel_file_router = new Diesel({ logger: true, errorFormat: 'json' })
-diesel_file_router.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}))
+
 diesel_file_router
     .get('/:id/:token/files', dieselMiddleware.fetchFilesByTokenMiddleware as any, diesel_file_controller.getFilesByLinkToken)
     .get('/storage-used', dieselMiddleware.fetchUser as any, diesel_file_controller.storeageUsed)
