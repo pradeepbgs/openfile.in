@@ -1,87 +1,57 @@
-import { Hono } from 'hono'
-import { cors } from 'hono/cors'
-import { secureHeaders } from 'hono/secure-headers'
-import { logger } from 'hono/logger'
+import { Diesel } from 'diesel-core'
+import { cors } from 'diesel-core/cors'
 import { httpRequestsCounter, httpResponseTime, registry } from './metrics'
 import { diesel_auth_router } from './src/api/diesel/routes/auth.routes'
-import { linkRouter } from './src/api/hono/routes/link.routes'
+import { diesel_link_router } from './src/api/diesel/routes/link.routes'
 import { diesel_file_router } from './src/api/diesel/routes/file.routes'
-import { fileRouter } from './src/api/hono/routes/file.route'
-import { webhookRouter } from './src/api/hono/routes/webhook'
-import { paymentsRouter } from './src/api/hono/routes/payments'
+import { CONFIG } from './src/config'
 
+export function createApp() {
+  const app = new Diesel({ logger: true })
 
-const app = new Hono()
+  const allowedOrigins = CONFIG.CORS_ORIGINS?.split(',') || []
 
-app.use(logger())
+  app
+    // CORS
+    .use(cors({ origin: allowedOrigins, credentials: true }))
 
-app.use("*", async (c, next) => {
-  const start = Date.now();
-  await next();
-  const duration = (Date.now() - start) / 1000;
+    // Stamp request start time for metrics
+    .addHooks('onRequest', (ctx) => {
+      ctx.set('_start', Date.now())
+    })
 
-  const path = c.req.url;
-  const method = c.req.method;
-  const status = c?.status || 200;
+    // Prometheus metrics
+    .addHooks('onSend', async (ctx, res) => {
+      if (!res) return
+      const duration = (Date.now() - (ctx.get<number>('_start') ?? Date.now())) / 1000
+      httpRequestsCounter.labels(ctx.req.method, ctx.req.url, res.status.toString()).inc()
+      httpResponseTime.labels(ctx.req.method, ctx.req.url, res.status.toString()).observe(duration)
+    })
 
-  httpRequestsCounter.labels(method, path, status.toString()).inc();
-  httpResponseTime.labels(method, path, status.toString()).observe(duration);
+    // Security headers
+    .addHooks('onSend', async (_ctx, res) => {
+      if (!res) return
+      const headers = new Headers(res.headers)
+      headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload')
+      headers.set('X-Frame-Options', 'DENY')
+      headers.set('Referrer-Policy', 'no-referrer')
+      headers.set('X-XSS-Protection', '0')
+      headers.set('X-Content-Type-Options', 'nosniff')
+      return new Response(res.body, { status: res.status, statusText: res.statusText, headers })
+    })
 
-  return c.res;
-});
+    // Health & monitoring
+    .get('/', () => new Response('Welcome to openfile'))
+    .get('/health', (c: any) => c.text("i'm good lady boy!"))
+    .get('/metrics', async (c: any) => {
+      const metrics = await registry.metrics()
+      return c.text(metrics, 200, { 'Content-Type': registry.contentType })
+    })
 
-const allowedOrigins = process.env.CORS_ORIGIN?.split(",") || [];
+    // API routes
+    .route('/api/v1/auth', diesel_auth_router)
+    .route('/api/v1/link', diesel_link_router)
+    .route('/api/v1/file', diesel_file_router)
 
-app.use(
-  '*',
-  cors({
-    origin: allowedOrigins,
-    // allowHeaders : ['Access-Control-Allow-Credentials: true'],
-    credentials: true
-  })
-)
-
-app.use(
-  '*',
-  secureHeaders({
-    strictTransportSecurity: 'max-age=31536000; includeSubDomains; preload',
-    xFrameOptions: 'DENY',
-    referrerPolicy: 'no-referrer',
-    xXssProtection: '0',
-    // contentSecurityPolicy: "default-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
-    xContentTypeOptions: 'nosniff',
-  })
-)
-
-app
-  .get('/health', (c) => c.text("i'm good lady boy!"))
-
-
-
-app
-  // .route("/api/v1/auth", authRouter)
-  .mount('/api/v1/auth', diesel_auth_router.fetch())
-  .route("/api/v1/link", linkRouter)
-  // .mount('/api/v1/file/upload-url', diesel_file_router.fetch())
-  .route('/api/v1/file', fileRouter)
-  //
-  .route('/api/v1/webhooks', webhookRouter)
-  .route('/api/v1/payments', paymentsRouter)
-
-
-// for monitoring
-
-app.get("/metrics", async (c) => {
-  const metrics = await registry.metrics();
-  return c.text(metrics, 200, { "Content-Type": registry.contentType });
-});
-
-//
-// app.use('/assets/*', serveStatic({ root: './public' }))
-// app.use('/*', async (c, next) => {
-//   if (c.req.path.startsWith('/api/')) {
-//     return next() 
-//   }
-//   return serveStatic({ root: './public', path: 'index.html' })(c, next)
-// })
-export default app
+  return app
+}

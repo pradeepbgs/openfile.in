@@ -29,7 +29,7 @@ export default class DieselFileController {
         const files: any = c.get("files");
         const { page, limit }: any = c.get("pagination");
 
-        const safeFiles = files.map(file => ({
+        const safeFiles = files.map((file: any) => ({
             ...file,
             size: Number(file.size),
         }));
@@ -49,7 +49,7 @@ export default class DieselFileController {
 
     notifyFileUpload = async (c: ContextType) => {
         try {
-            const link: Link = c.get('link')
+            const link = c.get('link') as Link
 
             const body = await c.req.json();
             const parsed = notifyUploadSchema.safeParse(body)
@@ -73,7 +73,7 @@ export default class DieselFileController {
 
     getUploadPresignedUrl = async (c: ContextType) => {
         try {
-            const safeMimeType: string = c.get('mimeType')
+            const safeMimeType = c.get('mimeType') as string
 
             const res: ApiResponse = await this.fileService.uploadPreSignedUrl(safeMimeType)
             return c.json(res.data, res.statusCode);
@@ -86,15 +86,15 @@ export default class DieselFileController {
     }
 
     getDownloadPresignedUrl = async (c: ContextType) => {
-        const token = c.req.query('token');
-        const fileIdRaw = c.req.query('fileId');
-        const fileId = Number(fileIdRaw);
-        const s3key = c.req.query('s3key');
+        console.log("query ", c.query)
+        const token = c.query?.token;
+        const fileId = c.query?.fileId
+        const s3key = c.query?.s3key
 
         if (!token || !s3key || !fileId) {
             return c.json({ error: "Missing or invalid parameters" }, 400);
         }
-        const user: User = c.get('user')
+        const user = c.get('user') as User
         try {
             const apiRespone: ApiResponse = await this.fileService.getDownloadPreSignedUrl(user.id, token, fileId, s3key)
 
@@ -108,7 +108,7 @@ export default class DieselFileController {
 
     storeageUsed = async (c: ContextType) => {
         try {
-            const user: User = c.get('user')
+            const user = c.get('user') as User
             const apiRespone = await this.fileService.storageUsed(user.id)
 
             return c.json(apiRespone, apiRespone.statusCode);

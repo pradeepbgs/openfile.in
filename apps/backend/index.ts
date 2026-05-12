@@ -1,10 +1,8 @@
-import app from "./app";
 import { deleteQueue } from "./src/queue/bullmq/queue/delete-files.queue";
 import { redis } from "./src/config/redis";
-import { cleanupService, deletedFileRepository, userRepository } from "./server.conf";
+import { cleanupService, deletedFileRepository } from "./server.conf";
+import { startServer } from "./serve";
 
-
-const port = process.env.PORT || 8000;
 
 async function requeueFilesByStatus(status: 'PENDING' | 'FAILED') {
     let total = await deletedFileRepository.findExpiredLinkCount(status)
@@ -41,40 +39,18 @@ export async function pushPendingFilesToQueue() {
 
 
 if (process.env.NODE_ENV === "development") {
-    (
-        async () => {
-            await redis.flushall();
-            await redis.flushdb();
-        }
-    )()
-
-    // prisma.ipLog.deleteMany()
-    // prisma.file.deleteMany()
-    // prisma.link.deleteMany()
-    // await prisma.user.deleteMany()
+    await redis.flushall();
+    await redis.flushdb();
 }
-
 
 cleanupService.run_delete_file_worker()
 cleanupService.runInterval(process.env.CLEANUP_INTERVAL ?? "10m");
 
-const user = await userRepository.findUserByUsername("okay")
-console.log('user ', user)
-
 pushPendingFilesToQueue()
-    .catch(err =>
-        console.error("Failed to requeue deleted files:", err)
-    );
+    .catch(err => console.error("Failed to requeue deleted files:", err));
 
-
-
-export default app
-
-// serve({
-//     port,
-//     fetch: app.fetch,
-//     // key: Bun.file("./localhost.key"),
-//     // cert: Bun.file("./localhost.crt"),
-// });
-
-// console.log(`Listening on http://localhost:${port}`);
+startServer()
+    .catch(err => {
+        console.error('[Server] Failed to start:', err)
+        process.exit(1)
+    })

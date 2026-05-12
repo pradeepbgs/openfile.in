@@ -1,10 +1,7 @@
 import { DieselAuthController } from "./src/api/diesel/controller/auth.controller";
 import DieselFileController from "./src/api/diesel/controller/file.controller";
+import DieselLinkController from "./src/api/diesel/controller/link.controller";
 import { DieselMiddlewares } from "./src/api/diesel/middleware";
-import { AuthController } from "./src/api/hono/controllers/auth.controller";
-import FileController from "./src/api/hono/controllers/file.controllers";
-import LinkController from "./src/api/hono/controllers/link.controller";
-import { Middlewares } from "./src/api/hono/middleware/middleware";
 import { CONFIG } from "./src/config";
 import { createDBClient } from "./src/config/db";
 import { IDeleteFileRepo } from "./src/interface/delete-file.interface";
@@ -123,13 +120,7 @@ export const linkService = LinkService.getInstance(
 
 export const fileService = FileService.getInstance(fileRepository, storageService);
 
-export const linkController = LinkController.getInstance(linkService);
-export const fileController = FileController.getInstance(fileService);
-
-export const middleware = Middlewares.getInstance(userRepository, linkRepository);
-
 export const authService = AuthService.getInstance(notificationService, userRepository);
-export const authController = AuthController.getInstance(authService);
 export const cleanupService = CleanupService.getInstance(
     linkRepository,
     deletedFileRepository,
@@ -137,9 +128,7 @@ export const cleanupService = CleanupService.getInstance(
 );
 
 
-
-// for diesel.js
-
 export const dieselAuthController = DieselAuthController.getInstance(authService)
 export const dieselMiddleware = DieselMiddlewares.getInstance(userRepository, linkRepository, cacheService);
 export const diesel_file_controller = DieselFileController.getInstance(fileService as any); // will solve ts err
+export const diesel_link_controller = DieselLinkController.getInstance(linkService);

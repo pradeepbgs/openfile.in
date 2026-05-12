@@ -181,7 +181,7 @@ export class DieselMiddlewares {
 
             c.set('mimeType', mimeType)
 
-        } catch (error) {
+        } catch (error: any) {
             if (error?.name === "HTTPException") throw error;
             console.error("validateLinkAccess error:", error);
             throw new HTTPException(500, {
@@ -191,7 +191,98 @@ export class DieselMiddlewares {
     };
 
 
-    // 
+    fetchUser = async (c: ContextType): Promise<any> => {
+        try {
+            let token = c.req.headers.get('Authorization') ?? c.cookies?.accessToken
+            if (!token) throw new HTTPException(401, { message: 'Unauthorized', cause: 'No token provided' })
 
+            const decoded = verifyToken(token)
+            if (!decoded || !decoded.id) throw new HTTPException(401, { message: 'Unauthorized', cause: 'Invalid token' })
+
+            const user = await this.userRepository.findUserId(decoded.id as string)
+            if (!user) throw new HTTPException(401, { message: 'Unauthorized: User not found' })
+
+            c.set('user', user)
+        } catch (error: any) {
+            if (error?.name === 'HTTPException') throw error
+            throw new HTTPException(401, { message: 'Unauthorized', cause: error?.message })
+        }
+    }
+
+    fetchUserLinks = async (c: ContextType): Promise<any> => {
+        try {
+            let token = c.req.headers.get('Authorization') ?? c.cookies?.accessToken
+            if (!token) throw new HTTPException(401, { message: 'Unauthorized', cause: 'No token provided' })
+
+            const decoded = verifyToken(token)
+            if (!decoded || !decoded.id) throw new HTTPException(401, { message: 'Unauthorized', cause: 'Invalid token' })
+
+            const query = c.query.query || ''
+            const limit = parseInt(c.query.limit || '10')
+            const page = parseInt(c.query.page || '1')
+            const skip = (page - 1) * limit
+
+            const links = await this.linkRepository.findUserLinks(decoded.id as string, query, skip, limit)
+            if (!links || links.length === 0) {
+                return c.json({ error: 'No links found or unauthorized', data: [] }, 200)
+            }
+
+            c.set('userId', decoded.id)
+            c.set('userLinks', links)
+            c.set('pagination', { limit, page })
+        } catch (error: any) {
+            if (error?.name === 'HTTPException') throw error
+            throw new HTTPException(500, { message: 'Internal Server Error in fetchUserLinks' })
+        }
+    }
+
+    fetchLinkWithUser = async (c: ContextType): Promise<any> => {
+        try {
+            let token = c.req.headers.get('Authorization') ?? c.cookies?.accessToken
+            if (!token) throw new HTTPException(401, { message: 'Unauthorized', cause: 'No token provided' })
+
+            const decoded = verifyToken(token)
+            if (!decoded || !decoded.id) throw new HTTPException(401, { message: 'Unauthorized', cause: 'Invalid token' })
+
+            const linkId = c.params.id
+            if (!linkId) throw new HTTPException(400, { message: 'Invalid link ID' })
+
+            const link = await this.linkRepository.findLinkByIdAndUser(linkId, decoded.id as string)
+            if (!link) throw new HTTPException(404, { message: 'Not Found' })
+
+            c.set('userId', decoded.id)
+            c.set('link', link)
+        } catch (error: any) {
+            if (error?.name === 'HTTPException') throw error
+            throw new HTTPException(500, { message: 'Internal Server Error in fetchLinkWithUser' })
+        }
+    }
+
+    fetchFilesByTokenMiddleware = async (c: ContextType): Promise<any> => {
+        try {
+            let token = c.req.headers.get('Authorization') ?? c.cookies?.accessToken
+            if (!token) throw new HTTPException(401, { message: 'Unauthorized', cause: 'No token provided' })
+
+            const decoded = verifyToken(token)
+            if (!decoded || !decoded.id) throw new HTTPException(401, { message: 'Unauthorized', cause: 'Invalid token' })
+
+            const linkToken = c.params.token
+            const linkId = c.params.id
+            if (!linkToken || !linkId) throw new HTTPException(400, { message: 'Token param or linkId missing' })
+
+            const limit = parseInt(c.query.limit || '10')
+            const page = parseInt(c.query.page || '1')
+            const skip = (page - 1) * limit
+
+            const link = await this.linkRepository.findLinkWithFilesByTokenAndUserId(linkId, linkToken, decoded.id as string, skip, limit)
+            if (!link) throw new HTTPException(404, { message: 'No files found or unauthorized access' })
+
+            c.set('files', link.files)
+            c.set('pagination', { page, limit })
+        } catch (error: any) {
+            if (error?.name === 'HTTPException') throw error
+            throw new HTTPException(500, { message: 'Internal Server Error in fetchFilesByTokenMiddleware' })
+        }
+    }
 
 }
