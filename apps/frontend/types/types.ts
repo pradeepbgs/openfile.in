@@ -27,7 +27,6 @@ export interface FileItem {
 
 export interface createLinkArgs {
   payload: CreateLinkPayload;
-  navigate: (path:string) => void; 
   secretKey: string;
   iv: string
 }
