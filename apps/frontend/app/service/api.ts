@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router";
 import type { createLinkArgs } from "types/types";
 import { useAuth } from "~/zustand/store";
 import axios from 'axios'
@@ -7,6 +6,16 @@ import { useUploadProgressStore } from "~/zustand/progress-store";
 import { useUploadStatusStore } from "~/zustand/upload-status-store";
 
 const backendUrl = import.meta.env.VITE_BACKEND_APP_URL
+
+const handleAuthError = (status: number): boolean => {
+    if (status === 401 || status === 403) {
+        useAuth.getState().logout();
+        useAuth.getState().setUser(null);
+        window.location.href = '/auth';
+        return true;
+    }
+    return false;
+}
 
 // Google OAuth disabled
 // export function useGoogleLoginHandler() { ... }
@@ -103,6 +112,7 @@ const fetchUserLinks = async ({ page = 1, searchQuery = '', limit = 10 }) => {
         credentials: 'include',
     });
 
+    if (handleAuthError(res.status)) return;
     if (!res.ok) {
         throw new Error("Failed to fetch user links");
     }
@@ -271,7 +281,7 @@ export const useUpdateS3UploadDB = () => {
 
 
 
-const createLink = async ({ payload, navigate }: createLinkArgs) => {
+const createLink = async ({ payload }: createLinkArgs) => {
     try {
         const res = await fetch(`${backendUrl}/api/v1/link`, {
             method: "POST",
@@ -282,11 +292,7 @@ const createLink = async ({ payload, navigate }: createLinkArgs) => {
             body: JSON.stringify(payload),
         });
 
-        if (res.status === 401) {
-            useAuth.getState().setUser(null)
-            navigate('/auth')
-            return;
-        }
+        if (handleAuthError(res.status)) return;
         const result = await res.json();
         if (result.error) {
             console.error('err', result.error);
@@ -314,6 +320,7 @@ const fetchStorageUsed = async () => {
             credentials: 'include',
         });
 
+        if (handleAuthError(res.status)) return;
         if (!res.ok) {
             throw new Error("Failed to fetch storage used");
         }
@@ -342,7 +349,9 @@ const deleteLink = async (id: number) => {
             withCredentials: true
         })
         return await res
-    } catch (error) {
+    } catch (error: any) {
+        const status = error?.response?.status;
+        if (handleAuthError(status)) return;
         console.log("got error during deleting link")
         throw error
     }
@@ -361,6 +370,7 @@ const linkCoumt = async () => {
             credentials: 'include',
         });
 
+        if (handleAuthError(res.status)) return;
         if (!res.ok) {
             throw new Error("Failed to fetch link count");
         }

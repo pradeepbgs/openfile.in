@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Copy, Check, Link2, Download, Shield } from "lucide-react";
 import { downloadKeyFile } from "~/utils/dowload-key";
-import { useNavigate } from "react-router";
 import { useCreateLinkMutation } from "~/service/api";
 import Spinner from "~/components/spinner";
 import { generateKeyAndIVWithWebCrypto } from "~/utils/encrypt-decrypt";
@@ -33,8 +32,6 @@ export default function CreateLinkPage() {
   const [relativeTime, setRelativeTime] = useState<Record<string, string>>({ value: "1", unit: "hours" });
   const [shouldDownloadKey, setShouldDownloadKey] = useState<boolean>(true);
   const [shouldExpireLinkAfterFirstUpload, setShouldExpireLinkAfterFirstUpload] = useState<boolean>(false);
-
-  const navigate = useNavigate();
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<CreateLinkData>({
     resolver: zodResolver(createLinkSchema),
@@ -70,7 +67,7 @@ export default function CreateLinkPage() {
 
     try {
       interface Result { uploadUrl?: string; token?: string; }
-      const result: Result | void = await createLink({ payload, navigate, secretKey, iv });
+      const result: Result | void = await createLink({ payload, secretKey, iv });
       if (result) {
         const { token } = result;
         const fullLink = `${import.meta.env.VITE_UPLOAD_URL}?token=${token}#key=${secretKey}&iv=${iv}`;
