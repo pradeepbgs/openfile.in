@@ -30,7 +30,7 @@ function Profile() {
 
   if (isError) return (
     <div className="min-h-screen flex justify-center items-center">
-      <p className="text-red-400">Error loading links. Please try again later.</p>
+      <p className="text-red-400 text-sm">Error loading links. Please try again later.</p>
     </div>
   );
 
@@ -42,7 +42,6 @@ function Profile() {
 
   return (
     <div className="min-h-screen text-white px-4 md:px-8 py-8">
-      {/* Stats */}
       <div className="mb-8">
         <UserStats
           links={links}
@@ -53,36 +52,33 @@ function Profile() {
         />
       </div>
 
-      {/* Search */}
       <div className="relative mb-6">
-        <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
+        <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-600" size={15} />
         <input
           type="text"
           placeholder="Search links by name…"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
-          className="w-full pl-9 pr-4 py-2.5 bg-white/5 text-white placeholder-gray-600 rounded-xl border border-white/8 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500 text-sm transition-colors"
+          className="w-full pl-9 pr-4 py-2.5 bg-[#1a1a1a] text-white placeholder-neutral-600 rounded-lg border border-[#262626] focus:outline-none focus:ring-1 focus:ring-[#3a3a3a] focus:border-[#3a3a3a] text-sm transition-colors"
         />
       </div>
 
-      {/* Links table */}
       <UserLinks links={links} handleRefresh={handleRefresh} />
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="mt-6 flex justify-center items-center gap-3">
           <button
-            className="px-4 py-1.5 bg-white/8 hover:bg-white/15 border border-white/10 rounded-lg text-sm disabled:opacity-40 transition-colors"
+            className="px-4 py-1.5 bg-[#1a1a1a] hover:bg-[#1e1e1e] border border-[#262626] rounded-lg text-sm text-neutral-300 disabled:opacity-40 transition-colors"
             onClick={loadPrevPage}
             disabled={page === 1}
           >
             ← Prev
           </button>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-neutral-500">
             Page {currentPage} of {totalPages}
           </span>
           <button
-            className="px-4 py-1.5 bg-white/8 hover:bg-white/15 border border-white/10 rounded-lg text-sm disabled:opacity-40 transition-colors"
+            className="px-4 py-1.5 bg-[#1a1a1a] hover:bg-[#1e1e1e] border border-[#262626] rounded-lg text-sm text-neutral-300 disabled:opacity-40 transition-colors"
             onClick={loadNextPage}
             disabled={page === totalPages}
           >

@@ -82,29 +82,26 @@ export default function CreateLinkPage() {
     }
   };
 
-  const inputClass = "w-full bg-white/5 border border-white/10 text-white placeholder-gray-600 px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500 transition-colors";
-  const labelClass = "block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5";
+  const inputClass = "w-full bg-[#1a1a1a] border border-[#262626] text-white placeholder-neutral-600 px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3a3a3a] focus:border-[#3a3a3a] transition-colors";
+  const labelClass = "block text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1.5";
 
   return (
     <div className="min-h-screen text-white flex flex-col items-center px-4 py-8">
-      {/* Page header */}
       <div className="w-full max-w-lg mb-6">
         <div className="flex items-center gap-2 mb-1">
-          <Shield size={18} className="text-purple-400" />
-          <h1 className="text-xl font-bold text-white">Create Secure Link</h1>
+          <Shield size={16} className="text-neutral-400" />
+          <h1 className="text-lg font-semibold text-white">Create Secure Link</h1>
         </div>
-        <p className="text-gray-500 text-sm">Generate an encrypted upload link to privately receive files.</p>
+        <p className="text-neutral-500 text-sm">Generate an encrypted upload link to privately receive files.</p>
       </div>
 
       <div className="w-full max-w-lg space-y-4">
-        {/* Form card */}
-        <div className="bg-white/4 border border-white/8 rounded-2xl p-6 space-y-5">
+        <div className="bg-[#161616] border border-[#222222] rounded-xl p-6 space-y-5">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
-            {/* Name */}
             <div>
               <label className={labelClass}>
-                Link name <span className="text-gray-600 normal-case font-normal">(optional)</span>
+                Link name <span className="text-neutral-600 normal-case font-normal">(optional)</span>
               </label>
               <input
                 type="text"
@@ -114,7 +111,6 @@ export default function CreateLinkPage() {
               />
             </div>
 
-            {/* Max uploads + Expiry — row */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className={labelClass}>Max uploads</label>
@@ -137,26 +133,25 @@ export default function CreateLinkPage() {
                     min={1}
                     value={relativeTime.value}
                     onChange={(e) => setRelativeTime({ ...relativeTime, value: e.target.value })}
-                    className="w-16 bg-white/5 border border-white/10 text-white px-2 py-2 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                    className="w-16 bg-[#1a1a1a] border border-[#262626] text-white px-2 py-2 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3a3a3a] transition-colors"
                   />
                   <select
                     value={relativeTime.unit}
                     onChange={(e) => setRelativeTime({ ...relativeTime, unit: e.target.value as TimeUnit })}
-                    className="flex-1 bg-white/5 border border-white/10 text-white px-2 py-2 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+                    className="flex-1 bg-[#1a1a1a] border border-[#262626] text-white px-2 py-2 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3a3a3a] transition-colors"
                   >
-                    <option value="minutes" className="bg-gray-900">Minutes</option>
-                    <option value="hours" className="bg-gray-900">Hours</option>
-                    <option value="days" className="bg-gray-900">Days</option>
+                    <option value="minutes" className="bg-[#1a1a1a]">Minutes</option>
+                    <option value="hours" className="bg-[#1a1a1a]">Hours</option>
+                    <option value="days" className="bg-[#1a1a1a]">Days</option>
                   </select>
                 </div>
               </div>
             </div>
 
-            {/* Options */}
-            <div className="space-y-2.5">
+            <div className="space-y-2">
               <label className={labelClass}>Options</label>
 
-              <label className="flex items-start gap-3 cursor-pointer group p-3 rounded-xl hover:bg-white/3 transition-colors">
+              <label className="flex items-start gap-3 cursor-pointer group p-3 rounded-lg hover:bg-[#1a1a1a] transition-colors">
                 <div className="relative mt-0.5">
                   <input
                     type="checkbox"
@@ -164,17 +159,17 @@ export default function CreateLinkPage() {
                     onChange={(e) => setShouldDownloadKey(e.target.checked)}
                     className="sr-only"
                   />
-                  <div className={`w-4 h-4 rounded border transition-colors flex items-center justify-center ${shouldDownloadKey ? 'bg-purple-600 border-purple-600' : 'bg-transparent border-white/20'}`}>
-                    {shouldDownloadKey && <Check size={10} className="text-white" strokeWidth={3} />}
+                  <div className={`w-4 h-4 rounded border transition-colors flex items-center justify-center ${shouldDownloadKey ? 'bg-white border-white' : 'bg-transparent border-[#3a3a3a]'}`}>
+                    {shouldDownloadKey && <Check size={10} className="text-black" strokeWidth={3} />}
                   </div>
                 </div>
                 <div>
-                  <span className="text-sm text-gray-300 group-hover:text-white transition-colors">Download encryption key file</span>
-                  <p className="text-xs text-gray-600 mt-0.5">Save the key/IV backup to your device</p>
+                  <span className="text-sm text-neutral-300 group-hover:text-white transition-colors">Download encryption key file</span>
+                  <p className="text-xs text-neutral-600 mt-0.5">Save the key/IV backup to your device</p>
                 </div>
               </label>
 
-              <label className="flex items-start gap-3 cursor-pointer group p-3 rounded-xl hover:bg-white/3 transition-colors">
+              <label className="flex items-start gap-3 cursor-pointer group p-3 rounded-lg hover:bg-[#1a1a1a] transition-colors">
                 <div className="relative mt-0.5">
                   <input
                     type="checkbox"
@@ -182,22 +177,21 @@ export default function CreateLinkPage() {
                     onChange={(e) => setShouldExpireLinkAfterFirstUpload(e.target.checked)}
                     className="sr-only"
                   />
-                  <div className={`w-4 h-4 rounded border transition-colors flex items-center justify-center ${shouldExpireLinkAfterFirstUpload ? 'bg-purple-600 border-purple-600' : 'bg-transparent border-white/20'}`}>
-                    {shouldExpireLinkAfterFirstUpload && <Check size={10} className="text-white" strokeWidth={3} />}
+                  <div className={`w-4 h-4 rounded border transition-colors flex items-center justify-center ${shouldExpireLinkAfterFirstUpload ? 'bg-white border-white' : 'bg-transparent border-[#3a3a3a]'}`}>
+                    {shouldExpireLinkAfterFirstUpload && <Check size={10} className="text-black" strokeWidth={3} />}
                   </div>
                 </div>
                 <div>
-                  <span className="text-sm text-gray-300 group-hover:text-white transition-colors">Expire after first upload</span>
-                  <p className="text-xs text-gray-600 mt-0.5">Link becomes invalid after one use</p>
+                  <span className="text-sm text-neutral-300 group-hover:text-white transition-colors">Expire after first upload</span>
+                  <p className="text-xs text-neutral-600 mt-0.5">Link becomes invalid after one use</p>
                 </div>
               </label>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={isSubmitting || isCreateLinkPending}
-              className="w-full rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white py-2.5 text-sm font-semibold disabled:opacity-50 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-purple-500/20"
+              className="w-full rounded-lg bg-white hover:bg-neutral-100 text-black py-2.5 text-sm font-semibold disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
             >
               {isCreateLinkPending ? (
                 <><Spinner size={15} /> Generating...</>
@@ -208,9 +202,8 @@ export default function CreateLinkPage() {
           </form>
         </div>
 
-        {/* Output card */}
-        <div className="bg-white/4 border border-white/8 rounded-2xl p-5">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Generated Link</p>
+        <div className="bg-[#161616] border border-[#222222] rounded-xl p-5">
+          <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-3">Generated Link</p>
 
           {isCreateLinkError && (
             <p className="text-red-400 text-sm mb-3">
@@ -220,47 +213,47 @@ export default function CreateLinkPage() {
 
           {uploadUrl ? (
             <div className="space-y-3">
-              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/8">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-[#1a1a1a] border border-[#262626]">
                 <a
                   href={uploadUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-indigo-400 hover:text-indigo-300 break-all text-sm underline-offset-2 hover:underline flex-1"
+                  className="text-neutral-300 hover:text-white break-all text-sm underline-offset-2 hover:underline flex-1"
                 >
                   {uploadUrl.length > 80 ? `${uploadUrl.substring(0, 80)}...` : uploadUrl}
                 </a>
                 <button
                   onClick={handleCopy}
-                  className="flex-shrink-0 p-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                  className="flex-shrink-0 p-1.5 rounded-lg bg-[#222222] hover:bg-[#2a2a2a] transition-colors"
                   title="Copy link"
                 >
                   {copied
-                    ? <Check size={15} className="text-green-400" />
-                    : <Copy size={15} className="text-gray-400" />
+                    ? <Check size={14} className="text-green-400" />
+                    : <Copy size={14} className="text-neutral-400" />
                   }
                 </button>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={handleCopy}
-                  className="flex-1 flex items-center justify-center gap-2 py-2 text-sm rounded-lg bg-white/5 hover:bg-white/8 border border-white/8 text-gray-300 hover:text-white transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 py-2 text-sm rounded-lg bg-[#1a1a1a] hover:bg-[#1e1e1e] border border-[#262626] text-neutral-400 hover:text-white transition-colors"
                 >
-                  {copied ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
+                  {copied ? <Check size={13} className="text-green-400" /> : <Copy size={13} />}
                   {copied ? 'Copied!' : 'Copy Link'}
                 </button>
                 <button
                   onClick={() => downloadKeyFile(uploadUrl, '', '')}
-                  className="flex items-center justify-center gap-2 px-4 py-2 text-sm rounded-lg bg-white/5 hover:bg-white/8 border border-white/8 text-gray-300 hover:text-white transition-colors"
+                  className="flex items-center justify-center gap-2 px-4 py-2 text-sm rounded-lg bg-[#1a1a1a] hover:bg-[#1e1e1e] border border-[#262626] text-neutral-400 hover:text-white transition-colors"
                 >
-                  <Download size={14} />
+                  <Download size={13} />
                   Key
                 </button>
               </div>
             </div>
           ) : (
-            <div className="p-6 rounded-xl border border-dashed border-white/10 text-center">
-              <Link2 size={20} className="text-gray-600 mx-auto mb-2" />
-              <p className="text-gray-500 text-sm">Your generated link will appear here.</p>
+            <div className="p-6 rounded-lg border border-dashed border-[#262626] text-center">
+              <Link2 size={18} className="text-neutral-700 mx-auto mb-2" />
+              <p className="text-neutral-600 text-sm">Your generated link will appear here.</p>
             </div>
           )}
         </div>

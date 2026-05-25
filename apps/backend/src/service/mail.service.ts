@@ -44,7 +44,7 @@ export class NodemailerService implements IMailer {
 export class ResendMailService implements IMailer {
     private resend:Resend
     constructor() {
-        this.resend = new Resend(CONFIG.RESNED_API_KEY)
+        this.resend = new Resend(CONFIG.RESEND_API_KEY)
     }
 
     async sendMail({ to, subject, html, text }: MailPayload): Promise<boolean> {

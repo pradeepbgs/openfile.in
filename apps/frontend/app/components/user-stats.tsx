@@ -7,7 +7,6 @@ interface StatCardProps {
   label: string;
   value: React.ReactNode;
   icon: React.ReactNode;
-  accent: string;
 }
 
 function UserStats({
@@ -32,36 +31,32 @@ function UserStats({
       <StatCard
         label="Total Links"
         value={linkCount ?? 0}
-        accent="border-blue-500/50 bg-blue-500/5"
-        icon={<Link2 size={16} className="text-blue-400" />}
+        icon={<Link2 size={15} className="text-neutral-400" />}
       />
       <StatCard
         label="Active Links"
         value={activeLinks}
-        accent="border-green-500/50 bg-green-500/5"
-        icon={<CheckCircle size={16} className="text-green-400" />}
+        icon={<CheckCircle size={15} className="text-neutral-400" />}
       />
       <StatCard
         label="Total Uploads"
         value={totalUploads}
-        accent="border-yellow-500/50 bg-yellow-500/5"
-        icon={<Upload size={16} className="text-yellow-400" />}
+        icon={<Upload size={15} className="text-neutral-400" />}
       />
       <StatCard
         label="Storage Used"
         value={filesize(storageUsed || 0)}
-        accent="border-red-400/50 bg-red-500/5"
-        icon={<HardDrive size={16} className="text-red-400" />}
+        icon={<HardDrive size={15} className="text-neutral-400" />}
       />
     </div>
   );
 }
 
-const StatCard: React.FC<StatCardProps> = ({ label, value, icon, accent }) => (
-  <div className={`rounded-xl border px-4 py-3.5 bg-white/3 ${accent}`}>
-    <div className="flex items-center justify-between mb-2">
-      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{label}</p>
-      <div className="p-1.5 rounded-lg bg-white/5">{icon}</div>
+const StatCard: React.FC<StatCardProps> = ({ label, value, icon }) => (
+  <div className="rounded-xl border border-[#222222] bg-[#161616] px-4 py-3.5">
+    <div className="flex items-center justify-between mb-3">
+      <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">{label}</p>
+      <div className="p-1.5 rounded-lg bg-[#1e1e1e]">{icon}</div>
     </div>
     <p className="text-2xl font-bold text-white">{value}</p>
   </div>

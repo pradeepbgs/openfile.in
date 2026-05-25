@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '~/zustand/store';
-
 import { checkout } from '~/service/api';
 import Spinner from '~/components/spinner';
-import { GLOBAL_BG } from 'constant';
 
 const plans = [
     {
@@ -31,18 +29,6 @@ const plans = [
         ],
         planKey: 'pro',
     },
-    // {
-    //     name: 'Enterprise',
-    //     price: '$4.99/month',
-    //     description: 'For teams and high-volume usage.',
-    //     features: [
-    //         'Unlimited upload links',
-    //         '100 uploads per link',
-    //         'Files expire in 30 days',
-    //         '24/7 support',
-    //     ],
-    //     planKey: 'enterprise',
-    // },
 ];
 
 export default function PlansPage() {
@@ -51,14 +37,12 @@ export default function PlansPage() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
-
     const handleSelectPlan = async (planKey: string) => {
         if (planKey === 'free') {
             navigate('/plan/checkout')
             return
         }
         setLoading(true);
-
         const url = await checkout(import.meta.env.VITE_DODO_PRODUCT_ID)
         if (url) {
             window.location.href = url;
@@ -66,48 +50,43 @@ export default function PlansPage() {
         setLoading(false);
     };
 
-
-
     return (
-        <div className={`text-white px-6 py-16 flex flex-col items-center ${GLOBAL_BG}`}>
+        <div className="text-white px-6 py-16 flex flex-col items-center bg-[#111111]">
             <div className="text-center mb-12">
-                <span className="inline-block text-xs font-semibold tracking-widest text-purple-400 uppercase mb-3 px-3 py-1 rounded-full border border-purple-500/30 bg-purple-500/10">
-                    Pricing
-                </span>
-                <h1 className="text-4xl md:text-5xl font-bold mt-3 mb-3">Simple, Transparent Pricing</h1>
-                <p className="text-gray-400 text-lg max-w-md mx-auto">Start free. Upgrade when you need more.</p>
+                <p className="text-xs font-semibold tracking-widest text-neutral-600 uppercase mb-3">Pricing</p>
+                <h1 className="text-4xl font-bold text-white mb-3">Simple, Transparent Pricing</h1>
+                <p className="text-neutral-500 text-base max-w-md mx-auto">Start free. Upgrade when you need more.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
                 {plans.map((plan) => {
                     const isPro = plan.planKey === 'pro';
                     const isCurrent = currentPlan === plan.planKey;
                     return (
                         <div
                             key={plan.name}
-                            className={`relative p-7 rounded-2xl shadow-xl transition duration-300 flex flex-col ${
+                            className={`relative p-7 rounded-xl flex flex-col border transition-colors ${
                                 isPro
-                                    ? 'border border-purple-500 bg-gradient-to-b from-purple-950/40 to-black/40 backdrop-blur-md shadow-purple-500/20'
-                                    : isCurrent
-                                        ? 'border border-purple-500 bg-white/5 backdrop-blur-md'
-                                        : 'border border-white/10 bg-white/5 hover:bg-white/8 hover:border-white/20'
+                                    ? 'border-white/20 bg-[#1a1a1a]'
+                                    : 'border-[#222222] bg-[#161616]'
                             }`}
                         >
                             {isPro && (
-                                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg">
-                                        ⭐ Most Popular
+                                <div className="absolute -top-3 left-6">
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white text-black">
+                                        Most Popular
                                     </span>
                                 </div>
                             )}
                             <div className="mb-5">
-                                <h2 className="text-lg font-semibold text-white mb-1">{plan.name}</h2>
-                                <p className="text-3xl font-extrabold text-white mb-1">{plan.price}</p>
-                                <p className="text-gray-400 text-sm">{plan.description}</p>
+                                <h2 className="text-sm font-semibold text-neutral-400 mb-2 uppercase tracking-wide">{plan.name}</h2>
+                                <p className="text-3xl font-bold text-white mb-1">{plan.price}</p>
+                                <p className="text-neutral-500 text-sm">{plan.description}</p>
                             </div>
                             <ul className="text-sm space-y-2.5 mb-7 flex-1">
                                 {plan.features.map((f, i) => (
-                                    <li className="flex items-center gap-2 text-gray-300" key={i}>
-                                        <span className="text-green-400 font-bold">✓</span> {f}
+                                    <li className="flex items-center gap-2.5 text-neutral-300" key={i}>
+                                        <span className="text-neutral-500 text-xs">✓</span> {f}
                                     </li>
                                 ))}
                             </ul>
@@ -115,9 +94,9 @@ export default function PlansPage() {
                             {isCurrent ? (
                                 <button
                                     disabled
-                                    className="w-full bg-white/10 text-white/50 py-2.5 rounded-xl cursor-not-allowed text-sm font-medium"
+                                    className="w-full bg-[#1e1e1e] text-neutral-600 border border-[#262626] py-2.5 rounded-lg cursor-not-allowed text-sm font-medium"
                                 >
-                                    Your Current Plan
+                                    Current Plan
                                 </button>
                             ) : (
                                 <button
@@ -125,10 +104,10 @@ export default function PlansPage() {
                                         if (!user) return navigate('/auth');
                                         return handleSelectPlan(plan.planKey);
                                     }}
-                                    className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                    className={`w-full py-2.5 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                                         isPro
-                                            ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white shadow-lg hover:shadow-purple-500/30 hover:scale-[1.02]'
-                                            : 'bg-white/10 hover:bg-white/15 border border-white/10 text-white'
+                                            ? 'bg-white text-black hover:bg-neutral-100'
+                                            : 'bg-[#1e1e1e] hover:bg-[#242424] border border-[#2a2a2a] text-white'
                                     }`}
                                 >
                                     {loading ? <Spinner /> : isPro ? 'Get Pro' : 'Get Started'}
