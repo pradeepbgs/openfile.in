@@ -7,7 +7,7 @@ import { diesel_file_router } from './src/api/diesel/routes/file.routes'
 import { CONFIG } from './src/config'
 
 export function createApp() {
-  const app = new Diesel({ logger: true })
+  const app = new Diesel({ logger: true, pipelineArchitecture: true })
 
   const allowedOrigins = CONFIG.CORS_ORIGINS?.split(',') || []
 
