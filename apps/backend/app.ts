@@ -7,7 +7,7 @@ import { diesel_file_router } from './src/api/diesel/routes/file.routes'
 import { CONFIG } from './src/config'
 
 export function createApp() {
-  const app = new Diesel({ logger: true, pipelineArchitecture: true })
+  const app = new Diesel({ logger: true })
 
   const allowedOrigins = CONFIG.CORS_ORIGINS?.split(',') || []
 
@@ -48,10 +48,10 @@ export function createApp() {
       return c.text(metrics, 200, { 'Content-Type': registry.contentType })
     })
 
-    // API routes
-    .route('/api/v1/auth', diesel_auth_router)
-    .route('/api/v1/link', diesel_link_router)
-    .route('/api/v1/file', diesel_file_router)
+  // API routes (sub() is not chainable — it doesn't return the app)
+  app.sub('/api/v1/auth/*', diesel_auth_router)
+  app.sub('/api/v1/link/*', diesel_link_router)
+  app.sub('/api/v1/file/*', diesel_file_router)
 
   return app
 }
