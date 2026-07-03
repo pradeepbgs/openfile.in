@@ -1,13 +1,21 @@
-FROM oven/bun:latest
+FROM oven/bun:latest AS builder
 
 WORKDIR /app
 
-COPY package.json ./
+COPY package.json tsconfig.json ./
 
 RUN bun install
 
 COPY . .
 
+RUN bun run compile
+
+FROM oven/bun:latest AS runner
+
+WORKDIR /app
+
+COPY --from=builder /app/app-server ./
+
 EXPOSE 8000
 
-CMD ["bun", "index.ts"]
+ENTRYPOINT ["./app-server"]
