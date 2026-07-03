@@ -1,5 +1,4 @@
 // import { oAuthClient } from "../config/oauth";  // OAuth disabled
-import * as bcrypt from 'bcrypt';
 import { generateAccessAndRefreshToken } from "../utils/generate.token";
 import { UserDTO } from "../dto/user.dto";
 import { ApiError } from "../utils/apiError";
@@ -65,7 +64,7 @@ export class AuthService implements IAuthService {
     if (!user) throw new ApiError("Invalid credentials", 401)
     if (!user.passoword) throw new ApiError("Invalid credentials", 401)
 
-    const isPasswordValid = await bcrypt.compare(password, user.passoword)
+    const isPasswordValid = await Bun.password.verify(password, user.passoword)
     if (!isPasswordValid) throw new ApiError("Invalid credentials", 401)
 
     const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user);
