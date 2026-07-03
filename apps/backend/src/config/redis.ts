@@ -6,7 +6,7 @@ class RedisClient {
 
     public static getInstance() {
         if (!RedisClient.instance) {
-            RedisClient.instance = process.env.PRODUCTION === 'true'
+            RedisClient.instance = process.env.REDIS_URL
                 ? new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: null })
                 : new Redis({ maxRetriesPerRequest: null })
 

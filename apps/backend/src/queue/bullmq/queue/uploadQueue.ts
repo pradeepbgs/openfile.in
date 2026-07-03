@@ -1,9 +1,7 @@
 import { Queue } from "bullmq";
-import { Redis } from "ioredis";
+import { redis } from "../../../config/redis";
 
-const connection = new Redis();
-
-export const uploadQueue = new Queue("uploadQueue", { connection });
+export const uploadQueue = new Queue("uploadQueue", { connection: redis });
 
 export interface UploadJob {
     userId: number;
