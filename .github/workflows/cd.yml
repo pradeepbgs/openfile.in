@@ -1,4 +1,4 @@
-name: Deploy to ec2
+name: Deploy backend to VPS
 
 on:
   push:
@@ -6,60 +6,46 @@ on:
       - main
     paths:
       - "apps/backend/**"
+      - "bun.lock"
+      - ".github/workflows/cd.yml"
+
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false
 
 jobs:
-   deploy:
-      runs-on: ubuntu-latest
-      
-      steps:
-        - name: Checkout Code
-          uses: actions/checkout@v4
+  deploy:
+    runs-on: ubuntu-latest
 
-        - name: Setup Bun (Runner Cache)
-          uses: oven-sh/setup-bun@v2
-          with:
-            bun-version: latest
-            cache: "bun"
-            cache-node-modules: true
+    steps:
+      - name: Deploy to the VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            set -e
 
-        - name: Deploy to the server
-          uses: appleboy/ssh-action@v1.0.3
-          with:
-            host: ${{ secrets.EC2_HOST   }}
-            username: ${{ secrets.EC2_USER }}
-            key: ${{ secrets.EC2_SSH_KEY_OPENFILE }}
-            script: |
-              # 1. Environment Check & Tooling Setup
-              if ! command -v bun &> /dev/null; then
-                  echo "[Environment] Installing Bun..."
-                  curl -fsSL https://bun.sh/install | bash
+            echo "[Project] Updating codebase..."
+            cd /srv/apps/openfile.in
+            git fetch origin
+            git reset --hard origin/main
+
+            echo "[Deploy] Building and starting containers..."
+            cd apps/backend
+            docker compose up -d --build
+
+            echo "[Deploy] Waiting for backend to become healthy..."
+            for i in $(seq 1 10); do
+              if curl -sf http://127.0.0.1:8000/health > /dev/null; then
+                echo "[Deploy] Backend is healthy."
+                docker image prune -f
+                exit 0
               fi
-              
-              # Ensure path is set for this session (even if not in .bashrc yet)
-              export BUN_INSTALL="$HOME/.bun"
-              export PATH="$BUN_INSTALL/bin:$PATH"
+              sleep 3
+            done
 
-              if ! command -v pm2 &> /dev/null; then
-                  echo "[Environment] Installing PM2..."
-                  # Try npm first, fallback to bun global install
-                  npm install -g pm2 || bun add -g pm2
-              fi
-
-              # 2. Project Update
-              echo "[Project] Updating codebase..."
-              if [ ! -d "openfile.in" ]; then
-                  git clone https://github.com/pradeepbgs/openfile.in.git
-              fi
-              cd openfile.in
-              git fetch origin
-              git reset --hard origin/main
-              
-              # 3. Backend Deployment
-              cd apps/backend
-              echo "[Project] Installing dependencies..."
-              bun install
-              
-              echo "[Project] Starting server with PM2..."
-              chmod +x ./pm2.sh
-              ./pm2.sh
-               
+            echo "[Deploy] Health check failed, recent logs:"
+            docker compose logs --tail 50 backend
+            exit 1

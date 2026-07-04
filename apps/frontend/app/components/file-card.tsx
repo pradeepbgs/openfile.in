@@ -102,10 +102,10 @@ export function FileCard({ file, iv, ivkey, token }: FileCardProps) {
   };
 
   return (
-    <div className="bg-white/4 border border-white/8 rounded-2xl p-4 flex flex-col gap-3 hover:border-white/15 hover:bg-white/6 transition-all duration-200">
+    <div className="bg-[#161616] border border-[#222222] rounded-lg p-4 flex flex-col gap-3 hover:bg-[#1a1a1a] transition-colors">
       {/* File info */}
       <div className="flex items-start gap-3">
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${getExtColor(ext)}`}>
+        <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${getExtColor(ext)}`}>
           <span className="text-[9px] font-bold font-mono">{ext}</span>
         </div>
         <div className="min-w-0 flex-1">
@@ -116,7 +116,7 @@ export function FileCard({ file, iv, ivkey, token }: FileCardProps) {
 
       {/* Preview */}
       {showPreview && (
-        <div className="rounded-xl overflow-hidden border border-white/8 bg-black/20">
+        <div className="rounded-lg overflow-hidden border border-[#262626] bg-[#111111]">
           <PreviewFile file={file} previewUrl={decryptedUrl} isLoading={isProcessing} />
         </div>
       )}
@@ -126,7 +126,7 @@ export function FileCard({ file, iv, ivkey, token }: FileCardProps) {
         <button
           onClick={handleTogglePreview}
           disabled={isProcessing && !decryptedUrl}
-          className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 text-xs rounded-lg text-gray-300 bg-white/5 hover:bg-white/10 border border-white/8 transition-colors disabled:opacity-40"
+          className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 text-xs rounded-lg text-neutral-300 bg-[#1a1a1a] hover:bg-[#1e1e1e] border border-[#262626] transition-colors disabled:opacity-40"
         >
           {isProcessing && !decryptedUrl ? (
             <Spinner size={13} color="white" />
