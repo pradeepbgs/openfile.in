@@ -17,7 +17,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to VPS
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies & Build Frontend
+        run: |
+          cd apps/frontend
+          bun install
+          bun run build
+
+      - name: Update git codebase on VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -25,18 +39,20 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
             set -e
-
             echo "[Frontend] Pulling latest codebase..."
             cd /srv/apps/openfile.in
             git fetch origin
             git reset --hard origin/main
 
-            echo "[Frontend] Building frontend..."
-            cd apps/frontend
-            export PATH="$HOME/.bun/bin:$PATH"
-            bun install
-            bun run build
+      - name: Upload build output to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          source: "apps/frontend/build/client"
+          target: "/srv/apps/openfile.in/apps/frontend"
+          strip_components: 2
 
-            echo "[Frontend] Deployment completed successfully!"
 
 

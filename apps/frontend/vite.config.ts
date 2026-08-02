@@ -11,4 +11,13 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [tailwindcss(), reactRouter(), tsconfigPaths({ ignoreConfigErrors: true })],
+  build: {
+    rollupOptions: {
+      onwarn(warning, warn) {
+        if (warning.code === "EVAL" && warning.id?.includes("lottie-web")) return;
+        warn(warning);
+      },
+    },
+  },
 });
+
