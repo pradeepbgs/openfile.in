@@ -7,52 +7,50 @@ import { deleteFiles } from "../queue/bullmq/workers/delete-files.worker";
 import { ICache } from "../interface/cache.interface";
 import { redis } from "../config/redis";
 
-
 export default class CleanupService {
     private static instance: CleanupService;
-    private intervalId: NodeJS.Timeout | null
-    private intervalMs: number
-    private cache: ICache
-
-    private linkRepository: ILinkRepo
-    private deletedFileRepo: IDeleteFileRepo
+    private cache: ICache;
+    private linkRepository: ILinkRepo;
+    private deletedFileRepo: IDeleteFileRepo;
 
     constructor(
         linkRepository: ILinkRepo,
         deletedFileRepo: IDeleteFileRepo,
         cache: ICache
     ) {
-        this.linkRepository = linkRepository
-        this.deletedFileRepo = deletedFileRepo
-        this.intervalId = null;
-        this.intervalMs = 60_000;
-        this.cache = cache
+        this.linkRepository = linkRepository;
+        this.deletedFileRepo = deletedFileRepo;
+        this.cache = cache;
     }
 
     public static getInstance(
         linkRepository: ILinkRepo,
-         deletedFileRepo: IDeleteFileRepo,
-         cache:ICache
-        ): CleanupService {
+        deletedFileRepo: IDeleteFileRepo,
+        cache: ICache
+    ): CleanupService {
         if (!CleanupService.instance) {
             CleanupService.instance = new CleanupService(linkRepository, deletedFileRepo, cache);
         }
         return CleanupService.instance;
     }
 
-    private async runExclusive(fn: () => Promise<void>) {
-        const lockKey = "cleanup-lock";
-        const lockTtlMs = Math.min(Math.floor(this.intervalMs * 0.9), 10 * 60 * 1000);
+    /**
+     * Executes a task exclusively across distributed server nodes using a Redis lock.
+     */
+    private async runExclusive(lockName: string, fn: () => Promise<void>, intervalMs: number = 60_000) {
+        const lockKey = `lock:${lockName}`;
+        const lockTtlMs = Math.min(Math.floor(intervalMs * 0.9), 10 * 60 * 1000);
         const acquired = await this.cache.setWithOptions(lockKey, "locked", { PX: lockTtlMs, NX: true });
+        
         if (!acquired) {
-            console.warn("Skipped: cleanup already in progress by another process.");
+            console.warn(`[Cleanup] Skipped: '${lockName}' is already in progress by another instance.`);
             return;
         }
- 
+
         try {
-            await fn()
+            await fn();
         } catch (error) {
-            console.error("Error in guarded execution:", error);
+            console.error(`[Cleanup] Error in guarded execution for '${lockName}':`, error);
         } finally {
             await this.cache.del(lockKey);
         }
@@ -73,23 +71,40 @@ export default class CleanupService {
         }
     };
 
-    runInterval = async (interval = "10s") => {
+    /**
+     * Generic runner to schedule any task function on a specified interval with distributed locking.
+     */
+    public runTaskInterval = (
+        taskName: string,
+        taskFn: () => Promise<void>,
+        interval: string = "10m"
+    ): NodeJS.Timeout => {
         const intervalMs = this.parseInterval(interval);
-        this.intervalMs = intervalMs;
-
-        this.intervalId = setInterval(async () => {
-            await this.runExclusive(this.cleanupExpiredLinks)
+        return setInterval(async () => {
+            await this.runExclusive(taskName, taskFn, intervalMs);
         }, intervalMs);
-    }
+    };
 
-    stopInterval = () => {
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-            this.intervalId = null;
-        }
-    }
+    /**
+     * Schedules periodic expired links cleanup.
+     */
+    public runLinkCleanupInterval = (interval = "10m") => {
+        return this.runTaskInterval("cleanup-expired-links", this.cleanupExpiredLinks, interval);
+    };
 
-    addQueue = async (minute: number = 10) => {
+    /**
+     * Schedules periodic recovery for pending/failed deleted files.
+     */
+    public runFileRecoveryInterval = (interval = "10m") => {
+        return this.runTaskInterval("requeue-pending-failed-files", this.requeuePendingAndFailedFiles, interval);
+    };
+
+    // Backward compatibility alias for runLinkCleanupInterval
+    public runInterval = async (interval = "10m") => {
+        this.runLinkCleanupInterval(interval);
+    };
+
+    public addQueue = async (minute: number = 10) => {
         await cleanupQueue.add(
             "cleanup-expired-links",
             {},
@@ -98,24 +113,23 @@ export default class CleanupService {
                 removeOnComplete: true,
             }
         );
-    }
+    };
 
-    runWorker = async () => {
+    public runWorker = async () => {
         new Worker('cleanup', async () => {
-            await this.runExclusive(this.cleanupExpiredLinks)
-        }, { connection: redis as any})
-    }
-
+            await this.runExclusive("cleanup-expired-links", this.cleanupExpiredLinks);
+        }, { connection: redis as any });
+    };
 
     public run_delete_file_worker = () => {
-        console.log("\nstarting delete file worker\n")
+        console.log("\nStarting delete file worker\n");
         new Worker("delete-queue", async (job: Job) => {
             try {
-                const { data } = job
-                const { linkId, files } = data
-                await deleteFiles(files, linkId)
+                const { data } = job;
+                const { linkId, files } = data;
+                await deleteFiles(files, linkId);
             } catch (error) {
-                console.log('file deletion failed', error)
+                console.log('File deletion failed', error);
             }
         },
             {
@@ -124,56 +138,84 @@ export default class CleanupService {
                 limiter: { max: 5, duration: 1000 },
                 concurrency: 3
             }
-        )
-    }
+        );
+    };
 
     public LinkCleanup() {
         return {
             runWoker: this.runWorker,
             runInterval: this.runInterval,
             addQueue: this.addQueue
-        }
+        };
     }
 
-    private cleanupExpiredLinks = async () => {
+    /**
+     * Sweeps deleted_files DB table for PENDING or FAILED records and requeues them to BullMQ.
+     */
+    public requeuePendingAndFailedFiles = async () => {
+        await this.requeueFilesByStatus('PENDING');
+        await this.requeueFilesByStatus('FAILED');
+    };
+
+    private requeueFilesByStatus = async (status: 'PENDING' | 'FAILED') => {
         try {
-            let totalLinks = await this.linkRepository.expired_link_count()
+            let total = await this.deletedFileRepo.findExpiredLinkCount(status);
+            if (total === 0) return;
+
+            console.log(`[Recovery] Found ${total} ${status} deleted files.`);
+            let offset = 0;
+            const BATCH_SIZE = 100;
+
+            while (total > 0) {
+                const limit = Math.min(BATCH_SIZE, total);
+                const files = await this.deletedFileRepo.findExpiredFiles(status, limit, offset);
+
+                if (files.length === 0) break;
+
+                const grouped = new Map<string, { id: string; url: string }[]>();
+                for (const file of files) {
+                    const group = grouped.get(file.linkId) || [];
+                    group.push({ id: file.fileId, url: file.fileUrl });
+                    grouped.set(file.linkId, group);
+                }
+
+                for (const [linkId, groupedFiles] of grouped) {
+                    await deleteQueue.add('delete-queue', { linkId, files: groupedFiles });
+                }
+
+                total = total - limit;
+                offset = offset + limit;
+                console.log(`[Recovery] Requeued ${files.length} ${status} deleted files.`);
+            }
+        } catch (error) {
+            console.error(`[Recovery] Error requeuing ${status} files:`, error);
+        }
+    };
+
+    /**
+     * Sweeps database for expired links, records files into deleted_files, enqueues to deleteQueue, and deletes link.
+     */
+    public cleanupExpiredLinks = async () => {
+        try {
+            let totalLinks = await this.linkRepository.expired_link_count();
 
             let offset = 0;
             const BATCH_SIZE = 50;
 
             while (totalLinks > 0) {
-                const limit = Math.min(BATCH_SIZE, totalLinks)
-
-                // const expiredLinks = await prisma.link.findMany({
-                //     where: {
-                //         expiresAt: { lt: new Date() },
-                //     },
-                //     include: { files: true },
-                //     take: limit,
-                //     skip: offset
-                // })
-
-                const expiredLinks = await this.linkRepository.find_expired_links(limit, offset)
+                const limit = Math.min(BATCH_SIZE, totalLinks);
+                const expiredLinks = await this.linkRepository.find_expired_links(limit, offset);
 
                 if (expiredLinks.length === 0) {
                     break;
                 }
 
                 await Promise.all(expiredLinks.map(async (link) => {
-                    const files = link.files
-                    const fileUrls = files.map(file => file.url)
+                    const files = link.files;
+                    const fileUrls = files.map(file => file.url);
 
                     if (fileUrls.length > 0) {
-                        // await prisma.deletedFile.createMany({
-                        //     data: files.map((file) => ({
-                        //         fileId: file.id,
-                        //         linkId: link.id,
-                        //         fileUrl: file.url,
-                        //         status: 'PENDING',
-                        //     }))
-                        // })
-                        await this.deletedFileRepo.createMany(files, link.id)
+                        await this.deletedFileRepo.createMany(files, link.id);
                         await deleteQueue.add('delete-queue', {
                             linkId: link.id,
                             files: files.map(file => ({
@@ -183,17 +225,15 @@ export default class CleanupService {
                         });
                     }
 
-                    await this.linkRepository.delete_link_by_id(link.id)
+                    await this.linkRepository.delete_link_by_id(link.id);
+                }));
 
-                }))
-
-                totalLinks = totalLinks - limit
-                offset = offset + limit
+                totalLinks = totalLinks - limit;
+                offset = offset + limit;
                 console.log(`Remaining expired links: ${totalLinks}`);
             }
         } catch (error) {
-            console.error('error while cleaning up expired links', error)
+            console.error('Error while cleaning up expired links:', error);
         }
-    }
-
+    };
 }

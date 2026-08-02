@@ -136,6 +136,47 @@ export class FileRepositoryDrizzle implements IFileRepo {
         
         return result[0]
     }
+
+    async get_file_by_id(id:string) {
+        const result = await this.client.query.files.findFirst({
+            where: eq(files.id, id),
+        })
+        return result;
+    }
+
+    async get_file_by_id_and_userid(id:string,user_id:string){
+        const result = await this.client.query.files.findFirst({
+            where: and(
+                eq(files.id, id),
+                eq(files.userId, user_id)
+            )
+        })
+        return result;
+    }
+
+    async delete_file_from_link(file_id:string, link_id:string, user_id:string) {
+        const [deletedFile] = await this
+            .client
+            .delete(files)
+            .where(and(
+                eq(files.id, file_id),
+                eq(files.uploadLinkId, link_id),
+                eq(files.userId, user_id)
+            ))
+            .returning();
+
+        if (!deletedFile) return null;
+
+        // await this
+        //     .client
+        //     .update(links)
+        //     .set({
+        //         uploadCount: sql`GREATEST(${links.uploadCount}-1, 0)`,
+        //     })
+        //     .where(and(eq(links.id, link_id), eq(links.userId, user_id)))
+
+        return deletedFile;
+    }
 }
 
 // local test

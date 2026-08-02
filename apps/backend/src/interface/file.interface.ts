@@ -8,6 +8,7 @@ export interface IFileService {
     getDownloadPreSignedUrl(userId: string, token: string, fileId: string, s3key: string): Promise<ApiResponse>;
     storageUsed(userId: string): Promise<ApiResponse>
     getFilesByLinkAndToken(token: string, userId: string, page: number, limit: number, skip: number): Promise<ApiResponse>
+    delete_a_file_from_a_link(link_id: string, file_id: string, user_id: string): Promise<ApiResponse>
 }
 
 export interface IFileRepo {
@@ -75,4 +76,41 @@ export interface IFileRepo {
         keyUsed: boolean;
         uploadLinkId: string;
     }[]>
+
+    get_file_by_id(id: string): Promise<{
+        userId: string;
+        url: string;
+        name: string;
+        size: bigint;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        keyUsed: boolean;
+        uploadLinkId: string;
+    } | undefined>
+
+    get_file_by_id_and_userid(file_id:string, user_id:string):Promise<{
+    userId: string;
+    url: string;
+    name: string;
+    size: bigint;
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    keyUsed: boolean;
+    uploadLinkId: string;
+} | undefined>
+
+
+    delete_file_from_link(file_id: string, link_id: string, user_id: string): Promise<{
+        userId: string;
+        url: string;
+        name: string;
+        size: bigint;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        keyUsed: boolean;
+        uploadLinkId: string;
+    } | null>
 }

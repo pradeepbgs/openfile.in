@@ -106,6 +106,24 @@ export default class DieselFileController {
         }
     }
 
+    deleteFileFromLink = async (c: ContextType) => {
+        try {
+            const user = c.get('user') as User
+            const link_id = c.params.link_id
+            const file_id = c.params.file_id
+
+            if (!link_id || !file_id) {
+                return c.json({ error: "Missing or invalid parameters" }, 400);
+            }
+
+            const apiResponse: ApiResponse = await this.fileService.delete_a_file_from_a_link(link_id, file_id, user.id)
+            return c.json({ message: apiResponse.message }, apiResponse.statusCode)
+        } catch (error) {
+            console.error("deleteFileFromLink error:", error);
+            return handleErrorResponse(c, error)
+        }
+    }
+
     storeageUsed = async (c: ContextType) => {
         try {
             const user = c.get('user') as User
