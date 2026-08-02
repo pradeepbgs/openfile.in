@@ -109,7 +109,7 @@ export default class DieselFileController {
     deleteFileFromLink = async (c: ContextType) => {
         try {
             const user = c.get('user') as User
-            const link_id = c.params.link_id
+            const link_id = c.params.id
             const file_id = c.params.file_id
 
             if (!link_id || !file_id) {

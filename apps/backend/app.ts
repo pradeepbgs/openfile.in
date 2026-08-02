@@ -49,10 +49,9 @@ export function createApp() {
     })
 
   // API routes
-  app
-    .route('/api/v1/auth', diesel_auth_router)
-    .route('/api/v1/link', diesel_link_router)
-    .route('/api/v1/file', diesel_file_router)
+  app.sub('/api/v1/auth/*', diesel_auth_router)
+  app.sub('/api/v1/link/*', diesel_link_router)
+  app.sub('/api/v1/file/*', diesel_file_router)
 
   return app
 }

@@ -265,7 +265,6 @@ export class DieselMiddlewares {
 
             const decoded = verifyToken(token)
             if (!decoded || !decoded.id) throw new HTTPException(401, { message: 'Unauthorized', cause: 'Invalid token' })
-
             const linkToken = c.params.token
             const linkId = c.params.id
             if (!linkToken || !linkId) throw new HTTPException(400, { message: 'Token param or linkId missing' })
