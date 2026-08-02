@@ -26,6 +26,13 @@ jobs:
           bun-version: latest
 
       - name: Install dependencies & Build Frontend
+        env:
+          VITE_BACKEND_APP_URL: ${{ secrets.VITE_BACKEND_APP_URL || 'https://api.openfile.exvillager.xyz' }}
+          VITE_DODO_PRODUCT_ID: ${{ secrets.VITE_DODO_PRODUCT_ID || 'pdt_ROv1dKJ6PC4gpcRSlAcCq' }}
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID || '545912976490-i62326he73ek52dquid2mr067ro51cpj.apps.googleusercontent.com' }}
+          VITE_MAX_FREE_USER_UPLOAD_MB: ${{ secrets.VITE_MAX_FREE_USER_UPLOAD_MB || '200' }}
+          VITE_PRODUCTION: ${{ secrets.VITE_PRODUCTION || 'true' }}
+          VITE_UPLOAD_URL: ${{ secrets.VITE_UPLOAD_URL || 'https://openfile.exvillager.xyz/upload' }}
         run: |
           cd apps/frontend
           bun install
