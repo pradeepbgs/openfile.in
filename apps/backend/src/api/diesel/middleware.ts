@@ -244,14 +244,7 @@ export class DieselMiddlewares {
             const decoded = verifyToken(token)
             if (!decoded || !decoded.id) throw new HTTPException(401, { message: 'Unauthorized', cause: 'Invalid token' })
 
-            let linkId = c.params?.id || c.params?.linkId || c.params?.link_id
-            if (!linkId) {
-                const urlPath = c.req?.url ? new URL(c.req.url, 'http://localhost').pathname : c.url.pathname
-                const parts = urlPath.split('/').filter(Boolean)
-                if (parts.length > 0 && parts[parts.length - 1] !== 'link') {
-                    linkId = parts[parts.length - 1]
-                }
-            }
+            const linkId = c.params.id
             if (!linkId) throw new HTTPException(400, { message: 'Invalid link ID' })
 
             const link = await this.linkRepository.findLinkByIdAndUser(linkId, decoded.id as string)
@@ -273,23 +266,12 @@ export class DieselMiddlewares {
             const decoded = verifyToken(token)
             if (!decoded || !decoded.id) throw new HTTPException(401, { message: 'Unauthorized', cause: 'Invalid token' })
 
-            let linkToken = c.params?.token || c.params?.linkToken
-            let linkId = c.params?.id || c.params?.linkId || c.params?.link_id
-
-            if (!linkToken || !linkId) {
-                const urlPath = c.req?.url ? new URL(c.req.url, 'http://localhost').pathname : c.url.pathname
-                const parts = urlPath.split('/').filter(Boolean)
-                const filesIndex = parts.indexOf('files')
-                if (filesIndex >= 2) {
-                    linkId = linkId || parts[filesIndex - 2]
-                    linkToken = linkToken || parts[filesIndex - 1]
-                }
-            }
-
+            const linkToken = c.params.token
+            const linkId = c.params.id
             if (!linkToken || !linkId) throw new HTTPException(400, { message: 'Token param or linkId missing' })
 
-            const limit = parseInt(c.query?.limit || '10')
-            const page = parseInt(c.query?.page || '1')
+            const limit = parseInt(c.query.limit || '10')
+            const page = parseInt(c.query.page || '1')
             const skip = (page - 1) * limit
 
             const link = await this.linkRepository.findLinkWithFilesByTokenAndUserId(linkId, linkToken, decoded.id as string, skip, limit)

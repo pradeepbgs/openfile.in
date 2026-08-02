@@ -5,7 +5,6 @@ import { useState } from "react";
 import { decryptAndDownloadFileWithCrypto } from "~/utils/encrypt-decrypt";
 import Spinner from "./spinner";
 import PreviewFile from "./preview-file";
-import AlertMenu from "./alert-menu";
 import { toast } from "sonner";
 
 type FileCardProps = {
@@ -13,7 +12,6 @@ type FileCardProps = {
   token: string;
   iv: string;
   ivkey: string;
-  onDelete: (file: FileItem) => Promise<void> | void;
 };
 
 function getFileExt(name: string) {
@@ -34,21 +32,11 @@ function getExtColor(ext: string): string {
   return 'bg-white/10 text-gray-400';
 }
 
-export function FileCard({ file, iv, ivkey, token, onDelete }: FileCardProps) {
+export function FileCard({ file, iv, ivkey, token }: FileCardProps) {
   const [showPreview, setShowPreview] = useState(false);
   const [decryptedBlob, setDecryptedBlob] = useState<Blob | null>(null);
   const [decryptedUrl, setDecryptedUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  const handleDelete = async () => {
-    setIsDeleting(true);
-    try {
-      await onDelete(file);
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   const ext = getFileExt(file.name);
 
@@ -123,18 +111,6 @@ export function FileCard({ file, iv, ivkey, token, onDelete }: FileCardProps) {
         <div className="min-w-0 flex-1">
           <p className="text-sm font-medium text-white truncate" title={file.name}>{file.name}</p>
           <p className="text-xs text-gray-500 mt-0.5">{filesize(file.size)}</p>
-        </div>
-        <div className="flex-shrink-0">
-          {isDeleting ? (
-            <Spinner size={16} color="white" />
-          ) : (
-            <AlertMenu
-              onConfirm={handleDelete}
-              title="Delete File"
-              description={`Are you sure you want to delete "${file.name}"? This action cannot be undone.`}
-              iconSize={16}
-            />
-          )}
         </div>
       </div>
 

@@ -226,27 +226,6 @@ export function useUserFilesQuery(linkId: string, token: string, page: number, l
 }
 
 
-const deleteFile = async ({ linkId, fileId }: { linkId: string, fileId: string }) => {
-    try {
-        const res = await axios.delete(`${backendUrl}/api/v1/file/${linkId}/files/${fileId}`, {
-            withCredentials: true
-        })
-        return res
-    } catch (error: any) {
-        const status = error?.response?.status;
-        if (handleAuthError(status)) return;
-        console.log("got error during deleting file")
-        throw error
-    }
-}
-
-export function useDeleteFile() {
-    return useMutation({
-        mutationFn: deleteFile,
-    });
-}
-
-
 export const getUploadUrl = async (mimeType: string, token: string | null, fileSize: number) => {
     try {
         const res = await fetch(`${backendUrl}/api/v1/file/upload-url?token=${token}`, {

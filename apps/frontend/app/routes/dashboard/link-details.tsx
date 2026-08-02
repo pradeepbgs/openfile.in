@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router';
-import { useUserFilesQuery, useDeleteFile } from '~/service/api';
+import { useUserFilesQuery } from '~/service/api';
 import type { FileItem } from 'types/types';
 import { FileCard } from '~/components/file-card';
 import Spinner from '~/components/spinner';
@@ -24,17 +24,6 @@ function LinkPage() {
   const { data, isError, error, isLoading, refetch } = useUserFilesQuery(id ?? '', token, page, limit);
   const files = data?.data;
   const currentPage = data?.page;
-
-  const { mutateAsync: deleteFile } = useDeleteFile();
-  const handleDeleteFile = async (file: FileItem) => {
-    try {
-      await deleteFile({ linkId: id ?? '', fileId: file.id });
-      toast.success('File deleted');
-      refetch();
-    } catch (err) {
-      toast.error('Failed to delete file');
-    }
-  };
 
   useEffect(() => {
     const hashParams = new URLSearchParams(window.location.hash.slice(1));
@@ -143,7 +132,7 @@ function LinkPage() {
         <>
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {files.map((file: FileItem) => (
-              <FileCard key={file.id} file={file} iv={iv} token={token} ivkey={key} onDelete={handleDeleteFile} />
+              <FileCard key={file.id} file={file} iv={iv} token={token} ivkey={key} />
             ))}
           </div>
 

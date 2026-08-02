@@ -2,30 +2,18 @@ import { AlertDialog, Button, Flex } from '@radix-ui/themes';
 import React from 'react';
 import { MdDelete } from "react-icons/md";
 
-type AlertMenuProps = {
-    onConfirm: () => void;
-    title?: string;
-    description?: string;
-    iconSize?: number;
-};
-
-function AlertMenu({
-    onConfirm,
-    title = "Delete Link",
-    description = "Are you sure? This link and all associated access will be permanently removed.",
-    iconSize = 20,
-}: AlertMenuProps) {
+function AlertMenu({ onConfirm }: { onConfirm: () => void }) {
     return (
         <AlertDialog.Root>
             <AlertDialog.Trigger >
                 <Button variant="soft" color="red" size="1">
-                <MdDelete color='red' size={iconSize}/>
+                <MdDelete color='red' size={20}/>
                 </Button>
             </AlertDialog.Trigger>
             <AlertDialog.Content maxWidth="450px">
-                <AlertDialog.Title>{title}</AlertDialog.Title>
+                <AlertDialog.Title>Delete Link</AlertDialog.Title>
                 <AlertDialog.Description size="2">
-                    {description}
+                    Are you sure? This link and all associated access will be permanently removed.
                 </AlertDialog.Description>
 
                 <Flex gap="3" mt="4" justify="end">
