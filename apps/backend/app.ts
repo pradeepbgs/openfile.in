@@ -48,10 +48,11 @@ export function createApp() {
       return c.text(metrics, 200, { 'Content-Type': registry.contentType })
     })
 
-  // API routes (sub() is not chainable — it doesn't return the app)
-  app.sub('/api/v1/auth/*', diesel_auth_router)
-  app.sub('/api/v1/link/*', diesel_link_router)
-  app.sub('/api/v1/file/*', diesel_file_router)
+  // API routes
+  app
+    .route('/api/v1/auth', diesel_auth_router)
+    .route('/api/v1/link', diesel_link_router)
+    .route('/api/v1/file', diesel_file_router)
 
   return app
 }
