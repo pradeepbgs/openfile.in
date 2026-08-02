@@ -15,3 +15,4 @@ diesel_file_router
         diesel_file_controller.getUploadPresignedUrl
     )
     .post('/notify-upload', dieselMiddleware.validateToken as any, diesel_file_controller.notifyFileUpload)
+    .delete('/:id/files/:file_id', dieselMiddleware.fetchUser as any, diesel_file_controller.deleteFileFromLink)

@@ -8,7 +8,7 @@ import { useUploadStatusStore } from "~/zustand/upload-status-store";
 const backendUrl = import.meta.env.VITE_BACKEND_APP_URL
 
 const handleAuthError = (status: number): boolean => {
-    if (status === 401 || status === 403) {
+    if (status === 401) {
         useAuth.getState().logout();
         useAuth.getState().setUser(null);
         window.location.href = '/auth';
@@ -360,6 +360,26 @@ const deleteLink = async (id: number) => {
 export function useDeleteLink() {
     return useMutation({
         mutationFn: deleteLink,
+    })
+}
+
+const deleteFileFromLink = async ({ linkId, fileId }: { linkId: string, fileId: string }) => {
+    try {
+        const res = await axios.delete(`${backendUrl}/api/v1/file/${linkId}/files/${fileId}`, {
+            withCredentials: true
+        })
+        return await res
+    } catch (error: any) {
+        const status = error?.response?.status;
+        if (handleAuthError(status)) return;
+        console.log("got error during deleting file")
+        throw error
+    }
+}
+
+export function useDeleteFileFromLink() {
+    return useMutation({
+        mutationFn: deleteFileFromLink,
     })
 }
 

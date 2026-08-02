@@ -1,17 +1,21 @@
-import { Download, Eye, EyeOff } from "lucide-react";
+import { Download, Eye, EyeOff, MoreVertical, Trash2 } from "lucide-react";
 import { filesize } from 'filesize';
 import type { FileItem } from "types/types";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { decryptAndDownloadFileWithCrypto } from "~/utils/encrypt-decrypt";
 import Spinner from "./spinner";
 import PreviewFile from "./preview-file";
+import AlertMenu from "./alert-menu";
 import { toast } from "sonner";
+import { useDeleteFileFromLink } from "~/service/api";
 
 type FileCardProps = {
   file: FileItem;
   token: string;
   iv: string;
   ivkey: string;
+  linkId: string;
+  onDeleted: () => void;
 };
 
 function getFileExt(name: string) {
@@ -32,13 +36,40 @@ function getExtColor(ext: string): string {
   return 'bg-white/10 text-gray-400';
 }
 
-export function FileCard({ file, iv, ivkey, token }: FileCardProps) {
+export function FileCard({ file, iv, ivkey, token, linkId, onDeleted }: FileCardProps) {
   const [showPreview, setShowPreview] = useState(false);
   const [decryptedBlob, setDecryptedBlob] = useState<Blob | null>(null);
   const [decryptedUrl, setDecryptedUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const ext = getFileExt(file.name);
+
+  const { mutateAsync: deleteFile, isPending: isDeleting } = useDeleteFileFromLink();
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
+
+  const handleDelete = async () => {
+    try {
+      await deleteFile({ linkId, fileId: file.id });
+      toast.success("File deleted");
+      onDeleted();
+    } catch (error) {
+      console.error("File delete failed:", error);
+      toast.error("Failed to delete file.");
+    }
+  };
 
   const handleDecrypt = async () => {
     if (decryptedBlob) return;
@@ -112,7 +143,40 @@ export function FileCard({ file, iv, ivkey, token }: FileCardProps) {
           <p className="text-sm font-medium text-white truncate" title={file.name}>{file.name}</p>
           <p className="text-xs text-gray-500 mt-0.5">{filesize(file.size)}</p>
         </div>
+
+        <div className="relative flex-shrink-0" ref={menuRef}>
+          <button
+            onClick={() => setMenuOpen((prev) => !prev)}
+            disabled={isDeleting}
+            className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-[#222222] transition-colors disabled:opacity-40"
+          >
+            {isDeleting ? <Spinner size={13} color="white" /> : <MoreVertical size={16} />}
+          </button>
+
+          {menuOpen && (
+            <div className="absolute right-0 top-full mt-1 w-36 rounded-lg border border-[#262626] bg-[#1a1a1a] shadow-lg z-10 overflow-hidden">
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  setConfirmOpen(true);
+                }}
+                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-400 hover:bg-[#222222] transition-colors"
+              >
+                <Trash2 size={13} /> Delete
+              </button>
+            </div>
+          )}
+        </div>
       </div>
+
+      <AlertMenu
+        trigger={null}
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        onConfirm={handleDelete}
+        title="Delete File"
+        description={`Are you sure you want to delete "${file.name}"? This cannot be undone.`}
+      />
 
       {/* Preview */}
       {showPreview && (

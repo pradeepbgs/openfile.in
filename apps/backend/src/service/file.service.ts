@@ -4,23 +4,27 @@ import ApiResponse from "../utils/apiRespone";
 import { IFileRepo, IFileService } from "../interface/file.interface";
 import { IStorage } from "../interface/storage.interface";
 import { links } from "../db";
-import { Link } from "../interface/link.interface";
-
-
+import { ILinkRepo, Link } from "../interface/link.interface";
+import { IDeleteFileRepo } from "../interface/delete-file.interface";
+import { deleteQueue } from "../queue/bullmq/queue/delete-files.queue";
 
 export default class FileService implements IFileService {
     private static instance: FileService
     private fileRepository: IFileRepo
     private storageService: IStorage
+    private link_repository: ILinkRepo
+    private deletedFileRepository: IDeleteFileRepo
 
-    constructor(fileRepository: IFileRepo, storageService: IStorage) {
+    constructor(fileRepository: IFileRepo, storageService: IStorage, link_repository: ILinkRepo, deletedFileRepository: IDeleteFileRepo) {
         this.fileRepository = fileRepository
         this.storageService = storageService
+        this.link_repository = link_repository
+        this.deletedFileRepository = deletedFileRepository
     }
 
-    static getInstance(fileRepository: IFileRepo, storageService: IStorage) {
+    static getInstance(fileRepository: IFileRepo, storageService: IStorage, link_repository: ILinkRepo, deletedFileRepository: IDeleteFileRepo) {
         if (!FileService.instance) {
-            FileService.instance = new FileService(fileRepository, storageService)
+            FileService.instance = new FileService(fileRepository, storageService, link_repository, deletedFileRepository)
         }
         return FileService.instance;
     }
@@ -118,5 +122,42 @@ export default class FileService implements IFileService {
                 },
             }
         );
+    }
+
+    delete_a_file_from_a_link = async (link_id: string, file_id: string, user_id: string) => {
+        const link = await this.link_repository.findLinkByIdAndUser(link_id, user_id);
+        if (!link) {
+            throw new ApiError("Link is expired or doesn't exist.", 404);
+        }
+        const file = await this.fileRepository.get_file_by_id_and_userid(file_id, user_id);
+        if (!file) {
+            throw new ApiError("File doesn't exist or Unauthorized", 404);
+        }
+
+        if (file.uploadLinkId !== link.id) {
+            throw new ApiError("Unauthorized", 403);
+        }
+
+        // 1. Create tracking record in deleted_files table so recovery worker can track status
+        await this.deletedFileRepository.createMany([{ id: file.id, url: file.url }], link.id);
+
+        // 2. Delete file row from files table (fail-safe: if DB delete fails, no S3 queue job is dispatched)
+        const deleted = await this.fileRepository.delete_file_from_link(file.id, link.id, user_id);
+        if (!deleted) {
+            throw new ApiError("Failed to delete file.", 500);
+        }
+
+        // 3. Dispatch background worker job for S3 cleanup (if this fails, recovery worker will retry PENDING state)
+        await deleteQueue.add('delete-queue', {
+            linkId: link.id,
+            files: [{ id: file.id, url: file.url }]
+        });
+
+        // 4. Safely clear redis cache
+        redis.del(`signed-url:${file.id}`).catch((err) => {
+            console.error(`Failed to delete redis cache for file ${file.id}:`, err);
+        });
+
+        return new ApiResponse(200, "File deleted successfully", {});
     }
 }

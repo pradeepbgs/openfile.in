@@ -118,7 +118,7 @@ export const linkService = LinkService.getInstance(
   cacheService
 );
 
-export const fileService = FileService.getInstance(fileRepository, storageService);
+export const fileService = FileService.getInstance(fileRepository, storageService, linkRepository, deletedFileRepository);
 
 export const authService = AuthService.getInstance(notificationService, userRepository);
 export const cleanupService = CleanupService.getInstance(
