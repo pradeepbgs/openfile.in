@@ -6,7 +6,8 @@ import AlertMenu from './alert-menu';
 import { useDeleteLink } from '~/service/api';
 import { getCryptoSecret } from '~/utils/crypto-store';
 import { toast } from "sonner";
-import { Copy, ExternalLink, RefreshCw, Link2, Plus } from "lucide-react";
+import { Copy, ExternalLink, RefreshCw, Link2, Plus, Trash2 } from "lucide-react";
+import { NBCard, nbButtonClass } from './ui/neobrutal';
 
 function UserLinks({ links, handleRefresh }: { links: LinkItem[], handleRefresh: () => void }) {
   const [spinning, setSpinning] = useState<boolean>(false);
@@ -51,47 +52,47 @@ function UserLinks({ links, handleRefresh }: { links: LinkItem[], handleRefresh:
 
   if (links.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <div className="w-12 h-12 rounded-xl bg-[#1a1a1a] border border-[#222222] flex items-center justify-center mb-4">
-          <Link2 size={20} className="text-neutral-600" />
+      <NBCard color="white" className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="w-12 h-12 rounded-xl bg-[#FFF8E7] border-2 border-black flex items-center justify-center mb-4">
+          <Link2 size={20} />
         </div>
-        <p className="text-neutral-300 font-medium mb-1">No links yet</p>
-        <p className="text-neutral-600 text-sm mb-6">Create your first secure upload link to get started.</p>
+        <p className="text-black font-extrabold mb-1">No links yet</p>
+        <p className="text-black/60 text-sm mb-6 font-medium">Create your first secure upload link to get started.</p>
         <button
           onClick={() => navigate('/dashboard')}
-          className="flex items-center gap-2 px-4 py-2 bg-white text-black text-sm rounded-lg font-medium hover:bg-neutral-100 transition-colors"
+          className={nbButtonClass({ color: 'yellow', size: 'sm', className: 'gap-2' })}
         >
           <Plus size={14} />
           Create Link
         </button>
-      </div>
+      </NBCard>
     );
   }
 
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-semibold text-white">Your Links</h2>
+        <h2 className="text-sm font-extrabold text-black">Your Links</h2>
         <button
           onClick={handleRefreshLink}
-          className="flex items-center gap-1.5 text-xs text-neutral-500 hover:text-white transition-colors px-2 py-1 rounded-lg hover:bg-[#1a1a1a]"
+          className="flex items-center gap-1.5 text-xs font-bold text-black/60 hover:text-black transition-colors px-2 py-1 rounded-lg hover:bg-white border-2 border-transparent hover:border-black"
         >
           <RefreshCw size={12} className={`transition-transform duration-500 ${spinning ? 'animate-spin' : ''}`} />
           Refresh
         </button>
       </div>
 
-      <div className="rounded-xl border border-[#222222] overflow-hidden">
+      <NBCard color="white" className="overflow-hidden overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-[#222222] bg-[#161616]">
-              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">Link</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide">Uploads</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wide hidden sm:table-cell">Expires</th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-neutral-500 uppercase tracking-wide">Actions</th>
+            <tr className="border-b-[3px] border-black bg-[#FFF8E7]">
+              <th className="px-4 py-3 text-left text-xs font-extrabold text-black/70 uppercase tracking-wide">Link</th>
+              <th className="px-4 py-3 text-left text-xs font-extrabold text-black/70 uppercase tracking-wide">Uploads</th>
+              <th className="px-4 py-3 text-left text-xs font-extrabold text-black/70 uppercase tracking-wide hidden sm:table-cell">Expires</th>
+              <th className="px-4 py-3 text-right text-xs font-extrabold text-black/70 uppercase tracking-wide">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#1e1e1e]">
+          <tbody className="divide-y-2 divide-black/10">
             {links.map((link: LinkItem) => {
               const secret = secretsMap[link.token];
               const fullLink = `${import.meta.env.VITE_UPLOAD_URL}?token=${link.token}#key=${secret?.key}&iv=${secret?.iv}`;
@@ -103,12 +104,12 @@ function UserLinks({ links, handleRefresh }: { links: LinkItem[], handleRefresh:
                 : 'Never';
 
               return (
-                <tr key={link.id} className="hover:bg-[#161616] transition-colors">
+                <tr key={link.id} className="hover:bg-[#FFF8E7] transition-colors">
                   <td className="px-4 py-3.5">
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => route(link.id, link.token, secret)}
-                        className="text-sm text-white hover:text-neutral-300 transition-colors font-medium truncate max-w-[160px] sm:max-w-[240px] text-left"
+                        className="text-sm text-black hover:text-black/70 transition-colors font-bold truncate max-w-[160px] sm:max-w-[240px] text-left"
                         title={link.name || fullLink}
                       >
                         {link.name || `Link #${link.id}`}
@@ -116,7 +117,7 @@ function UserLinks({ links, handleRefresh }: { links: LinkItem[], handleRefresh:
                       <div className="flex items-center gap-1 flex-shrink-0">
                         <button
                           onClick={() => handleCopyLink(fullLink)}
-                          className="p-1 rounded text-neutral-600 hover:text-neutral-300 transition-colors"
+                          className="p-1 rounded text-black/50 hover:text-black transition-colors"
                           title="Copy link"
                         >
                           <Copy size={12} />
@@ -125,7 +126,7 @@ function UserLinks({ links, handleRefresh }: { links: LinkItem[], handleRefresh:
                           to={fullLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1 rounded text-neutral-600 hover:text-neutral-300 transition-colors"
+                          className="p-1 rounded text-black/50 hover:text-black transition-colors"
                           title="Open link"
                         >
                           <ExternalLink size={12} />
@@ -136,12 +137,12 @@ function UserLinks({ links, handleRefresh }: { links: LinkItem[], handleRefresh:
 
                   <td className="px-4 py-3.5">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-white font-medium">{link.uploadCount}</span>
-                      <span className="text-neutral-600 text-xs">/ {link.maxUploads === 0 ? '∞' : link.maxUploads}</span>
+                      <span className="text-sm text-black font-bold">{link.uploadCount}</span>
+                      <span className="text-black/50 text-xs font-bold">/ {link.maxUploads === 0 ? '∞' : link.maxUploads}</span>
                       {link.maxUploads > 0 && (
-                        <div className="hidden sm:block w-16 h-1 bg-[#222222] rounded-full overflow-hidden">
+                        <div className="hidden sm:block w-16 h-2 bg-white border border-black/30 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-neutral-400 rounded-full transition-all"
+                            className="h-full bg-[#FFD400] rounded-full transition-all"
                             style={{ width: `${Math.min(100, (link.uploadCount / link.maxUploads) * 100)}%` }}
                           />
                         </div>
@@ -150,22 +151,29 @@ function UserLinks({ links, handleRefresh }: { links: LinkItem[], handleRefresh:
                   </td>
 
                   <td className="px-4 py-3.5 hidden sm:table-cell">
-                    <span className={`text-xs font-medium ${
-                      isExpired ? 'text-red-400' : link.expiresAt ? 'text-neutral-400' : 'text-neutral-600'
+                    <span className={`text-xs font-bold ${
+                      isExpired ? 'text-red-600' : link.expiresAt ? 'text-black/70' : 'text-black/40'
                     }`}>
                       {expiryText}
                     </span>
                   </td>
 
                   <td className="px-4 py-3.5 text-right">
-                    <AlertMenu onConfirm={() => handleLinkDelete(link.id)} />
+                    <AlertMenu
+                      onConfirm={() => handleLinkDelete(link.id)}
+                      trigger={
+                        <button className="p-1.5 rounded-md border-2 border-black bg-white hover:bg-red-100 transition-colors">
+                          <Trash2 size={13} className="text-red-600" />
+                        </button>
+                      }
+                    />
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-      </div>
+      </NBCard>
     </div>
   );
 }

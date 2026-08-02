@@ -3,8 +3,16 @@ import { useNavigate } from 'react-router';
 import { useAuth } from '~/zustand/store';
 import { checkout } from '~/service/api';
 import Spinner from '~/components/spinner';
+import { NBBadge, NBCard, nbButtonClass, type NBColor } from '~/components/ui/neobrutal';
 
-const plans = [
+const plans: Array<{
+    name: string;
+    price: string;
+    description: string;
+    features: string[];
+    planKey: string;
+    color: NBColor;
+}> = [
     {
         name: 'Free',
         price: '$0',
@@ -16,6 +24,7 @@ const plans = [
             'Basic support',
         ],
         planKey: 'free',
+        color: 'blue',
     },
     {
         name: 'Pro',
@@ -28,6 +37,7 @@ const plans = [
             '24/7 support',
         ],
         planKey: 'pro',
+        color: 'yellow',
     },
 ];
 
@@ -51,42 +61,35 @@ export default function PlansPage() {
     };
 
     return (
-        <div className="text-white px-6 py-16 flex flex-col items-center bg-[#111111]">
+        <div className="text-black px-6 py-16 flex flex-col items-center bg-[#FFF8E7]">
             <div className="text-center mb-12">
-                <p className="text-xs font-semibold tracking-widest text-neutral-600 uppercase mb-3">Pricing</p>
-                <h1 className="text-4xl font-bold text-white mb-3">Simple, Transparent Pricing</h1>
-                <p className="text-neutral-500 text-base max-w-md mx-auto">Start free. Upgrade when you need more.</p>
+                <p className="text-xs font-extrabold tracking-widest text-black/60 uppercase mb-3">Pricing</p>
+                <h1 className="text-4xl font-extrabold text-black mb-3">Simple, Transparent Pricing</h1>
+                <p className="text-black/70 text-base max-w-md mx-auto font-medium">Start free. Upgrade when you need more.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
                 {plans.map((plan) => {
                     const isPro = plan.planKey === 'pro';
                     const isCurrent = currentPlan === plan.planKey;
                     return (
-                        <div
-                            key={plan.name}
-                            className={`relative p-7 rounded-xl flex flex-col border transition-colors ${
-                                isPro
-                                    ? 'border-white/20 bg-[#1a1a1a]'
-                                    : 'border-[#222222] bg-[#161616]'
-                            }`}
-                        >
+                        <NBCard key={plan.name} color="white" shadow="lg" className="relative p-7 flex flex-col">
                             {isPro && (
-                                <div className="absolute -top-3 left-6">
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white text-black">
-                                        Most Popular
-                                    </span>
+                                <div className="absolute -top-4 left-6">
+                                    <NBBadge color={plan.color}>Most Popular</NBBadge>
                                 </div>
                             )}
+                            <NBBadge color={plan.color} className="w-fit mb-5 rounded-md uppercase tracking-wide">
+                                {plan.name}
+                            </NBBadge>
                             <div className="mb-5">
-                                <h2 className="text-sm font-semibold text-neutral-400 mb-2 uppercase tracking-wide">{plan.name}</h2>
-                                <p className="text-3xl font-bold text-white mb-1">{plan.price}</p>
-                                <p className="text-neutral-500 text-sm">{plan.description}</p>
+                                <p className="text-3xl font-extrabold text-black mb-1">{plan.price}</p>
+                                <p className="text-black/70 text-sm font-medium">{plan.description}</p>
                             </div>
                             <ul className="text-sm space-y-2.5 mb-7 flex-1">
                                 {plan.features.map((f, i) => (
-                                    <li className="flex items-center gap-2.5 text-neutral-300" key={i}>
-                                        <span className="text-neutral-500 text-xs">✓</span> {f}
+                                    <li className="flex items-center gap-2.5 text-black font-medium" key={i}>
+                                        <span className="flex-shrink-0 w-4 h-4 flex items-center justify-center bg-black text-white text-[9px] font-extrabold rounded-sm">✓</span> {f}
                                     </li>
                                 ))}
                             </ul>
@@ -94,7 +97,7 @@ export default function PlansPage() {
                             {isCurrent ? (
                                 <button
                                     disabled
-                                    className="w-full bg-[#1e1e1e] text-neutral-600 border border-[#262626] py-2.5 rounded-lg cursor-not-allowed text-sm font-medium"
+                                    className="w-full bg-black/5 text-black/40 border-2 border-black/20 py-2.5 rounded-lg cursor-not-allowed text-sm font-extrabold"
                                 >
                                     Current Plan
                                 </button>
@@ -104,16 +107,12 @@ export default function PlansPage() {
                                         if (!user) return navigate('/auth');
                                         return handleSelectPlan(plan.planKey);
                                     }}
-                                    className={`w-full py-2.5 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-                                        isPro
-                                            ? 'bg-white text-black hover:bg-neutral-100'
-                                            : 'bg-[#1e1e1e] hover:bg-[#242424] border border-[#2a2a2a] text-white'
-                                    }`}
+                                    className={nbButtonClass({ color: plan.color, className: 'w-full py-2.5' })}
                                 >
-                                    {loading ? <Spinner /> : isPro ? 'Get Pro' : 'Get Started'}
+                                    {loading ? <Spinner color="black" /> : isPro ? 'Get Pro' : 'Get Started'}
                                 </button>
                             )}
-                        </div>
+                        </NBCard>
                     );
                 })}
             </div>

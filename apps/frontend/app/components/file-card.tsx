@@ -8,6 +8,7 @@ import PreviewFile from "./preview-file";
 import AlertMenu from "./alert-menu";
 import { toast } from "sonner";
 import { useDeleteFileFromLink } from "~/service/api";
+import { NBCard, nbButtonClass } from "./ui/neobrutal";
 
 type FileCardProps = {
   file: FileItem;
@@ -28,12 +29,12 @@ function getExtColor(ext: string): string {
   const docs = ['PDF', 'DOC', 'DOCX', 'TXT', 'MD'];
   const code = ['JS', 'TS', 'TSX', 'JSX', 'PY', 'GO', 'RS', 'JSON'];
   const archives = ['ZIP', 'RAR', 'TAR', 'GZ', '7Z'];
-  if (images.includes(ext)) return 'bg-blue-500/20 text-blue-300';
-  if (videos.includes(ext)) return 'bg-pink-500/20 text-pink-300';
-  if (docs.includes(ext)) return 'bg-orange-500/20 text-orange-300';
-  if (code.includes(ext)) return 'bg-green-500/20 text-green-300';
-  if (archives.includes(ext)) return 'bg-yellow-500/20 text-yellow-300';
-  return 'bg-white/10 text-gray-400';
+  if (images.includes(ext)) return 'bg-[#6EC1FF]';
+  if (videos.includes(ext)) return 'bg-[#FF6FA5]';
+  if (docs.includes(ext)) return 'bg-[#FFD400]';
+  if (code.includes(ext)) return 'bg-[#A3FF66]';
+  if (archives.includes(ext)) return 'bg-[#FFD400]';
+  return 'bg-[#FFF8E7]';
 }
 
 export function FileCard({ file, iv, ivkey, token, linkId, onDeleted }: FileCardProps) {
@@ -133,38 +134,38 @@ export function FileCard({ file, iv, ivkey, token, linkId, onDeleted }: FileCard
   };
 
   return (
-    <div className="bg-[#161616] border border-[#222222] rounded-lg p-4 flex flex-col gap-3 hover:bg-[#1a1a1a] transition-colors">
+    <NBCard color="white" className="p-4 flex flex-col gap-3">
       {/* File info */}
       <div className="flex items-start gap-3">
-        <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${getExtColor(ext)}`}>
-          <span className="text-[9px] font-bold font-mono">{ext}</span>
+        <div className={`w-10 h-10 rounded-lg border-2 border-black flex items-center justify-center flex-shrink-0 ${getExtColor(ext)}`}>
+          <span className="text-[9px] font-extrabold font-mono text-black">{ext}</span>
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-white truncate" title={file.name}>{file.name}</p>
-          <p className="text-xs text-gray-500 mt-0.5">{filesize(file.size)}</p>
+          <p className="text-sm font-bold text-black truncate" title={file.name}>{file.name}</p>
+          <p className="text-xs text-black/60 mt-0.5 font-medium">{filesize(file.size)}</p>
         </div>
 
         <div className="relative flex-shrink-0" ref={menuRef}>
           <button
             onClick={() => setMenuOpen((prev) => !prev)}
             disabled={isDeleting}
-            className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-[#222222] transition-colors disabled:opacity-40"
+            className="p-1.5 rounded-md border-2 border-black text-black hover:bg-[#FFF8E7] transition-colors disabled:opacity-40"
           >
-            {isDeleting ? <Spinner size={13} color="white" /> : <MoreVertical size={16} />}
+            {isDeleting ? <Spinner size={13} color="black" /> : <MoreVertical size={16} />}
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 top-full mt-1 w-36 rounded-lg border border-[#262626] bg-[#1a1a1a] shadow-lg z-10 overflow-hidden">
+            <NBCard color="white" shadow="sm" className="absolute right-0 top-full mt-1 w-36 z-10 overflow-hidden">
               <button
                 onClick={() => {
                   setMenuOpen(false);
                   setConfirmOpen(true);
                 }}
-                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-400 hover:bg-[#222222] transition-colors"
+                className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 transition-colors"
               >
                 <Trash2 size={13} /> Delete
               </button>
-            </div>
+            </NBCard>
           )}
         </div>
       </div>
@@ -180,7 +181,7 @@ export function FileCard({ file, iv, ivkey, token, linkId, onDeleted }: FileCard
 
       {/* Preview */}
       {showPreview && (
-        <div className="rounded-lg overflow-hidden border border-[#262626] bg-[#111111]">
+        <div className="rounded-lg overflow-hidden border-2 border-black bg-[#FFF8E7]">
           <PreviewFile file={file} previewUrl={decryptedUrl} isLoading={isProcessing} />
         </div>
       )}
@@ -190,10 +191,10 @@ export function FileCard({ file, iv, ivkey, token, linkId, onDeleted }: FileCard
         <button
           onClick={handleTogglePreview}
           disabled={isProcessing && !decryptedUrl}
-          className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 text-xs rounded-lg text-neutral-300 bg-[#1a1a1a] hover:bg-[#1e1e1e] border border-[#262626] transition-colors disabled:opacity-40"
+          className={nbButtonClass({ color: 'white', size: 'sm', className: 'flex-1 gap-1.5 py-2 px-3' })}
         >
           {isProcessing && !decryptedUrl ? (
-            <Spinner size={13} color="white" />
+            <Spinner size={13} color="black" />
           ) : showPreview ? (
             <><EyeOff size={13} /> Hide</>
           ) : (
@@ -204,15 +205,15 @@ export function FileCard({ file, iv, ivkey, token, linkId, onDeleted }: FileCard
         <button
           onClick={handleDownload}
           disabled={isProcessing}
-          className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 text-xs rounded-lg text-white bg-indigo-600/80 hover:bg-indigo-600 border border-indigo-500/30 transition-colors disabled:opacity-40"
+          className={nbButtonClass({ color: 'yellow', size: 'sm', className: 'flex-1 gap-1.5 py-2 px-3' })}
         >
           {isProcessing ? (
-            <Spinner size={13} color="white" />
+            <Spinner size={13} color="black" />
           ) : (
             <><Download size={13} /> Download</>
           )}
         </button>
       </div>
-    </div>
+    </NBCard>
   );
 }

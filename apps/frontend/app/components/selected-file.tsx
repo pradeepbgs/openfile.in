@@ -1,6 +1,7 @@
 import { useUploadStatusStore } from "~/zustand/upload-status-store";
 import { filesize } from "filesize";
 import { CheckCircle, XCircle, Loader } from "lucide-react";
+import { NBCard } from "./ui/neobrutal";
 
 function getFileExt(name: string) {
     return name.split('.').pop()?.toUpperCase() ?? 'FILE';
@@ -13,7 +14,7 @@ export function SelectedFilesList({ files }: { files: File[] | undefined }) {
     if (!files || files.length === 0) return null;
 
     return (
-        <div className="space-y-2">
+        <div className="space-y-2.5">
             {files.map((file) => {
                 const status = fileStatusList.find((f) => f.name === file.name);
                 const isDone = status?.status === "done";
@@ -21,23 +22,23 @@ export function SelectedFilesList({ files }: { files: File[] | undefined }) {
                 const isUploading = status?.status === "uploading";
 
                 return (
-                    <div key={file.name} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/8">
+                    <NBCard key={file.name} color="white" shadow="sm" className="flex items-center gap-3 p-3">
                         {/* Ext badge */}
-                        <div className="w-10 h-10 rounded-lg bg-white/8 flex items-center justify-center flex-shrink-0">
-                            <span className="text-[9px] font-bold text-gray-400 font-mono">{getFileExt(file.name)}</span>
+                        <div className="w-10 h-10 rounded-md bg-[#FFF8E7] border-2 border-black flex items-center justify-center flex-shrink-0">
+                            <span className="text-[9px] font-extrabold text-black font-mono">{getFileExt(file.name)}</span>
                         </div>
 
                         {/* Info */}
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm text-white font-medium truncate">{file.name}</p>
-                            <p className="text-xs text-gray-500">{filesize(file.size)}</p>
+                            <p className="text-sm text-black font-bold truncate">{file.name}</p>
+                            <p className="text-xs text-black/60 font-medium">{filesize(file.size)}</p>
 
                             {status && (
                                 <div className="mt-1.5">
-                                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                                    <div className="w-full bg-black/10 h-2 rounded-full overflow-hidden border border-black/20">
                                         <div
-                                            className={`h-full rounded-full transition-all duration-500 ${
-                                                isError ? "bg-red-500" : isDone ? "bg-green-500" : "bg-purple-500"
+                                            className={`h-full transition-all duration-500 ${
+                                                isError ? "bg-red-500" : isDone ? "bg-[#A3FF66]" : "bg-[#FFD400]"
                                             }`}
                                             style={{ width: isDone ? '100%' : `${status.progress}%` }}
                                         />
@@ -46,19 +47,19 @@ export function SelectedFilesList({ files }: { files: File[] | undefined }) {
                             )}
 
                             {errors?.[file.name] && (
-                                <p className="text-xs text-red-400 mt-1">{errors[file.name]}</p>
+                                <p className="text-xs text-red-600 font-bold mt-1">{errors[file.name]}</p>
                             )}
                         </div>
 
                         {/* Status icon */}
                         {status && (
                             <div className="flex-shrink-0">
-                                {isDone && <CheckCircle size={18} className="text-green-400" />}
-                                {isError && <XCircle size={18} className="text-red-400" />}
-                                {isUploading && <Loader size={18} className="text-purple-400 animate-spin" />}
+                                {isDone && <CheckCircle size={18} className="text-green-600" />}
+                                {isError && <XCircle size={18} className="text-red-600" />}
+                                {isUploading && <Loader size={18} className="text-black animate-spin" />}
                             </div>
                         )}
-                    </div>
+                    </NBCard>
                 );
             })}
         </div>

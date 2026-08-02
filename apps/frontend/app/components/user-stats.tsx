@@ -2,11 +2,13 @@ import React from 'react'
 import type { LinkItem } from 'types/types'
 import { filesize } from 'filesize'
 import { Link2, CheckCircle, Upload, HardDrive } from 'lucide-react'
+import { NBCard, NB_COLORS, type NBColor } from './ui/neobrutal'
 
 interface StatCardProps {
   label: string;
   value: React.ReactNode;
   icon: React.ReactNode;
+  color: NBColor;
 }
 
 function UserStats({
@@ -31,35 +33,39 @@ function UserStats({
       <StatCard
         label="Total Links"
         value={linkCount ?? 0}
-        icon={<Link2 size={15} className="text-neutral-400" />}
+        icon={<Link2 size={15} strokeWidth={2.5} />}
+        color="yellow"
       />
       <StatCard
         label="Active Links"
         value={activeLinks}
-        icon={<CheckCircle size={15} className="text-neutral-400" />}
+        icon={<CheckCircle size={15} strokeWidth={2.5} />}
+        color="green"
       />
       <StatCard
         label="Total Uploads"
         value={totalUploads}
-        icon={<Upload size={15} className="text-neutral-400" />}
+        icon={<Upload size={15} strokeWidth={2.5} />}
+        color="pink"
       />
       <StatCard
         label="Storage Used"
         value={filesize(storageUsed || 0)}
-        icon={<HardDrive size={15} className="text-neutral-400" />}
+        icon={<HardDrive size={15} strokeWidth={2.5} />}
+        color="blue"
       />
     </div>
   );
 }
 
-const StatCard: React.FC<StatCardProps> = ({ label, value, icon }) => (
-  <div className="rounded-xl border border-[#222222] bg-[#161616] px-4 py-3.5">
+const StatCard: React.FC<StatCardProps> = ({ label, value, icon, color }) => (
+  <NBCard color="white" shadow="sm" className="px-4 py-3.5">
     <div className="flex items-center justify-between mb-3">
-      <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">{label}</p>
-      <div className="p-1.5 rounded-lg bg-[#1e1e1e]">{icon}</div>
+      <p className="text-xs font-extrabold text-black/60 uppercase tracking-wide">{label}</p>
+      <div className="p-1.5 rounded-md border-2 border-black" style={{ backgroundColor: NB_COLORS[color] }}>{icon}</div>
     </div>
-    <p className="text-2xl font-bold text-white">{value}</p>
-  </div>
+    <p className="text-2xl font-extrabold text-black">{value}</p>
+  </NBCard>
 );
 
 export default React.memo(UserStats);

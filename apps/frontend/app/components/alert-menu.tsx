@@ -1,6 +1,7 @@
-import { AlertDialog, Button, Flex } from '@radix-ui/themes';
+import { AlertDialog } from '@radix-ui/themes';
 import React from 'react';
 import { MdDelete } from "react-icons/md";
+import { nbBorder, nbButtonClass, nbShadowLg } from './ui/neobrutal';
 
 function AlertMenu({
     onConfirm,
@@ -22,26 +23,29 @@ function AlertMenu({
             {trigger !== null && (
                 <AlertDialog.Trigger>
                     {trigger ?? (
-                        <Button variant="soft" color="red" size="1">
-                            <MdDelete color='red' size={20} />
-                        </Button>
+                        <button className="p-1.5 rounded-md border-2 border-black bg-white hover:bg-red-100 transition-colors">
+                            <MdDelete color='#dc2626' size={16} />
+                        </button>
                     )}
                 </AlertDialog.Trigger>
             )}
-            <AlertDialog.Content maxWidth="450px">
-                <AlertDialog.Title>{title}</AlertDialog.Title>
-                <AlertDialog.Description size="2">
+            <AlertDialog.Content
+                maxWidth="450px"
+                className={`!bg-white !text-black !rounded-lg ${nbBorder} ${nbShadowLg}`}
+            >
+                <AlertDialog.Title className="!text-black !font-extrabold">{title}</AlertDialog.Title>
+                <AlertDialog.Description size="2" className="!text-black/70 !font-medium">
                     {description}
                 </AlertDialog.Description>
 
-                <Flex gap="3" mt="4" justify="end">
+                <div className="flex gap-3 mt-5 justify-end">
                     <AlertDialog.Cancel>
-                        <Button variant="soft" color="gray">Cancel</Button>
+                        <button className={nbButtonClass({ color: 'white', size: 'sm' })}>Cancel</button>
                     </AlertDialog.Cancel>
                     <AlertDialog.Action>
-                        <Button variant="solid" color="red" onClick={onConfirm}>Delete</Button>
+                        <button onClick={onConfirm} className={nbButtonClass({ color: 'pink', size: 'sm' })}>Delete</button>
                     </AlertDialog.Action>
-                </Flex>
+                </div>
             </AlertDialog.Content>
         </AlertDialog.Root>
     );
