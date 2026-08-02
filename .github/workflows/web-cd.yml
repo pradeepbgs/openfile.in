@@ -1,0 +1,41 @@
+name: "Deploy Web on VPS"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+        - "apps/frontend/**"
+        - ".github/workflows/web-cd.yml"
+
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploay to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+              set -e
+
+              echo "[Frontend] Pulling latest codebase"
+              cd /srv/apps/openfile.in
+              git fetch origin
+              git reset --hard origin/main
+
+              echo "Building frontend"
+              cd apps/frontend
+              bun run install
+              bun run build
+
+              echo "[Frontend] deployment completed"
+          
+

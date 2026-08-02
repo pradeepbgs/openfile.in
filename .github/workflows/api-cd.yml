@@ -7,7 +7,7 @@ on:
     paths:
       - "apps/backend/**"
       - "bun.lock"
-      - ".github/workflows/cd.yml"
+      - ".github/workflows/api-cd.yml"
 
 concurrency:
   group: deploy-backend
