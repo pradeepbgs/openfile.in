@@ -3,81 +3,67 @@ import { Link } from 'react-router'
 import { useAuth } from '~/zustand/store'
 import OpenfileLogo from './openfile-logo'
 import { FiMenu, FiX } from 'react-icons/fi'
+import { nbBorderThin, nbButtonClass, nbShadowSm } from './ui/neobrutal'
 
 function Header() {
   const isLoggedIn = useAuth.getState()?.user?.username
   const [mobileOpen, setMobileOpen] = useState(false)
 
+  const navLinks = [
+    { label: 'How it works', href: '#how-it-works' },
+    { label: 'Features', href: '#features' },
+    { label: 'Pricing', href: '#pricing' },
+  ]
+
   return (
-    <header className="sticky top-0 z-50 border-b border-[#1e1e1e] bg-[#111111]/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 border-b-[3px] border-black bg-[#FFF8E7]">
       <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <OpenfileLogo />
-          <Link to={'/'} className="text-sm font-semibold text-white">OpenFile</Link>
+          <Link to={'/'} className="text-sm font-extrabold text-black">OpenFile</Link>
         </div>
 
         <div className="hidden md:flex items-center gap-7">
-          <a href="#how-it-works" className="text-sm text-neutral-500 hover:text-white transition-colors">
-            How it works
-          </a>
-          <a href="#features" className="text-sm text-neutral-500 hover:text-white transition-colors">
-            Features
-          </a>
-          <a href="#pricing" className="text-sm text-neutral-500 hover:text-white transition-colors">
-            Pricing
-          </a>
+          {navLinks.map((l) => (
+            <a key={l.label} href={l.href} className="text-sm font-bold text-black/70 hover:text-black transition-colors">
+              {l.label}
+            </a>
+          ))}
           {isLoggedIn ? (
-            <Link
-              to={'/dashboard'}
-              className="text-sm bg-white text-black px-4 py-1.5 rounded-lg font-medium hover:bg-neutral-100 transition-colors"
-            >
+            <Link to={'/dashboard'} className={nbButtonClass({ color: 'yellow', size: 'sm' })}>
               Dashboard
             </Link>
           ) : (
-            <Link
-              to={'/auth'}
-              className="text-sm border border-[#2a2a2a] text-neutral-300 hover:text-white hover:border-[#3a3a3a] px-4 py-1.5 rounded-lg font-medium transition-colors"
-            >
+            <Link to={'/auth'} className={nbButtonClass({ color: 'white', size: 'sm' })}>
               Login
             </Link>
           )}
         </div>
 
         <button
-          className="md:hidden text-neutral-500 hover:text-white transition-colors"
+          className={`md:hidden text-black rounded-md p-1.5 bg-white ${nbBorderThin} ${nbShadowSm}`}
           onClick={() => setMobileOpen(!mobileOpen)}
         >
-          {mobileOpen ? <FiX size={20} /> : <FiMenu size={20} />}
+          {mobileOpen ? <FiX size={18} /> : <FiMenu size={18} />}
         </button>
       </nav>
 
       {mobileOpen && (
-        <div className="md:hidden border-t border-[#1e1e1e] bg-[#111111] px-6 py-4 flex flex-col gap-4">
-          <a
-            href="#how-it-works"
-            className="text-sm text-neutral-400 hover:text-white transition-colors py-1"
-            onClick={() => setMobileOpen(false)}
-          >
-            How it works
-          </a>
-          <a
-            href="#features"
-            className="text-sm text-neutral-400 hover:text-white transition-colors py-1"
-            onClick={() => setMobileOpen(false)}
-          >
-            Features
-          </a>
-          <a
-            href="#pricing"
-            className="text-sm text-neutral-400 hover:text-white transition-colors py-1"
-            onClick={() => setMobileOpen(false)}
-          >
-            Pricing
-          </a>
+        <div className="md:hidden border-t-[3px] border-black bg-[#FFF8E7] px-6 py-4 flex flex-col gap-4">
+          {navLinks.map((l) => (
+            <a
+              key={l.label}
+              href={l.href}
+              className="text-sm font-bold text-black/80 hover:text-black transition-colors py-1"
+              onClick={() => setMobileOpen(false)}
+            >
+              {l.label}
+            </a>
+          ))}
           {isLoggedIn ? (
             <Link
               to={'/dashboard'}
-              className="text-sm bg-white text-black px-4 py-2 rounded-lg text-center font-medium hover:bg-neutral-100 transition-colors"
+              className={nbButtonClass({ color: 'yellow', size: 'sm', className: 'text-center' })}
               onClick={() => setMobileOpen(false)}
             >
               Dashboard
@@ -85,7 +71,7 @@ function Header() {
           ) : (
             <Link
               to={'/auth'}
-              className="text-sm border border-[#2a2a2a] text-neutral-300 px-4 py-2 rounded-lg text-center font-medium transition-colors"
+              className={nbButtonClass({ color: 'white', size: 'sm', className: 'text-center' })}
               onClick={() => setMobileOpen(false)}
             >
               Login

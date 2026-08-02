@@ -13,7 +13,7 @@ function PreviewFile({ file, previewUrl, isLoading }: PreviewFileProps) {
 
   if (!isImage && !isVideo) {
     return (
-      <div className="flex items-center justify-center bg-gray-800/40 rounded-xl h-32 text-gray-400 text-sm">
+      <div className="flex items-center justify-center bg-[#FFF8E7] rounded-lg h-32 text-black/50 text-sm font-bold">
         No preview available
       </div>
     );
@@ -21,7 +21,7 @@ function PreviewFile({ file, previewUrl, isLoading }: PreviewFileProps) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center bg-gray-800/40 rounded-xl h-32 text-gray-400 text-sm">
+      <div className="flex items-center justify-center bg-[#FFF8E7] rounded-lg h-32 text-black/50 text-sm font-bold">
         Decrypting preview...
       </div>
     );
@@ -35,14 +35,14 @@ function PreviewFile({ file, previewUrl, isLoading }: PreviewFileProps) {
         <img
           src={previewUrl}
           alt={file.name}
-          className="rounded-xl max-h-60 w-full object-contain border border-white/10"
+          className="rounded-lg max-h-60 w-full object-contain border-2 border-black"
         />
       ) : (
         <video
           src={previewUrl}
           controls
           muted
-          className="w-full max-h-60 object-contain bg-black rounded-xl"
+          className="w-full max-h-60 object-contain bg-black rounded-lg border-2 border-black"
           disablePictureInPicture
         />
       )}

@@ -2,14 +2,16 @@ import { Link } from 'react-router';
 import Header from '~/components/header';
 import Footer from '~/components/footer';
 import PlansPage from './dashboard/plan';
+import { Lock } from 'lucide-react';
+import { NBBadge, NBCard, nbButtonClass } from '~/components/ui/neobrutal';
 
 const features = [
-  { title: 'Client-side Encryption', desc: "Files encrypt in the sender's browser using AES-256 before upload. The key never touches our servers." },
-  { title: 'Zero-Knowledge', desc: "The encryption key lives only in the link URL fragment — never sent to our server. We're structurally unable to read your files." },
-  { title: 'No Signup for Senders', desc: 'Anyone can upload to your link — no account, no tracking, no friction.' },
-  { title: 'You Control the Key', desc: 'Set expiry, max upload count, or one-time use. Download the key file as a backup anytime.' },
-  { title: 'Instant Dashboard', desc: 'All received files appear in your dashboard. Preview or download — decrypted locally in your browser.' },
-  { title: 'Simple Sharing', desc: 'One link, shareable anywhere. Works in any browser with no plugins required.' },
+  { title: 'Client-side Encryption', desc: "Files encrypt in the sender's browser using AES-256 before upload. The key never touches our servers.", color: 'yellow' as const },
+  { title: 'Zero-Knowledge', desc: "The encryption key lives only in the link URL fragment — never sent to our server. We're structurally unable to read your files.", color: 'pink' as const },
+  { title: 'No Signup for Senders', desc: 'Anyone can upload to your link — no account, no tracking, no friction.', color: 'blue' as const },
+  { title: 'You Control the Key', desc: 'Set expiry, max upload count, or one-time use. Download the key file as a backup anytime.', color: 'green' as const },
+  { title: 'Instant Dashboard', desc: 'All received files appear in your dashboard. Preview or download — decrypted locally in your browser.', color: 'yellow' as const },
+  { title: 'Simple Sharing', desc: 'One link, shareable anywhere. Works in any browser with no plugins required.', color: 'pink' as const },
 ];
 
 const steps = [
@@ -20,30 +22,28 @@ const steps = [
 
 export default function App() {
   return (
-    <div className="min-h-screen text-white bg-[#111111]">
+    <div className="min-h-screen text-black bg-[#FFF8E7]">
       <Header />
       <main>
         {/* Hero */}
-        <section className="px-6 pt-24 pb-20 md:pt-36 md:pb-28">
+        <section className="px-6 pt-20 pb-16 md:pt-28 md:pb-24">
           <div className="max-w-2xl mx-auto text-center">
-            <h1 className="text-5xl sm:text-6xl font-bold tracking-tight leading-tight mb-5">
+            <NBBadge color="white" className="mb-6 uppercase tracking-wide">
+              <Lock size={12} strokeWidth={3} />
+              Zero-Knowledge Encryption
+            </NBBadge>
+            <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight leading-[1.05] mb-5">
               Receive files privately.
             </h1>
-            <p className="text-neutral-400 text-lg mb-8 leading-relaxed max-w-lg mx-auto">
+            <p className="text-black/70 text-lg mb-8 leading-relaxed max-w-lg mx-auto font-medium">
               Create an encrypted upload link. Share it. Anyone can send you files —
               encrypted in their browser before they leave their device.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link
-                to="/dashboard"
-                className="inline-flex items-center justify-center bg-white text-black px-7 py-2.5 rounded-lg font-semibold text-sm hover:bg-neutral-100 transition-colors"
-              >
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/dashboard" className={nbButtonClass({ color: 'yellow' })}>
                 Get Started Free
               </Link>
-              <a
-                href="#how-it-works"
-                className="inline-flex items-center justify-center border border-[#2a2a2a] text-neutral-400 hover:text-white px-7 py-2.5 rounded-lg font-semibold text-sm transition-colors"
-              >
+              <a href="#how-it-works" className={nbButtonClass({ color: 'white' })}>
                 How it works
               </a>
             </div>
@@ -51,40 +51,42 @@ export default function App() {
         </section>
 
         {/* Features */}
-        <section id="features" className="px-6 py-16 border-t border-[#1e1e1e]">
+        <section id="features" className="px-6 py-16 border-t-[3px] border-black">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-base font-semibold text-white mb-8">Why OpenFile</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-7">
+            <h2 className="text-2xl font-extrabold text-black mb-8">Why OpenFile</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {features.map((f) => (
-                <div key={f.title}>
-                  <h3 className="text-sm font-medium text-white mb-1">{f.title}</h3>
-                  <p className="text-neutral-500 text-sm leading-relaxed">{f.desc}</p>
-                </div>
+                <NBCard key={f.title} color={f.color} className="p-5">
+                  <h3 className="text-sm font-extrabold text-black mb-1.5">{f.title}</h3>
+                  <p className="text-black/75 text-sm leading-relaxed font-medium">{f.desc}</p>
+                </NBCard>
               ))}
             </div>
           </div>
         </section>
 
         {/* How it works */}
-        <section id="how-it-works" className="px-6 py-16 border-t border-[#1e1e1e]">
+        <section id="how-it-works" className="px-6 py-16 border-t-[3px] border-black">
           <div className="max-w-2xl mx-auto">
-            <h2 className="text-base font-semibold text-white mb-8">How it works</h2>
-            <ol className="space-y-7">
+            <h2 className="text-2xl font-extrabold text-black mb-8">How it works</h2>
+            <ol className="space-y-5">
               {steps.map((s) => (
-                <li key={s.num} className="flex gap-5">
-                  <span className="text-xs font-mono text-neutral-600 pt-0.5 w-6 flex-shrink-0">{s.num}</span>
+                <NBCard key={s.num} as="li" color="white" className="p-5 flex gap-5 items-start">
+                  <span className="flex-shrink-0 w-9 h-9 flex items-center justify-center bg-[#FFD400] border-2 border-black rounded-md text-sm font-extrabold">
+                    {s.num}
+                  </span>
                   <div>
-                    <h3 className="text-sm font-medium text-white mb-1">{s.title}</h3>
-                    <p className="text-neutral-500 text-sm leading-relaxed">{s.desc}</p>
+                    <h3 className="text-sm font-extrabold text-black mb-1">{s.title}</h3>
+                    <p className="text-black/70 text-sm leading-relaxed font-medium">{s.desc}</p>
                   </div>
-                </li>
+                </NBCard>
               ))}
             </ol>
           </div>
         </section>
 
         {/* Pricing */}
-        <section id="pricing" className="border-t border-[#1e1e1e]">
+        <section id="pricing" className="border-t-[3px] border-black">
           <PlansPage />
         </section>
       </main>

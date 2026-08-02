@@ -4,6 +4,7 @@ import UserLinks from "~/components/user-links";
 import UserStats from "~/components/user-stats";
 import Spinner from "~/components/spinner";
 import { useEffect, useState } from "react";
+import { nbButtonClass, nbInputClass } from "~/components/ui/neobrutal";
 
 function Profile() {
   const [page, setPage] = useState<number>(1);
@@ -24,13 +25,13 @@ function Profile() {
 
   if (isLoading) return (
     <div className="min-h-screen flex justify-center items-center">
-      <Spinner size={28} />
+      <Spinner size={28} color="black" />
     </div>
   );
 
   if (isError) return (
     <div className="min-h-screen flex justify-center items-center">
-      <p className="text-red-400 text-sm">Error loading links. Please try again later.</p>
+      <p className="text-red-600 font-bold text-sm">Error loading links. Please try again later.</p>
     </div>
   );
 
@@ -41,7 +42,7 @@ function Profile() {
   const loadPrevPage = () => setPage((prev) => prev - 1);
 
   return (
-    <div className="min-h-screen text-white px-4 md:px-8 py-8">
+    <div className="min-h-screen text-black px-4 md:px-8 py-8">
       <div className="mb-8">
         <UserStats
           links={links}
@@ -53,13 +54,13 @@ function Profile() {
       </div>
 
       <div className="relative mb-6">
-        <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-600" size={15} />
+        <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-black/50" size={15} />
         <input
           type="text"
           placeholder="Search links by name…"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
-          className="w-full pl-9 pr-4 py-2.5 bg-[#1a1a1a] text-white placeholder-neutral-600 rounded-lg border border-[#262626] focus:outline-none focus:ring-1 focus:ring-[#3a3a3a] focus:border-[#3a3a3a] text-sm transition-colors"
+          className={`pl-9 ${nbInputClass}`}
         />
       </div>
 
@@ -68,17 +69,17 @@ function Profile() {
       {totalPages > 1 && (
         <div className="mt-6 flex justify-center items-center gap-3">
           <button
-            className="px-4 py-1.5 bg-[#1a1a1a] hover:bg-[#1e1e1e] border border-[#262626] rounded-lg text-sm text-neutral-300 disabled:opacity-40 transition-colors"
+            className={nbButtonClass({ color: 'white', size: 'sm' })}
             onClick={loadPrevPage}
             disabled={page === 1}
           >
             ← Prev
           </button>
-          <span className="text-sm text-neutral-500">
+          <span className="text-sm text-black/60 font-bold">
             Page {currentPage} of {totalPages}
           </span>
           <button
-            className="px-4 py-1.5 bg-[#1a1a1a] hover:bg-[#1e1e1e] border border-[#262626] rounded-lg text-sm text-neutral-300 disabled:opacity-40 transition-colors"
+            className={nbButtonClass({ color: 'white', size: 'sm' })}
             onClick={loadNextPage}
             disabled={page === totalPages}
           >

@@ -16,7 +16,7 @@ const DashboardLayout = () => {
   }, [])
 
   return (
-    <div className={`${GLOBAL_BG}`}>
+    <div className={`${GLOBAL_BG} text-black`}>
       <div className="relative flex min-h-screen ">
         <Sidebar />
         <main className="flex-1  p-4 md:p-6 min-h-screen overflow-auto">

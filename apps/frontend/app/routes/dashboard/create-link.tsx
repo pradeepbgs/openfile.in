@@ -10,6 +10,7 @@ import { generateKeyAndIVWithWebCrypto } from "~/utils/encrypt-decrypt";
 import { useAuth } from "~/zustand/store";
 import { saveCryptoSecret } from "~/utils/crypto-store";
 import { toast } from "sonner";
+import { NBCard, nbButtonClass, nbInputClass, nbLabelClass } from "~/components/ui/neobrutal";
 
 const createLinkSchema = z.object({
   maxUploads: z.number({ required_error: "Max uploads is required" }).min(1),
@@ -82,76 +83,73 @@ export default function CreateLinkPage() {
     }
   };
 
-  const inputClass = "w-full bg-[#1a1a1a] border border-[#262626] text-white placeholder-neutral-600 px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3a3a3a] focus:border-[#3a3a3a] transition-colors";
-  const labelClass = "block text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1.5";
-
   return (
-    <div className="min-h-screen text-white flex flex-col items-center px-4 py-8">
+    <div className="min-h-screen text-black flex flex-col items-center px-4 py-8">
       <div className="w-full max-w-lg mb-6">
         <div className="flex items-center gap-2 mb-1">
-          <Shield size={16} className="text-neutral-400" />
-          <h1 className="text-lg font-semibold text-white">Create Secure Link</h1>
+          <Shield size={16} strokeWidth={2.5} />
+          <h1 className="text-lg font-extrabold text-black">Create Secure Link</h1>
         </div>
-        <p className="text-neutral-500 text-sm">Generate an encrypted upload link to privately receive files.</p>
+        <p className="text-black/60 text-sm font-medium">Generate an encrypted upload link to privately receive files.</p>
       </div>
 
       <div className="w-full max-w-lg space-y-4">
-        <div className="bg-[#161616] border border-[#222222] rounded-xl p-6 space-y-5">
+        <NBCard color="white" className="p-6 space-y-5">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
             <div>
-              <label className={labelClass}>
-                Link name <span className="text-neutral-600 normal-case font-normal">(optional)</span>
+              <label className={nbLabelClass}>
+                Link name <span className="text-black/40 normal-case font-medium">(optional)</span>
               </label>
               <input
                 type="text"
                 placeholder="e.g. Client project files"
                 {...register("name")}
-                className={inputClass}
+                className={nbInputClass}
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className={labelClass}>Max uploads</label>
+                <label className={nbLabelClass}>Max uploads</label>
                 <input
                   type="number"
                   defaultValue={maxUploadVal}
                   {...register("maxUploads", { valueAsNumber: true })}
-                  className={inputClass}
+                  className={nbInputClass}
                 />
                 {errors.maxUploads && (
-                  <p className="text-xs text-red-400 mt-1">{errors.maxUploads.message}</p>
+                  <p className="text-xs text-red-600 font-bold mt-1">{errors.maxUploads.message}</p>
                 )}
               </div>
 
               <div>
-                <label className={labelClass}>Expires in</label>
+                <label className={nbLabelClass}>Expires in</label>
                 <div className="flex gap-2">
                   <input
                     type="number"
                     min={1}
                     value={relativeTime.value}
                     onChange={(e) => setRelativeTime({ ...relativeTime, value: e.target.value })}
-                    className="w-16 bg-[#1a1a1a] border border-[#262626] text-white px-2 py-2 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3a3a3a] transition-colors"
+                    className={`w-16 ${nbInputClass} px-2`}
                   />
                   <select
                     value={relativeTime.unit}
                     onChange={(e) => setRelativeTime({ ...relativeTime, unit: e.target.value as TimeUnit })}
-                    className="flex-1 bg-[#1a1a1a] border border-[#262626] text-white px-2 py-2 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3a3a3a] transition-colors"
+                    className={`flex-1 ${nbInputClass} px-2`}
                   >
-                    <option value="minutes" className="bg-[#1a1a1a]">Minutes</option>
-                    <option value="hours" className="bg-[#1a1a1a]">Hours</option>
-                    <option value="days" className="bg-[#1a1a1a]">Days</option>
+                    <option value="minutes">Minutes</option>
+                    <option value="hours">Hours</option>
+                    <option value="days">Days</option>
                   </select>
                 </div>
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className={labelClass}>Options</label>
+              <label className={nbLabelClass}>Options</label>
 
-              <label className="flex items-start gap-3 cursor-pointer group p-3 rounded-lg hover:bg-[#1a1a1a] transition-colors">
+              <label className="flex items-start gap-3 cursor-pointer group p-3 rounded-lg border-2 border-transparent hover:border-black hover:bg-[#FFF8E7] transition-colors">
                 <div className="relative mt-0.5">
                   <input
                     type="checkbox"
@@ -159,17 +157,17 @@ export default function CreateLinkPage() {
                     onChange={(e) => setShouldDownloadKey(e.target.checked)}
                     className="sr-only"
                   />
-                  <div className={`w-4 h-4 rounded border transition-colors flex items-center justify-center ${shouldDownloadKey ? 'bg-white border-white' : 'bg-transparent border-[#3a3a3a]'}`}>
-                    {shouldDownloadKey && <Check size={10} className="text-black" strokeWidth={3} />}
+                  <div className={`w-5 h-5 rounded-md border-2 border-black transition-colors flex items-center justify-center ${shouldDownloadKey ? 'bg-[#FFD400]' : 'bg-white'}`}>
+                    {shouldDownloadKey && <Check size={12} className="text-black" strokeWidth={3} />}
                   </div>
                 </div>
                 <div>
-                  <span className="text-sm text-neutral-300 group-hover:text-white transition-colors">Download encryption key file</span>
-                  <p className="text-xs text-neutral-600 mt-0.5">Save the key/IV backup to your device</p>
+                  <span className="text-sm text-black font-bold">Download encryption key file</span>
+                  <p className="text-xs text-black/60 mt-0.5 font-medium">Save the key/IV backup to your device</p>
                 </div>
               </label>
 
-              <label className="flex items-start gap-3 cursor-pointer group p-3 rounded-lg hover:bg-[#1a1a1a] transition-colors">
+              <label className="flex items-start gap-3 cursor-pointer group p-3 rounded-lg border-2 border-transparent hover:border-black hover:bg-[#FFF8E7] transition-colors">
                 <div className="relative mt-0.5">
                   <input
                     type="checkbox"
@@ -177,13 +175,13 @@ export default function CreateLinkPage() {
                     onChange={(e) => setShouldExpireLinkAfterFirstUpload(e.target.checked)}
                     className="sr-only"
                   />
-                  <div className={`w-4 h-4 rounded border transition-colors flex items-center justify-center ${shouldExpireLinkAfterFirstUpload ? 'bg-white border-white' : 'bg-transparent border-[#3a3a3a]'}`}>
-                    {shouldExpireLinkAfterFirstUpload && <Check size={10} className="text-black" strokeWidth={3} />}
+                  <div className={`w-5 h-5 rounded-md border-2 border-black transition-colors flex items-center justify-center ${shouldExpireLinkAfterFirstUpload ? 'bg-[#FFD400]' : 'bg-white'}`}>
+                    {shouldExpireLinkAfterFirstUpload && <Check size={12} className="text-black" strokeWidth={3} />}
                   </div>
                 </div>
                 <div>
-                  <span className="text-sm text-neutral-300 group-hover:text-white transition-colors">Expire after first upload</span>
-                  <p className="text-xs text-neutral-600 mt-0.5">Link becomes invalid after one use</p>
+                  <span className="text-sm text-black font-bold">Expire after first upload</span>
+                  <p className="text-xs text-black/60 mt-0.5 font-medium">Link becomes invalid after one use</p>
                 </div>
               </label>
             </div>
@@ -191,59 +189,59 @@ export default function CreateLinkPage() {
             <button
               type="submit"
               disabled={isSubmitting || isCreateLinkPending}
-              className="w-full rounded-lg bg-white hover:bg-neutral-100 text-black py-2.5 text-sm font-semibold disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
+              className={nbButtonClass({ color: 'yellow', className: 'w-full py-2.5 gap-2' })}
             >
               {isCreateLinkPending ? (
-                <><Spinner size={15} /> Generating...</>
+                <><Spinner size={15} color="black" /> Generating...</>
               ) : (
                 <><Link2 size={15} /> Generate Link</>
               )}
             </button>
           </form>
-        </div>
+        </NBCard>
 
-        <div className="bg-[#161616] border border-[#222222] rounded-xl p-5">
-          <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-3">Generated Link</p>
+        <NBCard color="white" className="p-5">
+          <p className="text-xs font-extrabold text-black/60 uppercase tracking-wide mb-3">Generated Link</p>
 
           {isCreateLinkError && (
-            <p className="text-red-400 text-sm mb-3">
+            <p className="text-red-600 text-sm font-bold mb-3">
               {createLinkError instanceof Error ? createLinkError.message : String(createLinkError)}
             </p>
           )}
 
           {uploadUrl ? (
             <div className="space-y-3">
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-[#1a1a1a] border border-[#262626]">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-[#FFF8E7] border-2 border-black">
                 <a
                   href={uploadUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-neutral-300 hover:text-white break-all text-sm underline-offset-2 hover:underline flex-1"
+                  className="text-black hover:text-black/70 break-all text-sm underline-offset-2 hover:underline flex-1 font-medium"
                 >
                   {uploadUrl.length > 80 ? `${uploadUrl.substring(0, 80)}...` : uploadUrl}
                 </a>
                 <button
                   onClick={handleCopy}
-                  className="flex-shrink-0 p-1.5 rounded-lg bg-[#222222] hover:bg-[#2a2a2a] transition-colors"
+                  className="flex-shrink-0 p-1.5 rounded-md bg-white border-2 border-black hover:bg-[#FFD400] transition-colors"
                   title="Copy link"
                 >
                   {copied
-                    ? <Check size={14} className="text-green-400" />
-                    : <Copy size={14} className="text-neutral-400" />
+                    ? <Check size={14} className="text-green-600" />
+                    : <Copy size={14} className="text-black" />
                   }
                 </button>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={handleCopy}
-                  className="flex-1 flex items-center justify-center gap-2 py-2 text-sm rounded-lg bg-[#1a1a1a] hover:bg-[#1e1e1e] border border-[#262626] text-neutral-400 hover:text-white transition-colors"
+                  className={nbButtonClass({ color: 'white', size: 'sm', className: 'flex-1 gap-2' })}
                 >
-                  {copied ? <Check size={13} className="text-green-400" /> : <Copy size={13} />}
+                  {copied ? <Check size={13} className="text-green-600" /> : <Copy size={13} />}
                   {copied ? 'Copied!' : 'Copy Link'}
                 </button>
                 <button
                   onClick={() => downloadKeyFile(uploadUrl, '', '')}
-                  className="flex items-center justify-center gap-2 px-4 py-2 text-sm rounded-lg bg-[#1a1a1a] hover:bg-[#1e1e1e] border border-[#262626] text-neutral-400 hover:text-white transition-colors"
+                  className={nbButtonClass({ color: 'white', size: 'sm', className: 'gap-2' })}
                 >
                   <Download size={13} />
                   Key
@@ -251,12 +249,12 @@ export default function CreateLinkPage() {
               </div>
             </div>
           ) : (
-            <div className="p-6 rounded-lg border border-dashed border-[#262626] text-center">
-              <Link2 size={18} className="text-neutral-700 mx-auto mb-2" />
-              <p className="text-neutral-600 text-sm">Your generated link will appear here.</p>
+            <div className="p-6 rounded-lg border-2 border-dashed border-black/30 text-center">
+              <Link2 size={18} className="text-black/30 mx-auto mb-2" />
+              <p className="text-black/50 text-sm font-medium">Your generated link will appear here.</p>
             </div>
           )}
-        </div>
+        </NBCard>
       </div>
     </div>
   );
