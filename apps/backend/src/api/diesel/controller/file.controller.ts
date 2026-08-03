@@ -6,7 +6,7 @@ import { notifyUploadSchema } from "../../../zod/schema";
 import { HTTPException } from "diesel-core/http-exception";
 import { User } from "../../../interface/user.interface";
 import { Link } from "../../../interface/link.interface";
-
+import { mustGet } from "../../../utils/mustGet";
 
 
 export default class DieselFileController {
@@ -26,14 +26,14 @@ export default class DieselFileController {
 
 
     getFilesByLinkToken = async (c: ContextType) => {
-        const files: any = c.get("files");
-        const { page, limit }: any = c.get("pagination");
-
-        const safeFiles = files.map((file: any) => ({
-            ...file,
-            size: Number(file.size),
-        }));
         try {
+            const files = mustGet<any[]>(c, "files");
+            const { page, limit } = mustGet<{ page: number; limit: number }>(c, "pagination");
+
+            const safeFiles = files.map((file: any) => ({
+                ...file,
+                size: Number(file.size),
+            }));
             return c.json({
                 message: "Files fetched successfully",
                 success: true,
@@ -49,7 +49,7 @@ export default class DieselFileController {
 
     notifyFileUpload = async (c: ContextType) => {
         try {
-            const link = c.get('link') as Link
+            const link = mustGet<Link>(c, 'link')
 
             const body = await c.req.json();
             const parsed = notifyUploadSchema.safeParse(body)
@@ -73,7 +73,7 @@ export default class DieselFileController {
 
     getUploadPresignedUrl = async (c: ContextType) => {
         try {
-            const safeMimeType = c.get('mimeType') as string
+            const safeMimeType = mustGet<string>(c, 'mimeType')
 
             const res: ApiResponse = await this.fileService.uploadPreSignedUrl(safeMimeType)
             return c.json(res.data, res.statusCode);
@@ -86,7 +86,6 @@ export default class DieselFileController {
     }
 
     getDownloadPresignedUrl = async (c: ContextType) => {
-        console.log("query ", c.query)
         const token = c.query?.token;
         const fileId = c.query?.fileId
         const s3key = c.query?.s3key
@@ -94,8 +93,8 @@ export default class DieselFileController {
         if (!token || !s3key || !fileId) {
             return c.json({ error: "Missing or invalid parameters" }, 400);
         }
-        const user = c.get('user') as User
         try {
+            const user = mustGet<User>(c, 'user')
             const apiRespone: ApiResponse = await this.fileService.getDownloadPreSignedUrl(user.id, token, fileId, s3key)
 
             return c.json(apiRespone, apiRespone.statusCode);
@@ -108,7 +107,7 @@ export default class DieselFileController {
 
     deleteFileFromLink = async (c: ContextType) => {
         try {
-            const user = c.get('user') as User
+            const user = mustGet<User>(c, 'user')
             const link_id = c.params.id
             const file_id = c.params.file_id
 
@@ -126,7 +125,7 @@ export default class DieselFileController {
 
     storeageUsed = async (c: ContextType) => {
         try {
-            const user = c.get('user') as User
+            const user = mustGet<User>(c, 'user')
             const apiRespone = await this.fileService.storageUsed(user.id)
 
             return c.json(apiRespone, apiRespone.statusCode);

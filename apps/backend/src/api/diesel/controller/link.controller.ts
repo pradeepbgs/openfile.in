@@ -1,9 +1,9 @@
 import { ContextType } from 'diesel-core'
-import { HTTPException } from 'diesel-core/http-exception'
-import { ILinkService } from '../../../interface/link.interface'
-import ApiResponse from '../../../utils/apiRespone'
+import { ILinkService, Link } from '../../../interface/link.interface'
 import { handleErrorResponse } from '../../../utils/handle-error'
 import { createLinkSchema } from '../../../zod/schema'
+import { User } from '../../../interface/user.interface'
+import { mustGet } from '../../../utils/mustGet'
 
 export default class DieselLinkController {
     private static instance: DieselLinkController
@@ -22,7 +22,7 @@ export default class DieselLinkController {
 
     generateLink = async (c: ContextType) => {
         try {
-            const user = c.get('user')
+            const user = mustGet<User>(c, 'user')
             const body = await c.body
             const result = createLinkSchema.safeParse(body)
             if (!result.success) {
@@ -39,8 +39,8 @@ export default class DieselLinkController {
 
     getUserLinks = async (c: ContextType) => {
         try {
-            const links = c.get('userLinks')
-            const pagination: any = c.get('pagination')
+            const links = mustGet<any[]>(c, 'userLinks')
+            const pagination = mustGet<{ page: number; limit: number }>(c, 'pagination')
             return c.json({
                 message: 'Links fetched successfully',
                 success: true,
@@ -68,9 +68,9 @@ export default class DieselLinkController {
 
     deleteLink = async (c: ContextType) => {
         try {
-            const link = c.get('link')
-            const userId = c.get('userId')
-            const apiResponse: any = await this.linkService.deleteLink(link, userId as string)
+            const link = mustGet<Link>(c, 'link')
+            const userId = mustGet<string>(c, 'userId')
+            const apiResponse: any = await this.linkService.deleteLink(link, userId)
             return c.json(apiResponse.message, apiResponse.statusCode)
         } catch (error) {
             console.error('Error deleting link:', error)
@@ -80,7 +80,7 @@ export default class DieselLinkController {
 
     getLinksCount = async (c: ContextType) => {
         try {
-            const user: any = c.get('user')
+            const user = mustGet<User>(c, 'user')
             const apiResponse: any = await this.linkService.getLinksCount(user.id)
             return c.json(apiResponse.data, apiResponse.statusCode)
         } catch (error) {

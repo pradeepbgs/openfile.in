@@ -5,6 +5,8 @@ import { handleErrorResponse } from '../../../utils/handle-error';
 import { loginSchema, registerSchema } from '../../../zod/schema';
 import { HTTPException } from 'diesel-core/http-exception';
 import { ContextType } from 'diesel-core';
+import { mustGet } from '../../../utils/mustGet';
+import { User } from '../../../interface/user.interface';
 
 export class DieselAuthController {
     private static instance: DieselAuthController
@@ -21,7 +23,7 @@ export class DieselAuthController {
         return DieselAuthController.instance;
     }
 
-    // --- OAuth (Google) sign-in disabled ---
+    // OAuth (Google) sign-in disabled
     // handleGoogleSignIn = async (c: ContextType) => {
     //     try {
     //         const body = await c.body
@@ -43,15 +45,16 @@ export class DieselAuthController {
     // };
     // --- end OAuth ---
 
-    signup = async (c: ContextType) => {
+  signup = async (c: ContextType) => {
+        return c.json({error:"SignUp is Disabled."}, 400)
         try {
             const body = await c.body
             const result = registerSchema.safeParse(body)
             if (!result.success) {
-                const message = result.error.errors[0].message
+                const message = result.error!.errors[0].message
                 throw new HTTPException(400, { res: c.json({ error: message }, 400) })
             }
-            const { username, password } = result.data
+            const { username, password } = result.data!
             const apiResponse: ApiResponse = await this.authService.signup(username, password);
             c.setCookie("accessToken", apiResponse.data.accessToken, accessTokenOptions as any);
             c.setCookie("refreshToken", apiResponse.data.refreshToken, refreshTokenOptions as any);
@@ -63,7 +66,7 @@ export class DieselAuthController {
         }
     };
 
-    login = async (c: ContextType) => {
+  login = async (c: ContextType) => {
         try {
             const body = await c.body
             const result = loginSchema.safeParse(body)
@@ -83,7 +86,7 @@ export class DieselAuthController {
         }
     };
 
-    logout = async (c: ContextType) => {
+  logout = async (c: ContextType) => {
         try {
             c.setCookie("accessToken", "", accessTokenOptions as any);
             c.setCookie("refreshToken", "", refreshTokenOptions as any);
@@ -95,9 +98,9 @@ export class DieselAuthController {
         }
     };
 
-    checkAuth = async (c: ContextType) => {
+  checkAuth = async (c: ContextType) => {
         try {
-            const user = c.get("user");
+            const user = mustGet<User>(c, "user");
             return c.json({ user });
         } catch (error) {
             console.error("check auth error:", error.message);

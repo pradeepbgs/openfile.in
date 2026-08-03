@@ -11,6 +11,7 @@
       "experimentalDecorators": true,
       "sourceMap": true,
       "skipLibCheck": true,
-      "noEmitOnError": false
+      "noEmitOnError": false,
+      "strictNullChecks": true
    }
 }
