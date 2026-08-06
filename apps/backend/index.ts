@@ -1,5 +1,5 @@
 import { redis } from "./src/config/redis";
-import { cleanupService } from "./server.conf";
+import { cleanupService } from "@/container";
 import { startServer } from "./serve";
 
 export async function pushPendingFilesToQueue() {

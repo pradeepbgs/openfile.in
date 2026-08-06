@@ -7,7 +7,7 @@ interface Subscription {
   type UserT = User & { subscription?: Subscription };
 
   export class UserDTO {
-    id: number;
+    id: string;
     username: string;
     email: string | null;
     avatar: string | null;

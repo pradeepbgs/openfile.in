@@ -1,5 +1,5 @@
 import { Diesel } from 'diesel-core'
-import { diesel_file_controller, dieselMiddleware } from '../../../../server.conf'
+import { diesel_file_controller, dieselMiddleware } from '@/container'
 
 export const diesel_file_router = new Diesel({ logger: true, errorFormat: 'json' })
 
