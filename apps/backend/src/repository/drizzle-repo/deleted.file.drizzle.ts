@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { uuidv7 } from "uuidv7";
-import { deletedFiles } from "../../db";
-import { IDeleteFileRepo } from "../../interface/delete-file.interface";
+import { deletedFiles } from "@/db";
+import { IDeleteFileRepo } from "@/interface/delete-file.interface";
 import { DrizzleClient } from "./user.drizzle";
 
 

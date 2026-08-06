@@ -1,7 +1,7 @@
 import { and, eq, sql } from "drizzle-orm";
 import { uuidv7 } from "uuidv7";
-import { files, links } from "../../db";
-import { IFileRepo } from "../../interface/file.interface";
+import { files, links } from "@/db";
+import { IFileRepo } from "@/interface/file.interface";
 import { DrizzleClient } from "./user.drizzle";
 
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll } from "bun:test";
 import { LinkRepositoryDrizzle } from "./link.drizzle";
 import { DrizzleClient } from "./user.drizzle";
-import { createDBClient } from "../../config/db.js";
+import { createDBClient } from "@/config/db.js";
 import { uuidv7 } from "uuidv7";
 
 

@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { uuidv7 } from "uuidv7";
-import { ISubscriptionRepo, StatusType } from "../../interface/subsc.interface";
-import { subscriptionLogs, subscriptions } from "../../db/schema";
+import { ISubscriptionRepo, StatusType } from "@/interface/subsc.interface";
+import { subscriptionLogs, subscriptions } from "@/db/schema";
 import { DrizzleClient } from "./user.drizzle";
 
 interface dt {

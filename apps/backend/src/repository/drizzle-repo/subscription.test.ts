@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeAll } from "bun:test";
 import { SubscriptionRepositoryDrizzle } from "./subscription.drizzle";
 import { DrizzleClient } from "./user.drizzle";
-import { createDBClient } from "../../config/db";
-import { StatusType } from "../../interface/subsc.interface";
+import { createDBClient } from "@/config/db";
+import { StatusType } from "@/interface/subsc.interface";
 import { uuidv7 } from "uuidv7";
 
 
