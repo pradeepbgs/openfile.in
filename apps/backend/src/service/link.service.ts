@@ -25,19 +25,12 @@ export const ONE_DAY = 24 * 60 * 60 * 1000
 
 export default class LinkService implements ILinkService {
     private static instance: LinkService
-    private linkRepository: ILinkRepo
-    private deletedFileRepository: IDeleteFileRepo
-    private cache: RedisCache
 
     constructor(
-        linkRepository: ILinkRepo,
-        deletedFileRepository: IDeleteFileRepo,
-        cache: RedisCache
-    ) {
-        this.linkRepository = linkRepository
-        this.deletedFileRepository = deletedFileRepository
-        this.cache = cache
-    }
+        private linkRepository: ILinkRepo,
+        private deletedFileRepository: IDeleteFileRepo,
+        private cache: RedisCache
+    ) {}
 
     static getInstance(linkRepository: ILinkRepo, deletedFileRepository: IDeleteFileRepo, cache: RedisCache) {
         if (!LinkService.instance) {
