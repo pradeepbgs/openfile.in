@@ -26,6 +26,8 @@ export const createLinkSchema = z.object({
     expireAfterFirstUpload: z.boolean().optional().default(false)
 })
 
+export type CreateLinkBody = z.infer<typeof createLinkSchema>
+
 
 export const secretKeySchema = z.object({
     secretKey: z.string().min(4, "Secret key is required")

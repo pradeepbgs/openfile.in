@@ -2,6 +2,8 @@ import { users } from "../db/schema";
 
 export type User = typeof users.$inferSelect
 
+export type UserWithPlan = NonNullable<Awaited<ReturnType<IUserRepository['findUserAndPlanName']>>>
+
 export interface IUserRepository {
 
     findUserId(id: string): Promise<{ id: string } | null>;

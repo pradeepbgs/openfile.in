@@ -1,6 +1,6 @@
 
 
-export const getFinalLinkExpiration = (expiresAt: Date, maxExpiration: any, now: Date): Date | string => {
+export const getFinalLinkExpiration = (expiresAt: Date | string, maxExpiration: any, now: Date): Date | string => {
     if (expiresAt) {
         const userExp = new Date(expiresAt)
         // if (userExp.getTime() - now.getTime() > maxExpiration) {

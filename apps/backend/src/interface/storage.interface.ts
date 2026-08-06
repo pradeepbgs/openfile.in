@@ -2,11 +2,25 @@ import { Readable } from "stream"
 
 export interface IStorage {
     name(): string
-    uploadFile(file: File)
-    uploadStream(stream: Readable, contentType: string)
-    generateSignedDownloadUrl(key: string)
-    generatePresignedUploadUrl(mimeType: string)
-    deleteFiles(files: { id: string, url: string }[])
+    
+    uploadFile(file: File): Promise<{
+        url: string;
+        key: string;
+    }>
+    
+    uploadStream(stream: Readable, contentType: string): Promise<{
+        url: string;
+        key: string;
+    }>
+    
+    generateSignedDownloadUrl(key: string): Promise<string>
+    
+    generatePresignedUploadUrl(mimeType: string): Promise<{
+        url: string;
+        key: string;
+    } | undefined>
+    
+    deleteFiles(files: { id: string, url: string }[]): Promise<boolean | undefined>
 }
 
 

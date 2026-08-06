@@ -1,9 +1,10 @@
-import { links } from "../db";
 import ApiResponse from "../utils/apiRespone";
 import { Link } from "./link.interface";
 
+export type NotifyUploadParams = { link: Link; s3Key: string; fileSize: number; name?: string }
+
 export interface IFileService {
-    notifyUpload(link: Link, { s3Key, fileSize, name }): Promise<ApiResponse>
+    notifyUpload(params: NotifyUploadParams): Promise<ApiResponse>
     uploadPreSignedUrl(mimeType: string): Promise<ApiResponse>;
     getDownloadPreSignedUrl(userId: string, token: string, fileId: string, s3key: string): Promise<ApiResponse>;
     storageUsed(userId: string): Promise<ApiResponse>
@@ -15,7 +16,7 @@ export interface IFileRepo {
     getUser(id: string): Promise<{ id: string } | null>
 
     findLinkByTokenAndUserId(token: string, userId: string): Promise<{
-        name: string;
+        name: string | null;
         id: string;
         createdAt: Date;
         updatedAt: Date;
@@ -37,9 +38,11 @@ export interface IFileRepo {
         size: bigint;
         keyUsed: boolean;
         uploadLinkId: string;
-    }>
+    } | null>
 
-    storageUsed(userId: string)
+    storageUsed(userId: string): Promise<{
+        totalSize: number;
+    }>
 
     createFileAndUpdateLink({ linkId, userId, url, name, size }: { linkId: string, userId: string, url: string, name: string, size: bigint }):
         Promise<[{
@@ -52,8 +55,8 @@ export interface IFileRepo {
             size: bigint;
             keyUsed: boolean;
             uploadLinkId: string;
-        }, {
-            name: string;
+        } | null, {
+            name: string | null;
             id: string;
             token: string;
             maxUploads: number;
@@ -63,7 +66,7 @@ export interface IFileRepo {
             userId: string;
             createdAt: Date;
             updatedAt: Date;
-        }]>
+        } | null]>
 
     getFiles(linkId: string, userId: string, skip: number, limit: number): Promise<{
         url: string;
@@ -89,17 +92,17 @@ export interface IFileRepo {
         uploadLinkId: string;
     } | undefined>
 
-    get_file_by_id_and_userid(file_id:string, user_id:string):Promise<{
-    userId: string;
-    url: string;
-    name: string;
-    size: bigint;
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    keyUsed: boolean;
-    uploadLinkId: string;
-} | undefined>
+    get_file_by_id_and_userid(file_id: string, user_id: string): Promise<{
+        userId: string;
+        url: string;
+        name: string;
+        size: bigint;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        keyUsed: boolean;
+        uploadLinkId: string;
+    } | undefined>
 
 
     delete_file_from_link(file_id: string, link_id: string, user_id: string): Promise<{

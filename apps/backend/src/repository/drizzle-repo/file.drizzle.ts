@@ -23,7 +23,8 @@ export class FileRepositoryDrizzle implements IFileRepo {
 
     async createFileAndUpdateLink(
         { linkId, userId, url, name, size }:
-            { linkId: string, userId: string, url: string, name: string, size: bigint }) {
+            { linkId: string, userId: string, url: string, name: string, size: bigint }
+    ): ReturnType<IFileRepo['createFileAndUpdateLink']> {
                 console.log('creating file', name, size, userId, linkId)
         const [createdFile] = await this
             .client
@@ -42,7 +43,7 @@ export class FileRepositoryDrizzle implements IFileRepo {
 
         if (!createdFile) {
             console.log('failed to create file')
-            return null;
+            return [null, null];
         }
 
         const [updatedLink] = await this
@@ -57,10 +58,10 @@ export class FileRepositoryDrizzle implements IFileRepo {
 
         if (!updatedLink) {
             console.log('failed to update link')
-            return null;
+            return [createdFile, null];
         }
 
-        return [createdFile!, updatedLink!] as [typeof createdFile, typeof updatedLink];
+        return [createdFile, updatedLink];
     }
 
     async findFileByIdUserIdAndLinkId(fileId: string, userId: string, linkId: string) {
@@ -76,7 +77,7 @@ export class FileRepositoryDrizzle implements IFileRepo {
                 )
             })
 
-        return result
+        return result ?? null
     }
 
     async findLinkByTokenAndUserId(token: string, userId: string) {
@@ -91,7 +92,7 @@ export class FileRepositoryDrizzle implements IFileRepo {
                 )
             })
 
-        return result;
+        return result ?? null;
     }
 
     async getFiles(linkId: string, userId: string, skip: number, limit: number) {
@@ -122,7 +123,7 @@ export class FileRepositoryDrizzle implements IFileRepo {
                 columns: { id: true }
             })
 
-        return result;
+        return result ?? null;
     }
 
     async storageUsed(userId: string) {

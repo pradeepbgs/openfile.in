@@ -1,10 +1,9 @@
 import { redis } from "../config/redis";
 import { ApiError } from "../utils/apiError";
 import ApiResponse from "../utils/apiRespone";
-import { IFileRepo, IFileService } from "../interface/file.interface";
+import { IFileRepo, IFileService, NotifyUploadParams } from "../interface/file.interface";
 import { IStorage } from "../interface/storage.interface";
-import { links } from "../db";
-import { ILinkRepo, Link } from "../interface/link.interface";
+import { ILinkRepo } from "../interface/link.interface";
 import { IDeleteFileRepo } from "../interface/delete-file.interface";
 import { deleteQueue } from "../queue/bullmq/queue/delete-files.queue";
 
@@ -25,7 +24,7 @@ export default class FileService implements IFileService {
         return FileService.instance;
     }
 
-    notifyUpload = async (link: Link, { s3Key, fileSize, name }) => {
+    notifyUpload = async ({ link, s3Key, fileSize, name }: NotifyUploadParams) => {
 
         const user = await this.fileRepository.getUser(link.userId);
         if (!user) {
@@ -33,13 +32,11 @@ export default class FileService implements IFileService {
         }
 
         const url = `https://${process.env.AWS_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Key}`;
-        console.log('userid', user)
-        console.log('link ', link)
         const [fileRes, linkRes] = await this.fileRepository.createFileAndUpdateLink({
             linkId: link.id,
             userId: user.id,
             url,
-            name,
+            name: name ?? '',
             size: BigInt(fileSize),
         })
 
@@ -52,9 +49,7 @@ export default class FileService implements IFileService {
 
 
     uploadPreSignedUrl = async (mimeType: string) => {
-        console.log('in file service before generate url')
         const { url, key } = await this.storageService.generatePresignedUploadUrl(mimeType);
-        console.log('in file service after generate url')
         return new ApiResponse(200, 'URL generated successfully', { url, key })
     }
 

@@ -6,6 +6,8 @@ import { deleteQueue } from "../queue/bullmq/queue/delete-files.queue";
 import { ILinkRepo, ILinkService } from "../interface/link.interface";
 import { IDeleteFileRepo } from "../interface/delete-file.interface";
 import { RedisCache } from "./cache.service";
+import { UserWithPlan } from "../interface/user.interface";
+import { CreateLinkBody } from "../zod/schema";
 
 export const planLimits = {
     free: { maxLinks: 5, maxUploadsPerLink: 2, fileExpiration: 1 },
@@ -30,7 +32,7 @@ export default class LinkService implements ILinkService {
         private linkRepository: ILinkRepo,
         private deletedFileRepository: IDeleteFileRepo,
         private cache: RedisCache
-    ) {}
+    ) { }
 
     static getInstance(linkRepository: ILinkRepo, deletedFileRepository: IDeleteFileRepo, cache: RedisCache) {
         if (!LinkService.instance) {
@@ -40,9 +42,9 @@ export default class LinkService implements ILinkService {
     }
 
     //
-    GenerateLinkForUpload = async (user, body) => {
-        const planName: string = user.subscription?.planName || 'free';
-        const limits: PlanLimits = planLimits[planName];
+    GenerateLinkForUpload = async (user: UserWithPlan, body: CreateLinkBody) => {
+        const planName = (user.subscription?.planName as keyof typeof planLimits) || 'free';
+        const limits: PlanLimits = planLimits[planName] ?? planLimits.free;
 
         const now = new Date()
 
@@ -98,7 +100,7 @@ export default class LinkService implements ILinkService {
                 finalExpiration,
                 finalMaxUploads,
                 linkCountexpireAt,
-                name: body.name,
+                name: body.name ?? '',
                 now,
                 shouldResetLinkCountExpiration,
                 token,
@@ -154,7 +156,7 @@ export default class LinkService implements ILinkService {
         // for that we can store all files url in redis and db then run a background job that will clean all these
         // url so even if server shuts down or link /file gets deleted we will have therir files url saved and
         // can delete by brute force thet if deleted then delete from local db or for next round cron job
-        const files = link.files;
+        const files = link.files as Array<{ id: string, url: string }>;
         if (files.length > 0) {
 
             await this.deletedFileRepository.createMany(files, link.id)

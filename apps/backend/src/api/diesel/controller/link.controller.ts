@@ -2,7 +2,7 @@ import { ContextType } from 'diesel-core'
 import { ILinkService, Link } from '../../../interface/link.interface'
 import { handleErrorResponse } from '../../../utils/handle-error'
 import { createLinkSchema } from '../../../zod/schema'
-import { User } from '../../../interface/user.interface'
+import { UserWithPlan } from '../../../interface/user.interface'
 import { mustGet } from '../../../utils/mustGet'
 
 export default class DieselLinkController {
@@ -22,7 +22,7 @@ export default class DieselLinkController {
 
     generateLink = async (c: ContextType) => {
         try {
-            const user = mustGet<User>(c, 'user')
+            const user = mustGet<UserWithPlan>(c, 'user')
             const body = await c.body
             const result = createLinkSchema.safeParse(body)
             if (!result.success) {
@@ -80,7 +80,7 @@ export default class DieselLinkController {
 
     getLinksCount = async (c: ContextType) => {
         try {
-            const user = mustGet<User>(c, 'user')
+            const user = mustGet<UserWithPlan>(c, 'user')
             const apiResponse: any = await this.linkService.getLinksCount(user.id)
             return c.json(apiResponse.data, apiResponse.statusCode)
         } catch (error) {

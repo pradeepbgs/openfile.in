@@ -1,6 +1,8 @@
 import { links } from "../db";
 import { ApiError } from "../utils/apiError"
 import ApiResponse from "../utils/apiRespone"
+import { CreateLinkBody } from "../zod/schema"
+import { UserWithPlan } from "./user.interface"
 
 export type Link = typeof links.$inferSelect
 
@@ -12,12 +14,12 @@ export interface ILinkRepo {
             id: string;
             url: string;
         }[];
-    }>
+    } | null>
 
     findLinkByTokenAndUserId(token: string, userId: string): Promise<{
         token: string;
         expireAfterFirstUpload: boolean;
-        name: string;
+        name: string | null;
         userId: string;
         id: string;
         maxUploads: number;
@@ -30,7 +32,7 @@ export interface ILinkRepo {
     findLinkByToken(token: string): Promise<{
         token: string;
         expireAfterFirstUpload: boolean;
-        name: string;
+        name: string | null;
         userId: string;
         id: string;
         maxUploads: number;
@@ -43,7 +45,7 @@ export interface ILinkRepo {
     FindLinkWithTokenIvAndKey(token: string): Promise<{
         token: string;
         expireAfterFirstUpload: boolean;
-        name: string;
+        name: string | null;
         userId: string;
         id: string;
         maxUploads: number;
@@ -65,12 +67,14 @@ export interface ILinkRepo {
         uploadLinkId: string;
     }[]>
 
-    deleteFilesForLink(linkId: string, userId: string)
+    deleteFilesForLink(linkId: string, userId: string): Promise<{
+        count: number;
+    }>
 
     deleteLink(linkId: string, userId: string): Promise<{
         token: string;
         expireAfterFirstUpload: boolean;
-        name: string;
+        name: string | null;
         userId: string;
         id: string;
         maxUploads: number;
@@ -78,12 +82,12 @@ export interface ILinkRepo {
         expiresAt: Date;
         createdAt: Date;
         updatedAt: Date;
-    }>
+    } | null>
 
     delete_link_by_id(id: string): Promise<{
         id: string;
         token: string;
-        name: string;
+        name: string | null;
         maxUploads: number;
         uploadCount: number;
         expiresAt: Date;
@@ -91,7 +95,7 @@ export interface ILinkRepo {
         userId: string;
         createdAt: Date;
         updatedAt: Date;
-    }>
+    } | null>
 
     findLinkWithFilesByTokenAndUserId(linkId: string, token: string, userId: string, skip: number, limit: number): Promise<{
         id: string;
@@ -102,12 +106,12 @@ export interface ILinkRepo {
             url: string;
             size: bigint;
         }[];
-    }>
+    } | null>
 
 
     findUserLinks(userId: string, query: string, skip: number, limit: number): Promise<{
         token: string;
-        name: string;
+        name: string | null;
         id: string;
         maxUploads: number;
         uploadCount: number;
@@ -142,13 +146,13 @@ export interface ILinkRepo {
                 expireAfterFirstUpload: boolean
                 shouldResetLinkCountExpiration: boolean
                 now: Date
-                linkCountexpireAt: Date
+                linkCountexpireAt: Date | null
             }
     ):
         Promise<[{
             token: string;
             expireAfterFirstUpload: boolean;
-            name: string;
+            name: string | null;
             userId: string;
             id: string;
             maxUploads: number;
@@ -156,7 +160,7 @@ export interface ILinkRepo {
             expiresAt: Date;
             createdAt: Date;
             updatedAt: Date;
-        }, {
+        } | null, {
             name: string | null;
             id: string;
             createdAt: Date;
@@ -185,7 +189,7 @@ export interface ILinkRepo {
         } & {
             token: string;
             expireAfterFirstUpload: boolean;
-            name: string;
+            name: string | null;
             userId: string;
             id: string;
             maxUploads: number;
@@ -200,7 +204,7 @@ export interface ILinkRepo {
 
 
 export interface ILinkService {
-    GenerateLinkForUpload(user, body): Promise<ApiResponse | ApiError>
+    GenerateLinkForUpload(user: UserWithPlan, body: CreateLinkBody): Promise<ApiResponse | ApiError>
 
     validateLink(token: string): Promise<boolean>
 

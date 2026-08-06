@@ -62,7 +62,7 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
                 now: Date;
                 linkCountexpireAt: Date;
             }
-    ) {
+    ): ReturnType<ILinkRepo['createLink']> {
         const [createdLink] = await this
             .client
             .insert(links)
@@ -82,7 +82,7 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
 
         if (!createdLink) {
             console.log('failed to generate link')
-            return null;
+            return [null, null];
         }
 
         const [updatedUser] = await this
@@ -100,11 +100,10 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
             .returning()
         if (!updatedUser) {
             console.log('failed to update user ', userId)
-            return null;
+            return [createdLink, null];
         }
 
-        // fuck this TS
-        return [createdLink!, updatedUser!] as [typeof createdLink, typeof updatedUser];
+        return [createdLink, updatedUser];
     }
 
     async deleteFilesForLink(linkId: string, userId: string) {

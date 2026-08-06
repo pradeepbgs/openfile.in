@@ -62,7 +62,7 @@ export default class DieselFileController {
                 return c.json({ error: 'Missing required fields' }, 400);
             }
 
-            const apiResponse: ApiResponse = await this.fileService.notifyUpload(link, { s3Key, fileSize, name })
+            const apiResponse: ApiResponse = await this.fileService.notifyUpload({ link, s3Key, fileSize, name })
             return c.json({ message: apiResponse.message }, apiResponse.statusCode)
         } catch (error) {
             console.error("notifyFileUpload error:", error);
