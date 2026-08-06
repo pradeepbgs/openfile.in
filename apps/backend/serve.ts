@@ -1,5 +1,5 @@
 import { Pool } from 'pg'
-import { CONFIG } from './src/config'  // throws at import time if required env vars are missing
+import { CONFIG } from '@/config'  // throws at import time if required env vars are missing
 import { createApp } from './app'
 
 async function checkDB() {

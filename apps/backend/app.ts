@@ -1,10 +1,10 @@
 import { Diesel } from 'diesel-core'
 import { cors } from 'diesel-core/cors'
 import { httpRequestsCounter, httpResponseTime, registry } from './metrics'
-import { diesel_auth_router } from './src/api/diesel/routes/auth.routes'
-import { diesel_link_router } from './src/api/diesel/routes/link.routes'
-import { diesel_file_router } from './src/api/diesel/routes/file.routes'
-import { CONFIG } from './src/config'
+import { diesel_auth_router } from '@/api/diesel/routes/auth.routes'
+import { diesel_link_router } from '@/api/diesel/routes/link.routes'
+import { diesel_file_router } from '@/api/diesel/routes/file.routes'
+import { CONFIG } from '@/config'
 
 export function createApp() {
   const app = new Diesel({ logger: true })

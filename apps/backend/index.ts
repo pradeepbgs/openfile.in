@@ -1,4 +1,4 @@
-import { redis } from "./src/config/redis";
+import { redis } from "@/config/redis";
 import { cleanupService } from "@/container";
 import { startServer } from "./serve";
 
