@@ -8,12 +8,11 @@ import { Upload } from "@aws-sdk/lib-storage";
 
 export class R2StorageService implements IStorage {
     private client: any;
-    private bucket: string;
 
     private static instance: R2StorageService
     Instancename: string
 
-    constructor(bucket: string, accountId: string, accessKey: string, secretKey: string) {
+    constructor(private bucket: string, accountId: string, accessKey: string, secretKey: string) {
         this.client = new S3Client({
             region: "auto",  // cloudflare needs auto
             endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
@@ -22,7 +21,6 @@ export class R2StorageService implements IStorage {
                 secretAccessKey: secretKey,
             },
         });
-        this.bucket = bucket;
         this.Instancename = 'r2'
     }
 

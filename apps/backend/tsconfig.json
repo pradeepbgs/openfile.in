@@ -12,6 +12,10 @@
       "sourceMap": true,
       "skipLibCheck": true,
       "noEmitOnError": false,
-      "strictNullChecks": true
+      "strictNullChecks": true,
+      "baseUrl": ".",
+      "paths": {
+         "@/*": ["./src/*"]
+      }
    }
 }

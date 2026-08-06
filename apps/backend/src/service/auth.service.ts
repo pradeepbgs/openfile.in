@@ -10,11 +10,8 @@ import { IAuthService } from "../interface/auth.interface";
 
 export class AuthService implements IAuthService {
   private static instance: AuthService
-  private userRepository: IUserRepository
 
-  constructor(_notificationService: INotification, userRepository: IUserRepository) {
-    this.userRepository = userRepository
-  }
+  constructor(_notificationService: INotification, private userRepository: IUserRepository) {}
 
   static getInstance(notificationService: INotification, userRepository: IUserRepository) {
     if (!AuthService.instance) {

@@ -3,7 +3,7 @@ set -e
 
 # Generate SSH Key (user must add to GitHub manually)
 # echo "Generating SSH key..."
-# ssh-keygen -t rsa -b 4096 -C "kumarpradeepbgs@gmail.com"
+# ssh-keygen -t rsa -b 4096 -C "mail@gmail.com"
 # echo "Copy and add the following public key to GitHub SSH settings:"
 # cat ~/.ssh/id_rsa.pub
 

@@ -1,4 +1,4 @@
-import { linkRepository, userRepository } from "../../server.conf";
+import { linkRepository, userRepository } from "@/container";
 import { ApiError } from "../utils/apiError";
 import { verifyToken } from "../utils/jwt";
 

@@ -10,17 +10,13 @@ import { deleteQueue } from "../queue/bullmq/queue/delete-files.queue";
 
 export default class FileService implements IFileService {
     private static instance: FileService
-    private fileRepository: IFileRepo
-    private storageService: IStorage
-    private link_repository: ILinkRepo
-    private deletedFileRepository: IDeleteFileRepo
 
-    constructor(fileRepository: IFileRepo, storageService: IStorage, link_repository: ILinkRepo, deletedFileRepository: IDeleteFileRepo) {
-        this.fileRepository = fileRepository
-        this.storageService = storageService
-        this.link_repository = link_repository
-        this.deletedFileRepository = deletedFileRepository
-    }
+    constructor(
+        private fileRepository: IFileRepo,
+        private storageService: IStorage,
+        private link_repository: ILinkRepo,
+        private deletedFileRepository: IDeleteFileRepo
+    ) {}
 
     static getInstance(fileRepository: IFileRepo, storageService: IStorage, link_repository: ILinkRepo, deletedFileRepository: IDeleteFileRepo) {
         if (!FileService.instance) {

@@ -1,5 +1,5 @@
 import {  ContextType, Diesel } from "diesel-core";
-import { dieselAuthController, dieselMiddleware } from "../../../../server.conf";
+import { dieselAuthController, dieselMiddleware } from "@/container";
 
 
 export const diesel_auth_router = new Diesel({

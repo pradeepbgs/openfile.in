@@ -1,5 +1,5 @@
 import { Diesel } from 'diesel-core'
-import { diesel_link_controller, dieselMiddleware } from '../../../../server.conf'
+import { diesel_link_controller, dieselMiddleware } from '@/container'
 
 export const diesel_link_router = new Diesel({ logger: true })
 

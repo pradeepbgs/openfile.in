@@ -9,19 +9,12 @@ import { redis } from "../config/redis";
 
 export default class CleanupService {
     private static instance: CleanupService;
-    private cache: ICache;
-    private linkRepository: ILinkRepo;
-    private deletedFileRepo: IDeleteFileRepo;
 
     constructor(
-        linkRepository: ILinkRepo,
-        deletedFileRepo: IDeleteFileRepo,
-        cache: ICache
-    ) {
-        this.linkRepository = linkRepository;
-        this.deletedFileRepo = deletedFileRepo;
-        this.cache = cache;
-    }
+        private linkRepository: ILinkRepo,
+        private deletedFileRepo: IDeleteFileRepo,
+        private cache: ICache
+    ) {}
 
     public static getInstance(
         linkRepository: ILinkRepo,

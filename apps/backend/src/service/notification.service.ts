@@ -3,11 +3,8 @@ import { INotification } from "../interface/notification.interface";
 
 
 export default class NotificationService implements INotification {
-  private mailer: IMailer
   private static instance: NotificationService;
-  constructor(mailer: IMailer) {
-    this.mailer = mailer
-  }
+  constructor(private mailer: IMailer) {}
 
   static getInstance(mailer: IMailer) {
     if (!NotificationService.instance) {

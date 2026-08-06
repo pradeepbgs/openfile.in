@@ -1,9 +1,9 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import { IUserRepository, User } from "../../interface/user.interface";
-import { subscriptions, users } from "../../db/schema";
+import { IUserRepository, User } from "@/interface/user.interface";
+import { subscriptions, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import * as schema from '../../db/index.js'
-import { getHashedPassword } from '../../utils/hash.password'
+import * as schema from '@/db/index.js'
+import { getHashedPassword } from '@/utils/hash.password'
 import { uuidv7 } from 'uuidv7'
 
 export type DrizzleClient = ReturnType<typeof drizzle<typeof schema>>;
