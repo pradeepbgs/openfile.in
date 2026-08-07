@@ -1,6 +1,8 @@
 import type { FileItem } from "types/types";
 import { useFileStatusStore } from "../zustand/fileStatusStore";
 
+export const ENCRYPTION_ALGORITHM = "AES-GCM";
+
 const toBase64URL = (bytes: Uint8Array): string => {
     const base64 = btoa(String.fromCharCode(...bytes));
     return base64
@@ -23,7 +25,7 @@ export const generateKeyAndIVWithWebCrypto = async (): Promise<{ key: string; iv
 
     const key = await crypto.subtle.generateKey(
         {
-            name: "AES-CBC",
+            name: ENCRYPTION_ALGORITHM,
             length: 256,
         },
         true,
@@ -33,7 +35,7 @@ export const generateKeyAndIVWithWebCrypto = async (): Promise<{ key: string; iv
     const exportedKey = await crypto.subtle.exportKey("raw", key);
     const keyBase64URL = toBase64URL(new Uint8Array(exportedKey));
 
-    const iv = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
     const ivBase64URL = toBase64URL(iv);
 
     return { key: keyBase64URL, iv: ivBase64URL };
@@ -51,7 +53,7 @@ export const encryptFileWithWebCrypto = async (
     const cryptoKey = await crypto.subtle.importKey(
         "raw",
         keyBytes,
-        { name: "AES-CBC" },
+        { name: ENCRYPTION_ALGORITHM },
         false,
         ["encrypt"]
     );
@@ -59,7 +61,7 @@ export const encryptFileWithWebCrypto = async (
     const fileBuffer = await file.arrayBuffer();
 
     const encryptedBuffer = await crypto.subtle.encrypt(
-        { name: "AES-CBC", iv: ivBytes },
+        { name: ENCRYPTION_ALGORITHM, iv: ivBytes },
         cryptoKey,
         fileBuffer
     );

@@ -1,4 +1,4 @@
-import { base64UrlToBase64 } from "./encrypt-decrypt";
+import { base64UrlToBase64, ENCRYPTION_ALGORITHM } from "./encrypt-decrypt";
 
   self.onmessage = async (e) => {
     const { base64Key, base64IV, encryptedData } = e.data;
@@ -10,13 +10,13 @@ import { base64UrlToBase64 } from "./encrypt-decrypt";
       const cryptoKey = await crypto.subtle.importKey(
         "raw",
         keyBytes,
-        { name: "AES-CBC" },
+        { name: ENCRYPTION_ALGORITHM },
         false,
         ["decrypt"]
       );
-  
+
       const decryptedBuffer = await crypto.subtle.decrypt(
-        { name: "AES-CBC", iv: ivBytes },
+        { name: ENCRYPTION_ALGORITHM, iv: ivBytes },
         cryptoKey,
         encryptedData
       );
