@@ -7,14 +7,16 @@ type PreviewFileProps = {
   isLoading: boolean;
 };
 
-function PreviewFile({ file, previewUrl, isLoading }: PreviewFileProps) {
-  const isImage = /\.(png|jpg|jpeg|gif|webp|bmp|svg)$/i.test(file.name);
-  const isVideo = /\.(mp4|webm|ogg|mov|avi|mkv)$/i.test(file.name);
+const isImage = (name: string) => /\.(png|jpg|jpeg|gif|webp|bmp|svg)$/i.test(name);
+const isVideo = (name: string) => /\.(mp4|webm|ogg|mov|avi|mkv)$/i.test(name);
 
-  if (!isImage && !isVideo) {
+export const isPreviewable = (name: string) => isImage(name) || isVideo(name);
+
+function PreviewFile({ file, previewUrl, isLoading }: PreviewFileProps) {
+  if (!isPreviewable(file.name)) {
     return (
       <div className="flex items-center justify-center bg-[#FFF8E7] rounded-lg h-32 text-black/50 text-sm font-bold">
-        No preview available
+        Preview not supported for this file type
       </div>
     );
   }
@@ -31,7 +33,7 @@ function PreviewFile({ file, previewUrl, isLoading }: PreviewFileProps) {
 
   return (
     <div className="flex justify-center mt-2 w-full">
-      {isImage ? (
+      {isImage(file.name) ? (
         <img
           src={previewUrl}
           alt={file.name}

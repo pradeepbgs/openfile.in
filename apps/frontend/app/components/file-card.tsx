@@ -4,7 +4,7 @@ import type { FileItem } from "types/types";
 import { useEffect, useRef, useState } from "react";
 import { decryptAndDownloadFileWithCrypto } from "~/utils/encrypt-decrypt";
 import Spinner from "./spinner";
-import PreviewFile from "./preview-file";
+import PreviewFile, { isPreviewable } from "./preview-file";
 import AlertMenu from "./alert-menu";
 import { toast } from "sonner";
 import { useDeleteFileFromLink } from "~/service/api";
@@ -98,7 +98,7 @@ export function FileCard({ file, iv, ivkey, token, linkId, onDeleted }: FileCard
       setShowPreview(false);
     } else {
       setShowPreview(true);
-      if (!decryptedBlob) await handleDecrypt();
+      if (!decryptedBlob && isPreviewable(file.name)) await handleDecrypt();
     }
   };
 
