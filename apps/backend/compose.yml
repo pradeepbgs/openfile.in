@@ -1,5 +1,6 @@
 services:
   backend:
+    image: ghcr.io/exvillager/openfile-backend:latest
     build:
       context: ../..
       dockerfile: apps/backend/Dockerfile

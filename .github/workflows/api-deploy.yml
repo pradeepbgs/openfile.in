@@ -1,0 +1,91 @@
+name: "Build backend image and deploy to VPS"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/backend/**"
+      - ".github/workflows/api-deploy.yml"
+
+concurrency:
+  group: deploy-backend-image
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read backend version
+        id: version
+        run: echo "version=$(jq -r .version apps/backend/package.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/backend/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/openfile-backend:${{ steps.version.outputs.version }}
+            ghcr.io/${{ github.repository_owner }}/openfile-backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pull latest image and restart backend on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            set -e
+
+            echo "[Project] Updating codebase..."
+            cd /srv/apps/openfile.in
+            git fetch origin
+            git reset --hard origin/main
+
+            echo "[Deploy] Pulling image ${{ needs.build-and-push.outputs.version }}..."
+            cd apps/backend
+            docker compose pull backend
+            docker compose up -d
+
+            echo "[Deploy] Waiting for backend to become healthy..."
+            for i in $(seq 1 10); do
+              if curl -sf http://127.0.0.1:8000/health > /dev/null; then
+                echo "[Deploy] Backend is healthy."
+                docker image prune -f
+                exit 0
+              fi
+              sleep 3
+            done
+
+            echo "[Deploy] Health check failed, recent logs:"
+            docker compose logs --tail 50 backend
+            exit 1
