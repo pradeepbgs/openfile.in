@@ -3,7 +3,10 @@ import { Link } from 'react-router'
 import { useAuth } from '~/zustand/store'
 import OpenfileLogo from './openfile-logo'
 import { FiMenu, FiX } from 'react-icons/fi'
-import { nbBorderThin, nbButtonClass, nbShadowSm } from './ui/neobrutal'
+import { Github } from 'lucide-react'
+import { nbBorderThin, nbButtonClass, nbPress, nbShadowSm } from './ui/neobrutal'
+
+const GITHUB_REPO_URL = 'https://github.com/exvillager/openfile.in'
 
 function Header() {
   const isLoggedIn = useAuth.getState()?.user?.username
@@ -29,6 +32,15 @@ function Header() {
               {l.label}
             </a>
           ))}
+          <a
+            href={GITHUB_REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View source on GitHub"
+            className={`p-1.5 rounded-md bg-white ${nbBorderThin} ${nbShadowSm} ${nbPress}`}
+          >
+            <Github size={16} strokeWidth={2.5} />
+          </a>
           {isLoggedIn ? (
             <Link to={'/dashboard'} className={nbButtonClass({ color: 'yellow', size: 'sm' })}>
               Dashboard
@@ -60,6 +72,16 @@ function Header() {
               {l.label}
             </a>
           ))}
+          <a
+            href={GITHUB_REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-sm font-bold text-black/80 hover:text-black transition-colors py-1"
+            onClick={() => setMobileOpen(false)}
+          >
+            <Github size={16} strokeWidth={2.5} />
+            GitHub
+          </a>
           {isLoggedIn ? (
             <Link
               to={'/dashboard'}

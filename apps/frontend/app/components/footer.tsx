@@ -1,8 +1,10 @@
-import { Shield } from 'lucide-react';
+import { Github, Shield } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router';
 import OpenfileLogo from './openfile-logo';
-import { NBBadge } from './ui/neobrutal';
+import { nbBorderThin, nbPress, nbShadowSm, NBBadge } from './ui/neobrutal';
+
+const GITHUB_REPO_URL = 'https://github.com/exvillager/openfile.in';
 
 function Footer() {
   return (
@@ -61,10 +63,21 @@ function Footer() {
           <p className="text-xs text-black/60 font-bold">
             © {new Date().getFullYear()} OpenFile. All rights reserved.
           </p>
-          <NBBadge color="green" className="text-[11px]">
-            <Shield className="w-3 h-3" strokeWidth={2.5} />
-            End-to-end encrypted
-          </NBBadge>
+          <div className="flex items-center gap-3">
+            <NBBadge color="green" className="text-[11px]">
+              <Shield className="w-3 h-3" strokeWidth={2.5} />
+              End-to-end encrypted
+            </NBBadge>
+            <a
+              href={GITHUB_REPO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View source on GitHub"
+              className={`p-1.5 rounded-md bg-white ${nbBorderThin} ${nbShadowSm} ${nbPress}`}
+            >
+              <Github className="w-3.5 h-3.5" strokeWidth={2.5} />
+            </a>
+          </div>
         </div>
       </div>
     </footer>
