@@ -1,9 +1,9 @@
 import { ContextType } from 'diesel-core'
-import { ILinkService, Link } from '../../../interface/link.interface'
-import { handleErrorResponse } from '../../../utils/handle-error'
-import { createLinkSchema } from '../../../zod/schema'
-import { UserWithPlan } from '../../../interface/user.interface'
-import { mustGet } from '../../../utils/mustGet'
+import { ILinkService, Link } from '../../interface/link.interface'
+import { handleErrorResponse } from '../../utils/handle-error'
+import { createLinkSchema } from '../../zod/schema'
+import { UserWithPlan } from '../../interface/user.interface'
+import { mustGet } from '../../utils/mustGet'
 
 export default class DieselLinkController {
     private static instance: DieselLinkController
