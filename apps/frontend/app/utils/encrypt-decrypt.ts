@@ -100,11 +100,6 @@ export const decryptAndDownloadFileWithCrypto = async (
 
         const decryptedBlob = await decryptFileWithWebCrypto(encryptedBuffer, base64Key, base64IV);
         return decryptedBlob;
-
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(decryptedBlob);
-        link.download = fileName;
-        link.click();
     }  finally {
         useFileStatusStore.getState().updateFileStatus("Decrypt & Download file")
     }

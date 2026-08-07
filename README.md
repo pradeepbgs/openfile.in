@@ -2,7 +2,7 @@ OpenFile is licensed under the [AGPL-3.0 License](./LICENSE).
 
 # OpenFile
 
-**OpenFile** is a secure and ecnrypted file reciever/sharing service. with help of openfile you can generate a link and  share to any anonymous person and that person can send you files anonymously.
+**OpenFile** is a secure and encrypted file receiver/sharing service. with help of openfile you can generate a link and share to any anonymous person and that person can send you files anonymously.
 
 ---
 
@@ -31,8 +31,8 @@ OpenFile is licensed under the [AGPL-3.0 License](./LICENSE).
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/pradeepbgs/openfile.git
-cd openfile
+git clone https://github.com/exvillager/openfile.in.git
+cd openfile.in
 ```
 
 ### 2. Set up the Backend
@@ -79,4 +79,4 @@ If you encounter bugs, have suggestions, or want to contribute:
 
 ## 📜 License
 
-MIT License © 2025 Pradeep Sahu
+AGPL-3.0 License © 2025 Pradeep kumar
