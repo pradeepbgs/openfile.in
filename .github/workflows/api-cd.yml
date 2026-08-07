@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "apps/backend/**"
+      - "apps/fcuka/**"
       - "bun.lock"
       - ".github/workflows/api-cd.yml"
 
