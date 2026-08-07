@@ -1,12 +1,12 @@
 import { ContextType } from "diesel-core";
-import { IFileService } from "../../../interface/file.interface";
-import { handleErrorResponse } from "../../../utils/handle-error";
-import ApiResponse from "../../../utils/apiRespone";
-import { notifyUploadSchema } from "../../../zod/schema";
+import { IFileService } from "../../interface/file.interface";
+import { handleErrorResponse } from "../../utils/handle-error";
+import ApiResponse from "../../utils/apiRespone";
+import { notifyUploadSchema } from "../../zod/schema";
 import { HTTPException } from "diesel-core/http-exception";
-import { User } from "../../../interface/user.interface";
-import { Link } from "../../../interface/link.interface";
-import { mustGet } from "../../../utils/mustGet";
+import { User } from "../../interface/user.interface";
+import { Link } from "../../interface/link.interface";
+import { mustGet } from "../../utils/mustGet";
 
 
 export default class DieselFileController {

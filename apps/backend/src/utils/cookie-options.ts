@@ -1,4 +1,4 @@
-import { CookieOptions } from "hono/utils/cookie";
+import { CookieOptions } from "diesel-core";
 
 export const accessTokenOptions: CookieOptions = {
     httpOnly: true,

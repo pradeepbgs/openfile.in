@@ -1,7 +1,7 @@
-import { DieselAuthController } from "@/api/diesel/controller/auth.controller";
-import DieselFileController from "@/api/diesel/controller/file.controller";
-import DieselLinkController from "@/api/diesel/controller/link.controller";
-import { DieselMiddlewares } from "@/api/diesel/middleware";
+import { DieselAuthController } from "@/api/controller/auth.controller";
+import DieselFileController from "@/api/controller/file.controller";
+import DieselLinkController from "@/api/controller/link.controller";
+import { DieselMiddlewares } from "@/api/middleware";
 import { linkRepository, userRepository } from "./repositories";
 import { authService, fileService, linkService } from "./services";
 import { cacheService } from "./storage";

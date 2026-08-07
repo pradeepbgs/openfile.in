@@ -1,12 +1,12 @@
-import { IAuthService } from '../../../interface/auth.interface';
-import ApiResponse from '../../../utils/apiRespone';
-import { accessTokenOptions, refreshTokenOptions } from '../../../utils/cookie-options';
-import { handleErrorResponse } from '../../../utils/handle-error';
-import { loginSchema, registerSchema } from '../../../zod/schema';
+import { IAuthService } from '../../interface/auth.interface';
+import ApiResponse from '../../utils/apiRespone';
+import { accessTokenOptions, refreshTokenOptions } from '../../utils/cookie-options';
+import { handleErrorResponse } from '../../utils/handle-error';
+import { loginSchema, registerSchema } from '../../zod/schema';
 import { HTTPException } from 'diesel-core/http-exception';
 import { ContextType } from 'diesel-core';
-import { mustGet } from '../../../utils/mustGet';
-import { User } from '../../../interface/user.interface';
+import { mustGet } from '../../utils/mustGet';
+import { User } from '../../interface/user.interface';
 
 export class DieselAuthController {
     private static instance: DieselAuthController

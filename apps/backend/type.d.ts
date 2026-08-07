@@ -1,4 +1,3 @@
-import { ConnInfo } from "hono/conninfo"
 import { JwtPayload } from "jsonwebtoken"
 
 export interface ipJobItem {
@@ -22,7 +21,13 @@ export interface FlatIpLog {
 }
 
 export interface Ip {
-    ip: ConnInfo
+    ip: {
+        remote: {
+            address: string
+            addressType: string
+            port: number
+        }
+    }
     purpose: "upload" | "link-create"
     fileId?: number
     linkId?: number
