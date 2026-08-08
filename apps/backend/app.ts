@@ -7,7 +7,8 @@ import { diesel_file_router } from '@/api/routes/file.routes'
 import { CONFIG } from '@/config'
 
 export function createApp() {
-  const app = new Diesel({ logger: true })
+  const app = new Diesel({})
+  app.useAdvancedLogger({ app })
 
   const allowedOrigins = CONFIG.CORS_ORIGINS?.split(',') || []
 
@@ -29,14 +30,13 @@ export function createApp() {
     })
 
     // Security headers
-    .addHooks('onSend', async (ctx, res) => {
+    .addHooks('onSend', async (_ctx, res) => {
       if (!res) return
       res.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload')
       res.headers.set('X-Frame-Options', 'DENY')
       res.headers.set('Referrer-Policy', 'no-referrer')
       res.headers.set('X-XSS-Protection', '0')
       res.headers.set('X-Content-Type-Options', 'nosniff')
-      console.log('[security-headers]', ctx.req.method, ctx.path, JSON.stringify(Object.fromEntries(res.headers)))
       return res
     })
 
