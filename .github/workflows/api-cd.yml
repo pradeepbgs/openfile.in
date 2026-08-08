@@ -1,13 +1,7 @@
 name: Deploy backend to VPS
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "apps/fcuka/**"
-      - "bun.lock"
-      - ".github/workflows/api-cd.yml"
+  workflow_dispatch: {}
 
 concurrency:
   group: deploy-backend
