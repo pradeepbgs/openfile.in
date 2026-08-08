@@ -31,13 +31,12 @@ export function createApp() {
     // Security headers
     .addHooks('onSend', async (_ctx, res) => {
       if (!res) return
-      const headers = new Headers(res.headers)
-      headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload')
-      headers.set('X-Frame-Options', 'DENY')
-      headers.set('Referrer-Policy', 'no-referrer')
-      headers.set('X-XSS-Protection', '0')
-      headers.set('X-Content-Type-Options', 'nosniff')
-      return new Response(res.body, { status: res.status, statusText: res.statusText, headers })
+      res.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload')
+      res.headers.set('X-Frame-Options', 'DENY')
+      res.headers.set('Referrer-Policy', 'no-referrer')
+      res.headers.set('X-XSS-Protection', '0')
+      res.headers.set('X-Content-Type-Options', 'nosniff')
+      return res
     })
 
     // Health & monitoring
