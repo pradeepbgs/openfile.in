@@ -6,8 +6,9 @@ import { verifyToken, verifyRefreshToken } from "../utils/jwt"
 import { calculateTTL, script } from "../utils/helper"
 import { redis } from "../config/redis"
 import { uploadRequestSchema } from "../zod/schema"
-import { RATE_LIMIT, WINDOW } from "../../constant"
+import { RATE_LIMIT, WINDOW, REFRESH_TOKEN_RATE_LIMIT, REFRESH_TOKEN_RATE_WINDOW } from "../../constant"
 import { ContextType } from "diesel-core"
+import { enforceRateLimit, getClientIp } from "../utils/rate-limit"
 
 
 export class DieselMiddlewares {
@@ -211,11 +212,16 @@ export class DieselMiddlewares {
 
     fetchUserFromRefreshToken = async (c: ContextType): Promise<any> => {
         try {
+            const ip = getClientIp(c)
+            await enforceRateLimit(`refresh:rate:ip:${ip}`, REFRESH_TOKEN_RATE_LIMIT, REFRESH_TOKEN_RATE_WINDOW)
+
             const token = c.cookies?.refreshToken
             if (!token) throw new HTTPException(401, { message: 'Unauthorized', cause: 'No refresh token provided' })
 
             const decoded = verifyRefreshToken(token)
             if (!decoded || !decoded.id) throw new HTTPException(401, { message: 'Unauthorized', cause: 'Invalid refresh token' })
+
+            await enforceRateLimit(`refresh:rate:user:${decoded.id}`, REFRESH_TOKEN_RATE_LIMIT, REFRESH_TOKEN_RATE_WINDOW)
 
             const user = await this.userRepository.findUserId(decoded.id as string)
             if (!user) throw new HTTPException(401, { message: 'Unauthorized: User not found' })
