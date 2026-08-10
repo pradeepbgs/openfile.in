@@ -2,20 +2,11 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import type { createLinkArgs } from "types/types";
 import { useAuth } from "~/zustand/store";
 import axios from 'axios'
+import { apiFetch, axiosInstance } from "./http";
 import { useUploadProgressStore } from "~/zustand/progress-store";
 import { useUploadStatusStore } from "~/zustand/upload-status-store";
 
 const backendUrl = import.meta.env.VITE_BACKEND_APP_URL
-
-const handleAuthError = (status: number): boolean => {
-    if (status === 401) {
-        useAuth.getState().logout();
-        useAuth.getState().setUser(null);
-        window.location.href = '/auth';
-        return true;
-    }
-    return false;
-}
 
 // Google OAuth disabled
 // export function useGoogleLoginHandler() { ... }
@@ -48,9 +39,8 @@ export const login = async (username: string, password: string) => {
 
 export const authCheck = async () => {
     try {
-        const res = await fetch(`${backendUrl}/api/v1/auth/check`, {
+        const res = await apiFetch(`${backendUrl}/api/v1/auth/check`, {
             method: "GET",
-            credentials: 'include'
         });
 
         if (!res.ok) {
@@ -107,12 +97,10 @@ export function useValidateTokenQuery(token: string) {
 
 
 const fetchUserLinks = async ({ page = 1, searchQuery = '', limit = 10 }) => {
-    const res = await fetch(`${backendUrl}/api/v1/link?page=${page}&limit=${limit}&query=${searchQuery}`, {
+    const res = await apiFetch(`${backendUrl}/api/v1/link?page=${page}&limit=${limit}&query=${searchQuery}`, {
         method: "GET",
-        credentials: 'include',
     });
 
-    if (handleAuthError(res.status)) return;
     if (!res.ok) {
         throw new Error("Failed to fetch user links");
     }
@@ -204,10 +192,9 @@ export function useUploadS3Mutation() {
 
 
 const fetchUserFiles = async (linkId: string, token: string, page: number, limit: number) => {
-    const res = await fetch(
+    const res = await apiFetch(
         `${backendUrl}/api/v1/file/${linkId}/${token}/files?page=${page}&limit=${limit}`, {
         method: "GET",
-        credentials: 'include',
     });
 
     if (!res.ok) {
@@ -283,16 +270,14 @@ export const useUpdateS3UploadDB = () => {
 
 const createLink = async ({ payload }: createLinkArgs) => {
     try {
-        const res = await fetch(`${backendUrl}/api/v1/link`, {
+        const res = await apiFetch(`${backendUrl}/api/v1/link`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            credentials: "include",
             body: JSON.stringify(payload),
         });
 
-        if (handleAuthError(res.status)) return;
         const result = await res.json();
         if (result.error) {
             console.error('err', result.error);
@@ -315,12 +300,10 @@ export function useCreateLinkMutation() {
 
 const fetchStorageUsed = async () => {
     try {
-        const res = await fetch(`${backendUrl}/api/v1/file/storage-used`, {
+        const res = await apiFetch(`${backendUrl}/api/v1/file/storage-used`, {
             method: "GET",
-            credentials: 'include',
         });
 
-        if (handleAuthError(res.status)) return;
         if (!res.ok) {
             throw new Error("Failed to fetch storage used");
         }
@@ -345,13 +328,9 @@ export function useStorageUsedQuery() {
 
 const deleteLink = async (id: number) => {
     try {
-        const res = await axios.delete(`${backendUrl}/api/v1/link/${id}`, {
-            withCredentials: true
-        })
+        const res = await axiosInstance.delete(`/api/v1/link/${id}`)
         return await res
     } catch (error: any) {
-        const status = error?.response?.status;
-        if (handleAuthError(status)) return;
         console.log("got error during deleting link")
         throw error
     }
@@ -365,13 +344,9 @@ export function useDeleteLink() {
 
 const deleteFileFromLink = async ({ linkId, fileId }: { linkId: string, fileId: string }) => {
     try {
-        const res = await axios.delete(`${backendUrl}/api/v1/file/${linkId}/files/${fileId}`, {
-            withCredentials: true
-        })
+        const res = await axiosInstance.delete(`/api/v1/file/${linkId}/files/${fileId}`)
         return await res
     } catch (error: any) {
-        const status = error?.response?.status;
-        if (handleAuthError(status)) return;
         console.log("got error during deleting file")
         throw error
     }
@@ -385,12 +360,10 @@ export function useDeleteFileFromLink() {
 
 const linkCoumt = async () => {
     try {
-        const res = await fetch(`${backendUrl}/api/v1/link/count`, {
+        const res = await apiFetch(`${backendUrl}/api/v1/link/count`, {
             method: "GET",
-            credentials: 'include',
         });
 
-        if (handleAuthError(res.status)) return;
         if (!res.ok) {
             throw new Error("Failed to fetch link count");
         }
