@@ -2,7 +2,7 @@ import { ICache } from "../interface/cache.interface"
 import { ILinkRepo, Link } from "../interface/link.interface"
 import { IUserRepository } from "../interface/user.interface"
 import { HTTPException } from "diesel-core/http-exception"
-import { verifyToken } from "../utils/jwt"
+import { verifyToken, verifyRefreshToken } from "../utils/jwt"
 import { calculateTTL, script } from "../utils/helper"
 import { redis } from "../config/redis"
 import { uploadRequestSchema } from "../zod/schema"
@@ -198,6 +198,24 @@ export class DieselMiddlewares {
 
             const decoded = verifyToken(token)
             if (!decoded || !decoded.id) throw new HTTPException(401, { message: 'Unauthorized', cause: 'Invalid token' })
+
+            const user = await this.userRepository.findUserId(decoded.id as string)
+            if (!user) throw new HTTPException(401, { message: 'Unauthorized: User not found' })
+
+            c.set('user', user)
+        } catch (error: any) {
+            if (error?.name === 'HTTPException') throw error
+            throw new HTTPException(401, { message: 'Unauthorized', cause: error?.message })
+        }
+    }
+
+    fetchUserFromRefreshToken = async (c: ContextType): Promise<any> => {
+        try {
+            const token = c.cookies?.refreshToken
+            if (!token) throw new HTTPException(401, { message: 'Unauthorized', cause: 'No refresh token provided' })
+
+            const decoded = verifyRefreshToken(token)
+            if (!decoded || !decoded.id) throw new HTTPException(401, { message: 'Unauthorized', cause: 'Invalid refresh token' })
 
             const user = await this.userRepository.findUserId(decoded.id as string)
             if (!user) throw new HTTPException(401, { message: 'Unauthorized: User not found' })

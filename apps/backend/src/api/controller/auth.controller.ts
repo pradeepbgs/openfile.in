@@ -1,10 +1,10 @@
 import { IAuthService } from '../../interface/auth.interface';
 import ApiResponse from '../../utils/apiRespone';
-import { accessTokenOptions, refreshTokenOptions } from '../../utils/cookie-options';
+import { accessTokenOptions, refreshTokenOptions, set_cookie } from '../../utils/cookie';
 import { handleErrorResponse } from '../../utils/handle-error';
 import { loginSchema, registerSchema } from '../../zod/schema';
 import { HTTPException } from 'diesel-core/http-exception';
-import { ContextType } from 'diesel-core';
+import { Context, ContextType } from 'diesel-core';
 import { mustGet } from '../../utils/mustGet';
 import { User } from '../../interface/user.interface';
 
@@ -56,8 +56,9 @@ export class DieselAuthController {
             }
             const { username, password } = result.data!
             const apiResponse: ApiResponse = await this.authService.signup(username, password);
-            c.setCookie("accessToken", apiResponse.data.accessToken, accessTokenOptions as any);
-            c.setCookie("refreshToken", apiResponse.data.refreshToken, refreshTokenOptions as any);
+            const refreshToken = apiResponse.data.refreshToken;
+            const accessToken = apiResponse.data.accessToken;
+            set_cookie({ c, accessToken, refreshToken })
             return c.json(apiResponse.data, apiResponse.statusCode);
         } catch (error) {
             console.error("Signup error:", error.message);
@@ -76,8 +77,9 @@ export class DieselAuthController {
             }
             const { username, password } = result.data
             const apiResponse: ApiResponse = await this.authService.login(username, password);
-            c.setCookie("accessToken", apiResponse.data.accessToken, accessTokenOptions as any);
-            c.setCookie("refreshToken", apiResponse.data.refreshToken, refreshTokenOptions as any);
+            const refreshToken = apiResponse.data.refreshToken;
+            const accessToken = apiResponse.data.accessToken;
+            set_cookie({ c, accessToken, refreshToken })
             return c.json(apiResponse.data, apiResponse.statusCode);
         } catch (error) {
             console.error("Login error:", error.message);
@@ -107,5 +109,19 @@ export class DieselAuthController {
             throw new HTTPException(500, { res: handleErrorResponse(c, error) })
             return handleErrorResponse(c, error)
         }
-    };
+  };
+
+  refresh_token = async (c: Context): Promise<Response> => {
+    try {
+      const user = mustGet<User>(c, 'user')
+      const apiResponse: ApiResponse = await this.authService.refresh_token(user);
+      const refreshToken = apiResponse.data.refreshToken;
+      const accessToken = apiResponse.data.accessToken;
+      set_cookie({ c, accessToken, refreshToken })
+      return c.json(apiResponse.data, apiResponse.statusCode)
+    } catch (e: unknown) {
+      return handleErrorResponse(c, e);
+    }
+  }
+  
 }

@@ -3,7 +3,7 @@ import { generateAccessAndRefreshToken } from "../utils/generate.token";
 import { UserDTO } from "../dto/user.dto";
 import { ApiError } from "../utils/apiError";
 import ApiResponse from "../utils/apiRespone";
-import { IUserRepository } from "../interface/user.interface";
+import { IUserRepository, User } from "../interface/user.interface";
 import { INotification } from "../interface/notification.interface";
 import { IAuthService } from "../interface/auth.interface";
 
@@ -39,7 +39,7 @@ export class AuthService implements IAuthService {
   //   const userDTO = new UserDTO(user);
   //   return new ApiResponse(201, "Login successful", { user: userDTO, accessToken, refreshToken })
   // }
-  
+
 
 
   signup = async (username: string, password: string): Promise<ApiResponse> => {
@@ -70,5 +70,9 @@ export class AuthService implements IAuthService {
     return new ApiResponse(200, "Login successful", { user: userDTO, accessToken, refreshToken })
   }
 
+  refresh_token = async (user:User) => {
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user);
+    return new ApiResponse(200,"new access_token generated successfully", {accessToken,refreshToken})
+  }
 
 }
