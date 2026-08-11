@@ -1,7 +1,9 @@
 import { Diesel } from 'diesel-core'
+import { logger } from 'diesel-core/logger'
 import { diesel_link_controller, dieselMiddleware } from '@/container'
 
-export const diesel_link_router = new Diesel({ logger: true })
+export const diesel_link_router = new Diesel()
+diesel_link_router.useLogger(logger)
 
 diesel_link_router
     .get('/', dieselMiddleware.fetchUserLinks, diesel_link_controller.getUserLinks)

@@ -1,7 +1,9 @@
 import { Diesel } from 'diesel-core'
+import { logger } from 'diesel-core/logger'
 import { diesel_file_controller, dieselMiddleware } from '@/container'
 
-export const diesel_file_router = new Diesel({ logger: true, errorFormat: 'json' })
+export const diesel_file_router = new Diesel({ errorFormat: 'json' })
+diesel_file_router.useLogger(logger)
 
 diesel_file_router
     .get('/:id/:token/files', dieselMiddleware.fetchFilesByTokenMiddleware, diesel_file_controller.getFilesByLinkToken)

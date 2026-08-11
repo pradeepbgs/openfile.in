@@ -1,10 +1,10 @@
 import {  ContextType, Diesel } from "diesel-core";
+import { logger } from "diesel-core/logger";
 import { dieselAuthController, dieselMiddleware } from "@/container";
 
 
-export const diesel_auth_router = new Diesel({
-    logger: true,
-})
+export const diesel_auth_router = new Diesel()
+diesel_auth_router.useLogger(logger)
 
 diesel_auth_router
   .get('/', (c: ContextType) => {

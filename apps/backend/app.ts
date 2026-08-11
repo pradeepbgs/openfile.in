@@ -1,5 +1,6 @@
 import { Diesel } from 'diesel-core'
 import { cors } from 'diesel-core/cors'
+import { advancedLogger } from 'diesel-core/logger'
 import { httpRequestsCounter, httpResponseTime, registry } from './metrics'
 import { diesel_auth_router } from '@/api/routes/auth.routes'
 import { diesel_link_router } from '@/api/routes/link.routes'
@@ -8,7 +9,7 @@ import { CONFIG } from '@/config'
 
 export function createApp() {
   const app = new Diesel({})
-  app.useAdvancedLogger({ app })
+  app.useAdvancedLogger(advancedLogger)
 
   const allowedOrigins = CONFIG.CORS_ORIGINS?.split(',') || []
 
