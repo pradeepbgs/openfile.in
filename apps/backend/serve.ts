@@ -20,7 +20,7 @@ export async function startServer() {
 
     Bun.serve({
         port,
-        fetch: app.fetch() as any,
+        fetch: app.fetch as any,
         // key: Bun.file("./localhost.key"),
         // cert: Bun.file("./localhost.crt"),
     })

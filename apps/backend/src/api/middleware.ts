@@ -90,10 +90,7 @@ export class DieselMiddlewares {
             // here we can make upload rate limit more better with using token as key so that a token can only hanlde 5 req/s 
             // but what if many users wants to upload at the same link token? it would be bad experience
             // mayb ewe can try ip+token so that each user can only make 5 req/s with his ip with the token
-            let ip: string | null = null;
-            const ipInfo: string | object | null = c.ip as any;
-            if (ipInfo && typeof ipInfo === "object" && "address" in ipInfo) ip = ipInfo.address as any;
-            else if (typeof ipInfo === "string") ip = ipInfo;
+            const ip = getClientIp(c);
 
             const token = c.query.token
             const key = `upload:rate:${ip}:${token}`

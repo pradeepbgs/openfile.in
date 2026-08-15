@@ -18,7 +18,7 @@
         "@types/jsonwebtoken": "^9.0.9",
         "@types/mime-types": "^2.1.4",
         "bullmq": "^5.55.0",
-        "diesel-core": "2.3.0",
+        "diesel-core": "3.2.0",
         "dotenv": "^17.2.3",
         "drizzle-orm": "^0.44.6",
         "ejs": "^3.1.10",
@@ -1001,7 +1001,7 @@
 
     "detect-node-es": ["detect-node-es@1.1.0", "", {}, "sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ=="],
 
-    "diesel-core": ["diesel-core@2.3.0", "", { "dependencies": { "peepal-router": "^0.5.0", "uuid": "^11.1.0" }, "peerDependencies": { "typescript": "^5.0.0" } }, "sha512-48KkDQPtyNRC1vtbPftT/I8mVOfNK/wh4rJF7cOR2tmRyWyiYyBbVU88umLk2MxUgyWT4nigKQseFATq3NXE9A=="],
+    "diesel-core": ["diesel-core@3.2.0", "", { "dependencies": { "peepal-router": "^0.5.1" }, "peerDependencies": { "typescript": "^5.0.0" } }, "sha512-kNVnAXVSqeaap4RLvyfnRMbQUVJjyolQthntfXIRFuUJjODc1bsZzfPfl9I247/QowQp3/ynI3qTHFS4oAds2w=="],
 
     "dotenv": ["dotenv@17.2.3", "", {}, "sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w=="],
 
@@ -1447,7 +1447,7 @@
 
     "pathe": ["pathe@1.1.2", "", {}, "sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ=="],
 
-    "peepal-router": ["peepal-router@0.5.0", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-j0FWuwLnXJGVftRfLsyMzI7EouzRnQR0Ln5a3ngP+SLnP+6Z80QN8nuVAyfztcdolV4HGvGgfpcq7ayswOSXLg=="],
+    "peepal-router": ["peepal-router@0.5.1", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-Iusjz6ClNsOi4zH7orKA2v/k4UML1AA92x0OQYzut9xqgUyA+QLnbaviPojUw8w2lHkf7nreOkznrk/cV7hb+w=="],
 
     "perfect-debounce": ["perfect-debounce@1.0.0", "", {}, "sha512-xCy9V055GLEqoFaHoC1SoLIaLmWctgCUaBaWxDZ7/Zx4CTyX7cJQLJOok/orfjZAh9kEYpjJa4d0KcJmCbctZA=="],
 
@@ -1924,8 +1924,6 @@
     "compression/debug": ["debug@2.6.9", "", { "dependencies": { "ms": "2.0.0" } }, "sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA=="],
 
     "cross-spawn/which": ["which@2.0.2", "", { "dependencies": { "isexe": "^2.0.0" }, "bin": { "node-which": "./bin/node-which" } }, "sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA=="],
-
-    "diesel-core/uuid": ["uuid@11.1.0", "", { "bin": { "uuid": "dist/esm/bin/uuid" } }, "sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A=="],
 
     "express/cookie": ["cookie@0.7.1", "", {}, "sha512-6DnInpx7SJ2AK3+CTUE/ZM0vWTUboZCegxhC2xiIydHR9jNuTAASBrfEpHhiGOZw/nX51bHt6YQl8jsGo4y/0w=="],
 
