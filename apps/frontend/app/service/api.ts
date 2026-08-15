@@ -46,6 +46,7 @@ export const authCheck = async () => {
         if (!res.ok) {
             useAuth.getState().logout()
             useAuth.getState().setUser(null)
+            return
         }
 
         const data = await res.json();

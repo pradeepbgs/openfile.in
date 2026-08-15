@@ -5,10 +5,17 @@ const backendUrl = import.meta.env.VITE_BACKEND_APP_URL;
 
 let refreshPromise: Promise<boolean> | null = null;
 
+const PROTECTED_PREFIXES = ["/dashboard", "/plan"];
+
 export const forceLogout = () => {
     useAuth.getState().logout();
     useAuth.getState().setUser(null);
-    window.location.href = "/auth";
+
+    const path = window.location.pathname;
+    const isProtectedRoute = PROTECTED_PREFIXES.some((p) => path.startsWith(p));
+    if (isProtectedRoute && path !== "/auth") {
+        window.location.href = "/auth";
+    }
 };
 
 // dedupe concurrent 401s into a single in-flight refresh call
