@@ -1,7 +1,6 @@
 import { Link } from 'react-router';
 import Header from '~/components/header';
 import Footer from '~/components/footer';
-import PlansPage from './dashboard/plan';
 import { Lock } from 'lucide-react';
 import { NBBadge, NBCard, nbButtonClass } from '~/components/ui/neobrutal';
 
@@ -85,10 +84,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* Pricing */}
-        <section id="pricing" className="border-t-[3px] border-black">
-          <PlansPage />
-        </section>
       </main>
       <Footer />
     </div>

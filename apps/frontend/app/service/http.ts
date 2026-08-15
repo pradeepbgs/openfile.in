@@ -5,7 +5,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_APP_URL;
 
 let refreshPromise: Promise<boolean> | null = null;
 
-const PROTECTED_PREFIXES = ["/dashboard", "/plan"];
+const PROTECTED_PREFIXES = ["/dashboard"];
 
 export const forceLogout = () => {
     useAuth.getState().logout();

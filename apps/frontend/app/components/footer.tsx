@@ -32,7 +32,6 @@ function Footer() {
             <ul className="space-y-2.5">
               {[
                 { label: 'Features', href: '#features' },
-                { label: 'Pricing', href: '#pricing' },
                 { label: 'Security', href: '/privacy-policy/#security' },
                 { label: 'Dashboard', href: '/dashboard' },
               ].map(l => (

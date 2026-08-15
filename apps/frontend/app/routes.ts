@@ -14,8 +14,6 @@ export default [
         route('link/:id', 'routes/dashboard/link-details.tsx'),
     ]),
     
-    route('plan','routes/dashboard/plan.tsx'),
-    route('plan/checkout', 'routes/dashboard/checkout.tsx'),
     route('upload', 'routes/upload/index.tsx'),
     route('/*','components/not-found.tsx'),
     route('/support', 'components/SupportPage.tsx'),
