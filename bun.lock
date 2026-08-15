@@ -18,7 +18,7 @@
         "@types/jsonwebtoken": "^9.0.9",
         "@types/mime-types": "^2.1.4",
         "bullmq": "^5.55.0",
-        "diesel-core": "3.2.0",
+        "diesel-core": "3.3.0",
         "dotenv": "^17.2.3",
         "drizzle-orm": "^0.44.6",
         "ejs": "^3.1.10",
@@ -1001,7 +1001,7 @@
 
     "detect-node-es": ["detect-node-es@1.1.0", "", {}, "sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ=="],
 
-    "diesel-core": ["diesel-core@3.2.0", "", { "dependencies": { "peepal-router": "^0.5.1" }, "peerDependencies": { "typescript": "^5.0.0" } }, "sha512-kNVnAXVSqeaap4RLvyfnRMbQUVJjyolQthntfXIRFuUJjODc1bsZzfPfl9I247/QowQp3/ynI3qTHFS4oAds2w=="],
+    "diesel-core": ["diesel-core@3.3.0", "", { "dependencies": { "peepal-router": "^0.5.1" }, "peerDependencies": { "typescript": "^5.0.0" } }, "sha512-D1TGxlWHcGUKepY/NWHKwJ07v1gRu/Ekng35EGnJkJT+QSKPQUtz0xPybMXdI3sQhVBLlpO5P9xIjjI9t7MHJQ=="],
 
     "dotenv": ["dotenv@17.2.3", "", {}, "sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w=="],
 
