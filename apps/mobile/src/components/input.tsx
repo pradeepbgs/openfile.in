@@ -14,7 +14,7 @@ interface InputProps extends TextInputProps {
   inputClassName?: string;
 }
 
-const Input: React.FC<InputProps> = ({
+const Input = React.forwardRef<TextInput, InputProps>(({
   label,
   value,
   onChangeText,
@@ -25,7 +25,7 @@ const Input: React.FC<InputProps> = ({
   labelClassName = "",
   inputClassName = "",
   ...props
-}) => {
+}, ref) => {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
@@ -34,6 +34,7 @@ const Input: React.FC<InputProps> = ({
         {label}
       </Text>
       <TextInput
+        ref={ref}
         className={`px-4 py-3 rounded-lg bg-zinc-800 text-zinc-100 ${
           isFocused ? "border-2 border-indigo-500" : "border border-zinc-700"
         } ${inputClassName} ${className}`}
@@ -49,6 +50,8 @@ const Input: React.FC<InputProps> = ({
       {error ? <Text className="text-red-400 mt-1 text-sm">{error}</Text> : null}
     </View>
   );
-};
+});
+
+Input.displayName = "Input";
 
 export default Input;

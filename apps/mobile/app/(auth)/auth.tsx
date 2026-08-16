@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { View, Text, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import { useRef, useState } from "react";
+import { View, Text, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, ActivityIndicator, TextInput } from "react-native";
 import { router } from "expo-router";
 import { COLORS } from "@/src/constant";
 import ScreenView from "@/src/components/safe-area-view-component";
@@ -10,6 +10,7 @@ import { useLogin, useRegister } from "@/src/api/api";
 type Tab = "login" | "register";
 
 export default function AuthScreen() {
+  const passwordRef = useRef<TextInput>(null);
   const [tab, setTab] = useState<Tab>("login");
 
   const [username, setUsername] = useState("");
@@ -79,15 +80,21 @@ export default function AuthScreen() {
               placeholder="your username"
               autoCapitalize="none"
               error={errors.username}
+              returnKeyType="next"
+              onSubmitEditing={() => passwordRef.current?.focus()}
+              blurOnSubmit={false}
             />
 
             <Input
+              ref={passwordRef}
               label="Password"
               value={password}
               onChangeText={setPassword}
               placeholder="••••••••"
               secureTextEntry
               error={errors.password}
+              returnKeyType="done"
+              onSubmitEditing={handleSubmit}
             />
 
             {apiError && (
