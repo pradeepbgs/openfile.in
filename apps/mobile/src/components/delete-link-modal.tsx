@@ -33,8 +33,7 @@ export default function DeleteLinkModal({ visible, linkId, linkName, onClose }: 
         <View className="bg-zinc-900 rounded-2xl p-6 border border-zinc-800" style={{ width: "85%" }}>
           <Text className="text-zinc-100 text-lg font-bold mb-2">Delete Link</Text>
           <Text className="text-zinc-400 text-sm mb-6">
-            Are you sure you want to delete{" "}
-            <Text className="text-zinc-200 font-medium">{linkName}</Text>? This cannot be undone.
+            Are you sure you want to delete the link? this cannot be undone.
           </Text>
           <View className="flex-row gap-3">
             <TouchableOpacity

@@ -1,24 +1,31 @@
 import { useState } from 'react'
-import { View, Text, Alert } from 'react-native'
+import { View, Text, Alert, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { useQueryClient } from '@tanstack/react-query'
 import type { FileItem } from '@/src/api/links-api'
 import { decryptAndSave, decryptToBase64, decryptToLocalUri } from '@/src/utils/crypto'
 import { formatBytes, getFileExt, getExtStyle, isImage, isVideo } from '@/src/utils/file-utils'
 import ImagePreview from './image-preview'
 import VideoPreview from './video-preview'
 import FileCardActions from './file-card-actions'
+import { AntDesign } from '@expo/vector-icons'
+import { useDeleteFile } from '../api/api'
 
 interface Props {
     file: FileItem
     token: string
+    linkId: string
     encryptionKey: string
     iv: string
 }
 
-export default function FileCard({ file, token, encryptionKey, iv }: Props) {
+export default function FileCard({ file, token, linkId, encryptionKey, iv }: Props) {
     const [showPreview, setShowPreview] = useState(false)
     const [imageUri, setImageUri] = useState<string | null>(null)
     const [videoUri, setVideoUri] = useState<string | null>(null)
     const [isProcessing, setIsProcessing] = useState(false)
+
+    const queryClient = useQueryClient()
+    const { mutateAsync: deleteFile, isPending: isDeleting } = useDeleteFile()
 
     const ext = getFileExt(file.name)
     const hasKey = !!encryptionKey && !!iv
@@ -55,6 +62,24 @@ export default function FileCard({ file, token, encryptionKey, iv }: Props) {
         }
     }
 
+    function handleDelete() {
+        Alert.alert('Delete file', `Are you sure you want to delete "${file.name}"? This cannot be undone.`, [
+            { text: 'Cancel', style: 'cancel' },
+            {
+                text: 'Delete',
+                style: 'destructive',
+                onPress: async () => {
+                    try {
+                        await deleteFile({ link_id: linkId, file_id: file.id })
+                        queryClient.invalidateQueries({ queryKey: ['files', linkId, token] })
+                    } catch (e) {
+                        Alert.alert('Delete Error', e instanceof Error ? e.message : String(e))
+                    }
+                },
+            },
+        ])
+    }
+
     return (
         <View className="bg-zinc-900 rounded-xl overflow-hidden">
             {showPreview && imageUri && <ImagePreview uri={imageUri} />}
@@ -69,6 +94,13 @@ export default function FileCard({ file, token, encryptionKey, iv }: Props) {
                         <Text className="text-zinc-100 font-medium text-sm" numberOfLines={1}>{file.name}</Text>
                         <Text className="text-zinc-500 text-xs mt-0.5">{formatBytes(file.size)}</Text>
                     </View>
+                    <TouchableOpacity onPress={handleDelete} disabled={isDeleting} hitSlop={8}>
+                        {isDeleting ? (
+                            <ActivityIndicator size="small" color="red" />
+                        ) : (
+                            <AntDesign name='delete' size={16} color={'red'} />
+                        )}
+                    </TouchableOpacity>
                 </View>
 
                 <FileCardActions

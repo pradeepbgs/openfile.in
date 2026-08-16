@@ -84,7 +84,6 @@ export default function LinkDetailScreen() {
           className="flex-row items-center bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-800"
           style={{ gap: 6 }}
         >
-          <AntDesign name="key" size={13} color={COLORS.iconSubtle} />
           <Text className="text-zinc-400 text-sm">
             {showKeyInput ? "Cancel" : "Add Key/IV"}
           </Text>
@@ -112,7 +111,7 @@ export default function LinkDetailScreen() {
             onCancelKeyInput={() => setShowKeyInput(false)}
           />
         }
-        renderItem={({ item }) => <FileCard file={item} token={token} encryptionKey={key} iv={iv} />}
+        renderItem={({ item }) => <FileCard file={item} token={token} linkId={id} encryptionKey={key} iv={iv} />}
         ListEmptyComponent={
           !isFetching ? (
             <View className="items-center mt-20">

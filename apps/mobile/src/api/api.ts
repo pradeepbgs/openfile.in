@@ -39,3 +39,19 @@ export function useRegister() {
             register(username, password),
     });
 }
+
+
+const delete_file = async ({ link_id, file_id }: { link_id: string; file_id: string }): Promise<void> => {
+  const res = await fetch(`${API_URL}/api/v1/file/${link_id}/files/${file_id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error || "Couldn't delete the file.");
+}
+
+export function useDeleteFile() {
+  return useMutation({
+    mutationFn: (payload: { link_id: string; file_id: string }) => delete_file(payload),
+  });
+}
