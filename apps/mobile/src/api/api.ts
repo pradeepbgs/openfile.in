@@ -48,7 +48,7 @@ const delete_file = async ({ link_id, file_id }: { link_id: string; file_id: str
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data?.error || "Couldn't delete the file.");
-}
+};
 
 export function useDeleteFile() {
   return useMutation({
