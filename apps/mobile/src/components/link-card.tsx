@@ -6,7 +6,7 @@ import * as Clipboard from "expo-clipboard";
 import * as WebBrowser from "expo-web-browser";
 import { formatDistanceToNow, isBefore } from "date-fns";
 
-import type { Link } from "@/src/api/links-api-api";
+import type { Link } from "@/src/api/links-api";
 import { COLORS, UPLOAD_URL } from "@/src/constant";
 import { getItem } from "@/src/utils/storage";
 import DeleteLinkModal from "./delete-link-modal";
@@ -50,7 +50,7 @@ export default function LinkCard({ link }: Props) {
       return;
     }
     await Clipboard.setStringAsync(fullLink);
-    Alert.alert("Copied", "Upload link copied to clipboard.");
+    // Alert.alert("Copied", "Upload link copied to clipboard.");
   };
 
   const handleOpenUploadPage = async () => {
