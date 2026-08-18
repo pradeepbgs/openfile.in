@@ -1,14 +1,8 @@
 name: openfile backend
 
+# Disabled: superseded by docker-build.yml. Trigger manually if needed.
 on:
-  push:
-    branches: [main]
-    paths:
-      - "apps/backend/**"
-  pull_request:
-    branches: [main]
-    paths:
-      - "apps/backend/**"
+  workflow_dispatch: {}
 
 jobs:
   build:
@@ -43,4 +37,3 @@ jobs:
 
       - name: Run tests
         run: bun run test --timeout=20000
-        
