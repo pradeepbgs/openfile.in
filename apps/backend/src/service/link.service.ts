@@ -168,8 +168,6 @@ export default class LinkService implements ILinkService {
                     url: file.url
                 }))
             });
-
-            await this.linkRepository.deleteFilesForLink(link.id, userId)
         }
 
         await this.linkRepository.deleteLink(link.id, userId)

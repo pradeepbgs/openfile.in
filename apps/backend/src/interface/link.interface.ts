@@ -67,10 +67,6 @@ export interface ILinkRepo {
         uploadLinkId: string;
     }[]>
 
-    deleteFilesForLink(linkId: string, userId: string): Promise<{
-        count: number;
-    }>
-
     deleteLink(linkId: string, userId: string): Promise<{
         token: string;
         expireAfterFirstUpload: boolean;

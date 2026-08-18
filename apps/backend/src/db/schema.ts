@@ -58,7 +58,7 @@ export const files = pgTable(
     name: varchar("name", { length: 255 }).notNull(),
     size: bigint("size", { mode: "bigint" }).notNull(),
     keyUsed: boolean("keyUsed").default(false).notNull(),
-    uploadLinkId: uuid("uploadLinkId").notNull(),
+    uploadLinkId: uuid("uploadLinkId").notNull().references(() => links.id, { onDelete: "cascade" }),
     userId: uuid("userId").notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),

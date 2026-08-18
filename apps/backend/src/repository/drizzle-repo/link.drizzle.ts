@@ -106,15 +106,6 @@ export class LinkRepositoryDrizzle implements ILinkRepo {
         return [createdLink, updatedUser];
     }
 
-    async deleteFilesForLink(linkId: string, userId: string) {
-        const result = await this
-            .client
-            .delete(files)
-            .where(and(eq(files.uploadLinkId, linkId), eq(files.userId, userId)))
-            .returning();
-        return { count: result.length };
-    }
-
     async deleteLink(linkId: string, userId: string) {
         const result = await this
             .client
