@@ -1,22 +1,23 @@
-import { base64UrlToBase64, ENCRYPTION_ALGORITHM } from "./encrypt-decrypt";
+import { base64UrlToBase64, resolveDecryptionAlgorithm } from "./encrypt-decrypt";
 
   self.onmessage = async (e) => {
     const { base64Key, base64IV, encryptedData } = e.data;
-  
+
     try {
       const keyBytes = Uint8Array.from(atob(base64UrlToBase64(base64Key)), c => c.charCodeAt(0));
       const ivBytes = Uint8Array.from(atob(base64UrlToBase64(base64IV)), c => c.charCodeAt(0));
-  
+      const algorithm = resolveDecryptionAlgorithm(ivBytes);
+
       const cryptoKey = await crypto.subtle.importKey(
         "raw",
         keyBytes,
-        { name: ENCRYPTION_ALGORITHM },
+        { name: algorithm },
         false,
         ["decrypt"]
       );
 
       const decryptedBuffer = await crypto.subtle.decrypt(
-        { name: ENCRYPTION_ALGORITHM, iv: ivBytes },
+        { name: algorithm, iv: ivBytes },
         cryptoKey,
         encryptedData
       );

@@ -2,6 +2,12 @@ import type { FileItem } from "types/types";
 import { useFileStatusStore } from "../zustand/fileStatusStore";
 
 export const ENCRYPTION_ALGORITHM = "AES-GCM";
+// Links created before the AES-GCM migration used a 16-byte IV (AES-CBC requirement);
+// AES-GCM uses a 12-byte IV, so IV length tells us which cipher a given file was encrypted with.
+export const LEGACY_ENCRYPTION_ALGORITHM = "AES-CBC";
+
+export const resolveDecryptionAlgorithm = (ivBytes: Uint8Array): string =>
+    ivBytes.byteLength === 16 ? LEGACY_ENCRYPTION_ALGORITHM : ENCRYPTION_ALGORITHM;
 
 const toBase64URL = (bytes: Uint8Array): string => {
     const base64 = btoa(String.fromCharCode(...bytes));
