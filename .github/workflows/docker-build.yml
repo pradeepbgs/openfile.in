@@ -5,10 +5,14 @@ on:
     branches: [main]
     paths:
       - "apps/backend/**"
+      - "package.json"
+      - "bun.lock"
   pull_request:
     branches: [main]
     paths:
       - "apps/backend/**"
+      - "package.json"
+      - "bun.lock"
 
 jobs:
   docker-build:
