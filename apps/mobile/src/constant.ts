@@ -16,4 +16,4 @@ export const COLORS = {
 export const API_URL = 'https://api.openfile.exvillager.xyz';
 export const UPLOAD_URL = 'https://openfile.exvillager.xyz/upload';
 
-export const LIMIT = 20;
+export const LIMIT = 50;

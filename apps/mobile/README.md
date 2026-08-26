@@ -10,6 +10,14 @@ OpenFile is a secure and encrypted file receiver/sharing service. Generate a lin
 - Token-based access for shared links
 - Built with Expo, React Native, and NativeWind
 
+## Screenshots
+
+<p align="center">
+  <img src="./screenshots/screenshot-1.png" width="250" alt="Screenshot 1" />
+  <img src="./screenshots/screenshot-2.png" width="250" alt="Screenshot 2" />
+  <img src="./screenshots/screenshot-3.png" width="250" alt="Screenshot 3" />
+</p>
+
 ## Tech Stack
 
 - **Framework:** Expo (React Native)

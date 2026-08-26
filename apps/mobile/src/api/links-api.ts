@@ -1,5 +1,12 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import { Alert } from "react-native";
 import { API_URL } from "../constant";
+
+function checkUnauthorized(res: Response) {
+  if (res.status === 403) {
+    Alert.alert("Unauthorized", "You're not authorized to do this.");
+  }
+}
 
 export interface Link {
   id: string;
@@ -40,8 +47,10 @@ export const createLink = async (
   const res = await fetch(`${API_URL}/api/v1/link`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(payload),
   });
+  checkUnauthorized(res);
   const data = await res.json();
   if (!res.ok) throw new Error(data?.error || "Failed to create link");
   return data;
@@ -63,6 +72,7 @@ const getUserLinks = async (page: number, search: string, limit: number) => {
     method: "GET",
     credentials: "include",
   });
+  checkUnauthorized(res);
   const data = await res.json();
   if (!res.ok) throw new Error(data?.error || "Failed to fetch links");
   return data as { data: Link[]; page: number; limit: number };
@@ -82,7 +92,10 @@ export function useLinkCount() {
   return useQuery({
     queryKey: ["linkCount"],
     queryFn: async () => {
-      const res = await fetch(`${API_URL}/api/v1/link/count`);
+      const res = await fetch(`${API_URL}/api/v1/link/count`, {
+        credentials: "include",
+      });
+      checkUnauthorized(res);
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error);
       return data as { links: number };
@@ -141,6 +154,7 @@ const getUserFiles = async ({
       credentials: "include",
     },
   );
+  checkUnauthorized(res);
   let data: any;
   try {
     data = await res.json();
@@ -174,6 +188,7 @@ const deleteLinkById = async (id: string) => {
     method: "DELETE",
     credentials: "include",
   });
+  checkUnauthorized(res);
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
     throw new Error(data?.error || "Failed to delete link");
