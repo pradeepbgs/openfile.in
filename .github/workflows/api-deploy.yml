@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - "apps/backend/**"
+      - "package.json"
+      - "bun.lock"
       - ".github/workflows/api-deploy.yml"
   workflow_dispatch: {}
 
