@@ -27,9 +27,9 @@
       "typescript": "^5"
    },
    "dependencies": {
-      "@aws-sdk/client-s3": "^3.832.0",
+      "@aws-sdk/client-s3": "^3.1118.0",
       "@aws-sdk/lib-storage": "^3.832.0",
-      "@aws-sdk/s3-request-presigner": "^3.837.0",
+      "@aws-sdk/s3-request-presigner": "^3.1118.0",
       "@neondatabase/serverless": "^1.0.2",
       "@types/jsonwebtoken": "^9.0.9",
       "@types/mime-types": "^2.1.4",
@@ -43,7 +43,7 @@
       "jsonwebtoken": "^9.0.2",
       "k6": "^0.0.0",
       "mime-types": "^3.0.1",
-      "nodemailer": "^7.0.3",
+      "nodemailer": "^9.0.1",
       "pg": "^8.16.3",
       "pino": "^9.9.5",
       "pino-daily-rotate-file": "^0.0.1",
